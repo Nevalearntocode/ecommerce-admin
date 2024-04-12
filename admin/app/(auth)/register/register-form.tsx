@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
+import axios from "axios";
 
 type Props = {};
 
@@ -54,7 +55,16 @@ const RegisterForm = (props: Props) => {
       toast.error("Password fields don't match.");
       return;
     }
-    console.log(data);
+    try {
+      const res = await axios.post(`/api/register`, {
+        email: data.email,
+        password: data.password,
+      });
+      toast.success(res.data.success);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data);
+    }
   };
 
   return (
