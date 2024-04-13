@@ -1,5 +1,5 @@
 import { withAuth } from "next-auth/middleware";
-import { authPrefix, authRoutes, definedRoutes } from "./routes";
+import { authPrefix, authRoutes, definedRoutes, publicRoutes } from "./routes";
 
 export default withAuth(
   function middleware(req) {
@@ -8,7 +8,12 @@ export default withAuth(
     const isLoggedIn = !!req.nextauth.token;
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
     const isApiAuthRoute = nextUrl.pathname.startsWith(authPrefix);
+    const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
     const isAllowed = definedRoutes.includes(nextUrl.pathname);
+
+    if (isPublicRoute) {
+      return null;
+    }
 
     if (isAuthRoute && isLoggedIn) {
       return Response.redirect(new URL(`/`, nextUrl));

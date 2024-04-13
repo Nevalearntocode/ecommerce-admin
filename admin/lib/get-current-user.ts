@@ -6,7 +6,7 @@ export default async function getCurrentUser() {
   const session = await auth();
 
   if (!session || !session.user || !session.user.email) {
-    return null
+    return null;
   }
 
   const user = await db.user.findUnique({
@@ -14,6 +14,7 @@ export default async function getCurrentUser() {
       email: session.user.email,
     },
     select: {
+      id: true,
       name: true,
       email: true,
       image: true,
@@ -21,7 +22,7 @@ export default async function getCurrentUser() {
   });
 
   if (!user) {
-    return null
+    return null;
   }
 
   return user;

@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -19,6 +20,10 @@ import { Input } from "../ui/input";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
+import ImageUpload from "../upload-image";
+import { toast } from "sonner";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -33,28 +38,29 @@ type FormType = z.infer<typeof formSchema>;
 const ProfileModal = (props: Props) => {
   const { isOpen, close, type, data } = useModal();
   const isModalOpen = type === "profile" && isOpen;
+  const router = useRouter();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      image: "",
-      name: "",
+      email: data?.user?.email || "",
+      image: data?.user?.image || "",
+      name: data?.user?.name || "",
     },
-  });
-
-  useEffect(() => {
-    if (data && data.user) {
-      form.setValue("name", data.user.name);
-      form.setValue("email", data.user.email);
-      form.setValue("image", data.user.image);
-    }
   });
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    console.log(data);
+    try {
+      const res = await axios.patch(`/api/profile`, data);
+      toast.success(res.data.success);
+      router.refresh();
+      close();
+    } catch (error: any) {
+      console.log(error);
+      toast.error("something went wrong");
+    }
   };
 
   return (
@@ -64,23 +70,27 @@ const ProfileModal = (props: Props) => {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="grid grid-cols-2 gap-6"
+            className="grid h-[300px] grid-cols-2 gap-6 "
           >
-            <FormField
-              control={form.control}
-              name="image"
-              render={({ field }) => (
-                <FormItem>
-                  <Image
-                    src={"/placeholder.jpg"}
-                    alt="profileImage"
-                    height={360}
-                    width={360}
-                  />
-                </FormItem>
-              )}
-            />
-            <div className="h-full flex items-center justify-evenly flex-col">
+            <div className="h-full">
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem className="h-full">
+                    <div className="h-full w-full pt-4">
+                      <ImageUpload
+                        onChange={field.onChange}
+                        value={field.value}
+                        endpoint="profileImage"
+                      />
+                      <FormMessage />
+                    </div>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className=" flex h-[230px] flex-col items-center justify-evenly">
               <FormField
                 control={form.control}
                 name="email"
@@ -108,7 +118,7 @@ const ProfileModal = (props: Props) => {
                 )}
               />
             </div>
-            <div className="col-span-2 w-full flex justify-between">
+            <div className="col-span-2 mt-auto flex w-full justify-between ">
               <Button
                 className=""
                 variant={`outline`}
