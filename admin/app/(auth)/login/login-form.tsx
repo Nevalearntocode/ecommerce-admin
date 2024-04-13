@@ -14,6 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Props = {};
 
@@ -28,6 +31,7 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const LoginForm = (props: Props) => {
+  const router = useRouter();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,7 +43,16 @@ const LoginForm = (props: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    console.log(data);
+    signIn("credentials", { ...data, redirect: false }).then((callback) => {
+      if (callback?.ok) {
+        toast.success("Welcome");
+        router.refresh();
+      }
+
+      if (callback?.error) {
+        toast.error(callback.error);
+      }
+    });
   };
 
   return (

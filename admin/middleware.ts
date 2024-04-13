@@ -1,25 +1,36 @@
-import authConfig from "./auth.config";
-import NextAuth from "next-auth";
-import { authRoutes, DEFAULT_REDIRECT, authPrefix } from "./routes";
+import { withAuth } from "next-auth/middleware";
+import { authPrefix, authRoutes, definedRoutes } from "./routes";
 
-const { auth } = NextAuth(authConfig);
+export default withAuth(
+  function middleware(req) {
+    const { nextUrl } = req;
+    // check if user is logged in by the existence of token
+    const isLoggedIn = !!req.nextauth.token;
+    const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+    const isApiAuthRoute = nextUrl.pathname.startsWith(authPrefix);
+    const isAllowed = definedRoutes.includes(nextUrl.pathname);
 
-export default auth((req) => {
-  const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
-
-  const isApiRoute = nextUrl.pathname.startsWith(authPrefix);
-  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-
-  if (isAuthRoute) {
-    if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_REDIRECT, nextUrl));
+    if (isAuthRoute && isLoggedIn) {
+      return Response.redirect(new URL(`/`, nextUrl));
     }
+
+    if (!isLoggedIn && !isAuthRoute && !isApiAuthRoute) {
+      return Response.redirect(new URL(`/login`, nextUrl));
+    }
+
+    if (isLoggedIn && !isAllowed) {
+      return Response.redirect(new URL(`/`, nextUrl));
+    }
+  },
+  {
+    secret: process.env.NEXTAUTH_SECRET,
+    callbacks: {
+      authorized() {
+        return true;
+      },
+    },
   }
-  if (!isLoggedIn && !isAuthRoute && !isApiRoute) {
-    return Response.redirect(new URL(`/login`, nextUrl));
-  }
-});
+);
 
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
