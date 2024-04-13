@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { toast } from "sonner";
 import axios from "axios";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
@@ -39,6 +41,7 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const RegisterForm = (props: Props) => {
+  const router = useRouter();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,11 +59,19 @@ const RegisterForm = (props: Props) => {
       return;
     }
     try {
-      const res = await axios.post(`/api/register`, {
+      const res = await axios.post(`/api/auth/register`, {
         email: data.email,
         password: data.password,
       });
-      toast.success(res.data.success);
+
+      if (res.status === 200) {
+        signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+        }).then(() => router.refresh());
+      }
+      toast.success("Welcome!");
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data);
@@ -114,7 +125,14 @@ const RegisterForm = (props: Props) => {
         />
         <div className="mt-4 w-full flex flex-col gap-y-6">
           <Button className="w-full">Register</Button>
-          <Button className="w-full" variant={`outline`}>
+          <Button
+            className="w-full"
+            variant={`outline`}
+            onClick={(e) => {
+              e.preventDefault();
+              signIn("google");
+            }}
+          >
             Register With Google
           </Button>
         </div>

@@ -45,7 +45,7 @@ const LoginForm = (props: Props) => {
   const onSubmit = async (data: FormType) => {
     signIn("credentials", { ...data, redirect: false }).then((callback) => {
       if (callback?.ok) {
-        toast.success("Welcome");
+        toast.success("Welcome back!");
         router.refresh();
       }
 
@@ -89,7 +89,14 @@ const LoginForm = (props: Props) => {
         />
         <div className="mt-4 w-full flex flex-col gap-y-6">
           <Button className="w-full">Login</Button>
-          <Button className="w-full" variant={`outline`}>
+          <Button
+            className="w-full"
+            variant={`outline`}
+            onClick={(e) => {
+              e.preventDefault();
+              signIn("google");
+            }}
+          >
             Login With Google
           </Button>
         </div>
