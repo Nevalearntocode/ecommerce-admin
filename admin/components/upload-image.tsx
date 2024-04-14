@@ -17,7 +17,7 @@ const ImageUpload = ({ onChange, value, endpoint }: Props) => {
 
   if (value && fileType !== "pdf") {
     return (
-      <div className="relative flex justify-center border-2 h-[185px]">
+      <div className="relative flex h-[185px] justify-center border-2">
         <div>
           <Image
             src={value}
@@ -40,13 +40,15 @@ const ImageUpload = ({ onChange, value, endpoint }: Props) => {
   }
 
   return (
-    <UploadButton
-      endpoint={endpoint}
-      onClientUploadComplete={(res) => onChange(res?.[0].url)}
-      // add toast later
-      onUploadError={(error: Error) => console.log(error)}
-      className="group mb-4 h-[70%] cursor-pointer"
-    />
+    <div className="flex h-full items-center justify-center">
+      <UploadButton
+        endpoint={endpoint}
+        onClientUploadComplete={(res) => onChange(res?.[0].url)}
+        // add toast later
+        onUploadError={(error: Error) => console.log(error)}
+        className="group mb-4 h-[70%] cursor-pointer"
+      />
+    </div>
     // <Button
     //   variant={'outline'}
     //   className="flex h-[80%] w-full flex-col items-center justify-center gap-8"

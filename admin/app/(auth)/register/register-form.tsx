@@ -123,7 +123,7 @@ const RegisterForm = (props: Props) => {
             </FormItem>
           )}
         />
-        <div className="mt-4 w-full flex flex-col gap-y-6">
+        <div className="mt-4 flex w-full flex-col gap-y-6">
           <Button className="w-full">Register</Button>
           <Button
             className="w-full"

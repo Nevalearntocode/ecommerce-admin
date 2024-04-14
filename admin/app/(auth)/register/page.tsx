@@ -6,12 +6,12 @@ type Props = {};
 
 const Register = (props: Props) => {
   return (
-    <div className="h-full w-full flex items-center justify-center">
-      <div className="xl:w-[30%] w-[380px] lg:px-20 pt-8 pb-8 lg:w-[540px] xl:border-2 flex flex-col gap-y-8 xl:mr-auto xl:h-full xl:justify-center">
+    <div className="flex h-full w-full items-center justify-center">
+      <div className="flex w-[380px] flex-col gap-y-8 pb-8 pt-8 lg:w-[540px] lg:px-20 xl:mr-auto xl:h-full xl:w-[30%] xl:justify-center xl:border-2">
         <h1 className="w-full text-center text-3xl font-bold">Register</h1>
         <RegisterForm />
       </div>
-      <div className="hidden bg-muted xl:flex w-[75%] items-center justify-center h-full">
+      <div className="hidden h-full w-[75%] items-center justify-center bg-muted xl:flex">
         <Image
           src="/celestial.png"
           alt="Image"

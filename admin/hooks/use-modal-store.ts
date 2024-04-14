@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type ModalType = "profile";
+type ModalType = "profile" | "createStore";
 
 type ModalData = {
   user?: {

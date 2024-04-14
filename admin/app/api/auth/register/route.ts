@@ -40,6 +40,8 @@ export async function POST(req: Request) {
       data: {
         email,
         hashedPassword,
+        name: "",
+        image: "",
       },
       select: {
         id: true,

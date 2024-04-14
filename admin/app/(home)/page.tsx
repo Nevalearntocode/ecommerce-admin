@@ -1,7 +1,7 @@
-import getCurrentUser from "@/lib/get-current-user";
-import LogOut from "./log-out";
 import UserButton from "@/components/user-button";
+import getCurrentUser from "@/lib/get-current-user";
 import { redirect } from "next/navigation";
+import Empty from "./_components/empty";
 export default async function Home() {
   const user = await getCurrentUser();
 
@@ -11,15 +11,19 @@ export default async function Home() {
 
   return (
     <>
-      <div className="flex gap-x-8 p-40 w-full justify-between">
-        <UserButton
-          user={{
-            email: user.email!,
-            name: user.name || "",
-            image: user.image || "",
-          }}
-        />
-        <LogOut />
+      <div className="flex h-screen flex-col">
+        <div className="flex w-full items-center justify-end border px-12 py-6">
+          <UserButton
+            user={{
+              name: user.name,
+              image: user.image,
+              email: user.email,
+            }}
+          />
+        </div>
+        <div className="flex h-full justify-center pt-40">
+          <Empty />
+        </div>
       </div>
     </>
   );

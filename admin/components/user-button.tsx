@@ -18,7 +18,7 @@ const UserButton = ({ user }: Props) => {
 
   return (
     <Button
-      className="rounded-full hover:drop-shadow-md transition"
+      className="rounded-full transition hover:drop-shadow-md"
       size={`icon`}
       onClick={() => open("profile", { user })}
     >

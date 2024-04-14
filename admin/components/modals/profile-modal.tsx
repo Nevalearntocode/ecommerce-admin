@@ -43,11 +43,19 @@ const ProfileModal = (props: Props) => {
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: data?.user?.email || "",
-      image: data?.user?.image || "",
-      name: data?.user?.name || "",
+      email: "",
+      image: "",
+      name: "",
     },
   });
+
+  useEffect(() => {
+    if (data && data.user) {
+      form.setValue("email", data.user.email);
+      form.setValue("name", data.user.name);
+      form.setValue("image", data.user.image);
+    }
+  }, [data?.user]);
 
   const isLoading = form.formState.isSubmitting;
 
@@ -111,7 +119,7 @@ const ProfileModal = (props: Props) => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input disabled={isLoading} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -120,6 +128,7 @@ const ProfileModal = (props: Props) => {
             </div>
             <div className="col-span-2 mt-auto flex w-full justify-between ">
               <Button
+                disabled={isLoading}
                 className=""
                 variant={`outline`}
                 onClick={(e) => {
@@ -129,7 +138,7 @@ const ProfileModal = (props: Props) => {
               >
                 Log Out
               </Button>
-              <Button>Confirm</Button>
+              <Button disabled={isLoading}>Confirm</Button>
             </div>
           </form>
         </Form>
