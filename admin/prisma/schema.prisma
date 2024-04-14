@@ -14,34 +14,99 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(cuid())
-  name            String
-  email           String   @unique
-  emailVerified   DateTime?
-  image           String
-  hashedPassword  String?
+  id             Int       @id @default(autoincrement())
+  name           String
+  email          String    @unique
+  emailVerified  DateTime?
+  image          String
+  hashedPassword String?
 
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  accounts        Account[]
+  store Store[]
+
+  accounts Account[]
+}
+
+enum StoreType {
+  CLOTHING
+  TECHNOLOGY
+}
+
+enum Size {
+  XS
+  S
+  M
+  L
+  XL
+  XXL
+}
+
+model Store {
+  id         Int        @id @default(autoincrement())
+  slug       String     @unique
+  name       String
+  type       StoreType  @default(CLOTHING)
+  userId     Int
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categories Category[]
+
+  @@unique([userId, name])
+}
+
+model Category {
+  id         Int         @id @default(autoincrement())
+  name       String
+  storeId    Int
+  store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  billboards Billboard[]
+  product    Product[]
+}
+
+model Billboard {
+  id         Int      @id @default(autoincrement())
+  image      String
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  size        Size?
+  color       String?
+  brand       String?
+  model       String?
+  stock       Int
+  images      Image[]
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model Image {
+  id        Int     @id @default(autoincrement())
+  url       String
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
-
-  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                Int     @id @default(autoincrement())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }

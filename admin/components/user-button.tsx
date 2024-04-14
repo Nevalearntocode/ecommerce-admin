@@ -4,13 +4,10 @@ import React from "react";
 import { Button } from "./ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import useModal from "@/hooks/use-modal-store";
+import { SafeUser } from "@/types";
 
 type Props = {
-  user: {
-    email: string;
-    name: string;
-    image: string;
-  };
+  user: SafeUser;
 };
 
 const UserButton = ({ user }: Props) => {

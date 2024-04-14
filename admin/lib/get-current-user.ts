@@ -18,6 +18,8 @@ export default async function getCurrentUser() {
       name: true,
       email: true,
       image: true,
+      createdAt: true,
+      updatedAt: true,
     },
   });
 
