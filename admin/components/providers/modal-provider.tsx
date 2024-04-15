@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import ProfileModal from "../modals/profile-modal";
 import CreateStoreModal from "../modals/create-store-modal";
+import ConfirmDeleteModal from "../modals/confirm-delete";
 type Props = {};
 
 const ModalProvider = (props: Props) => {
@@ -20,6 +21,7 @@ const ModalProvider = (props: Props) => {
     <>
       <ProfileModal />
       <CreateStoreModal />
+      <ConfirmDeleteModal />
     </>
   );
 };

@@ -11,7 +11,8 @@ export default withAuth(
     const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
     const isAllowed =
       definedRoutes.includes(nextUrl.pathname) ||
-      nextUrl.pathname.startsWith("/");
+      nextUrl.pathname.startsWith("/") ||
+      nextUrl.pathname.startsWith("/api/store/");
 
     if (isPublicRoute) {
       return null;

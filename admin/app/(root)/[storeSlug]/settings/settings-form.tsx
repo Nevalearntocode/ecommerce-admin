@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,6 +20,10 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
 import { Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import axios from "axios";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import useModal from "@/hooks/use-modal-store";
 
 type Props = {
   store: Store;
@@ -33,6 +37,9 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const SettingsForm = ({ store }: Props) => {
+  const { open } = useModal();
+  const router = useRouter();
+  const formRef = useRef(null);
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,20 +56,69 @@ const SettingsForm = ({ store }: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    console.log(data);
+    try {
+      const res = await axios.patch(`/api/store/${store.slug}`, data);
+      router.refresh();
+      toast.success(res.data.success);
+      router.push(
+        `/${data.slug !== "" ? data.slug : data.name.toLowerCase().trim().replace(/\s+/g, "-")}/settings`,
+      );
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data);
+    }
+  };
+
+  const onDelete = async () => {
+    try {
+      const res = await axios.delete(`/api/store/${store.slug}`);
+      router.refresh();
+      router.push(`/`);
+      toast.success(res.data.success);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data);
+    }
+  };
+
+  const deletePackage = {
+    confirmDelete: onDelete,
+    headerDelete: " Delete Store?",
+    descriptionDelete: `Deleting "${store.name}" will permanently remove it and all its content. This is irreversible.`,
   };
 
   return (
     <>
       <div className="flex items-center justify-between">
         <Header title="Settings" description="Manage your store" />
-        <Button variant={`destructive`} size={`sm`}>
-          <Trash className="h-4 w-4" />
-        </Button>
+        <div className="flex gap-x-4">
+          <Button
+            variant={`destructive`}
+            size={`sm`}
+            onClick={() => open("confirmDelete", { ...deletePackage })}
+          >
+            Delete
+            <Trash className="ml-2 h-4 w-4" />
+          </Button>
+          <Button
+            className="ml-auto flex"
+            size={"sm"}
+            disabled={isLoading}
+            type="submit"
+            form="updateStoreForm"
+          >
+            Save changes
+          </Button>
+        </div>
       </div>
       <Separator />
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8"
+          ref={formRef}
+          id="updateStoreForm"
+        >
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -111,9 +167,6 @@ const SettingsForm = ({ store }: Props) => {
               )}
             />
           </div>
-          <Button className="" disabled={isLoading}>
-            Save changes
-          </Button>
         </form>
       </Form>
     </>

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-type ModalType = "profile" | "createStore";
+type ModalType = "profile" | "createStore" | "confirmDelete";
 
 type ModalData = {
   user?: {
@@ -8,6 +8,9 @@ type ModalData = {
     name: string;
     image: string;
   };
+  confirmDelete?: () => void;
+  headerDelete?: string,
+  descriptionDelete?: string,
 };
 
 type ModalStore = {
