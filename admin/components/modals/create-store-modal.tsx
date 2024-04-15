@@ -65,7 +65,9 @@ const CreateStoreModal = (props: Props) => {
     try {
       const res = await axios.post(`/api/store`, data);
       form.reset();
-      router.refresh();
+      router.push(
+        `/${data.slug !== "" ? data.slug : data.name.toLowerCase().trim().replace(/\s+/g, "-")}`,
+      );
       close();
       toast.success(res.data.success);
     } catch (error: any) {

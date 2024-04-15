@@ -9,7 +9,9 @@ export default withAuth(
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
     const isApiAuthRoute = nextUrl.pathname.startsWith(authPrefix);
     const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-    const isAllowed = definedRoutes.includes(nextUrl.pathname);
+    const isAllowed =
+      definedRoutes.includes(nextUrl.pathname) ||
+      nextUrl.pathname.startsWith("/");
 
     if (isPublicRoute) {
       return null;
@@ -34,7 +36,7 @@ export default withAuth(
         return true;
       },
     },
-  }
+  },
 );
 
 export const config = {

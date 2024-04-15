@@ -1,35 +1,22 @@
-import UserButton from "@/components/user-button";
 import getCurrentUser from "@/lib/get-current-user";
-import { redirect } from "next/navigation";
-import Empty from "./_components/empty";
-import getUserStore from "@/lib/get-user-store";
+import Empty from "../../components/empty";
+import { gerFirstUserStoreById } from "@/lib/get-user-stores";
 export default async function Home() {
   const user = await getCurrentUser();
 
   if (!user) {
-    return redirect(`/login`);
+    return null;
   }
 
-  const stores = await getUserStore(user.id);
+  const store = await gerFirstUserStoreById(user.id);
 
-  if (stores.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <Empty />
-      </div>
-    );
+  if (!store) {
+    return <Empty label="You don't have any store yet." />;
   }
 
   return (
     <>
-      <div className="flex h-screen flex-col">
-        <div className="flex w-full items-center justify-end border px-12 py-6">
-          <UserButton user={user} />
-        </div>
-        <div className="flex h-full items-center justify-center">
-          <Empty />
-        </div>
-      </div>
+      <div className="flex h-screen flex-col"></div>
     </>
   );
 }

@@ -32,6 +32,9 @@ export async function POST(req: Request) {
           name,
         },
       },
+      select: {
+        id: true,
+      },
     });
 
     if (existedStoreWithGivenName) {
@@ -46,6 +49,9 @@ export async function POST(req: Request) {
           userId: user.id,
           slug,
         },
+      },
+      select: {
+        id: true,
       },
     });
 

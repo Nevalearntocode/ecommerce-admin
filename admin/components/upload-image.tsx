@@ -17,7 +17,7 @@ const ImageUpload = ({ onChange, value, endpoint }: Props) => {
 
   if (value && fileType !== "pdf") {
     return (
-      <div className="relative flex h-[185px] justify-center border-2">
+      <div className="relative flex h-[185px] justify-center">
         <div>
           <Image
             src={value}
@@ -28,9 +28,9 @@ const ImageUpload = ({ onChange, value, endpoint }: Props) => {
           />
         </div>
         <Button
-          variant={"destructive"}
+          variant={"outline"}
           size={`icon`}
-          className="absolute -right-4 -top-4 h-8 w-8 rounded-full"
+          className="absolute -right-2 -top-2 h-4 w-4 rounded-full"
           onClick={() => onChange("")}
         >
           <X />
