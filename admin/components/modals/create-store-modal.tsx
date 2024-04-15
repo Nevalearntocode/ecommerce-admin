@@ -49,6 +49,7 @@ const CreateStoreModal = (props: Props) => {
   const { isOpen, close, type } = useModal();
   const isModalOpen = type === "createStore" && isOpen;
   const router = useRouter();
+  // const refetchStores = useStore((state) => state.refetchStores);
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -65,10 +66,12 @@ const CreateStoreModal = (props: Props) => {
     try {
       const res = await axios.post(`/api/store`, data);
       form.reset();
-      router.push(
+      router.refresh();
+      window.location.assign(
         `/${data.slug !== "" ? data.slug : data.name.toLowerCase().trim().replace(/\s+/g, "-")}`,
       );
       close();
+      // refetchStores();
       toast.success(res.data.success);
     } catch (error: any) {
       console.log(error);
@@ -125,11 +128,13 @@ const CreateStoreModal = (props: Props) => {
                         .replace(/\s+/g, "-")}
                     />
                   </FormControl>
-                  <FormDescription className="text-xs italic">
-                    **Default Slug:** If you leave the slug field empty, a slug
-                    will be generated automatically based on your store name
-                    using the same format.
-                  </FormDescription>
+                  {form.watch("slug") === "" && (
+                    <FormDescription className="text-xs italic">
+                      **Default Slug:** If you leave the slug field empty, a
+                      slug will be generated automatically based on your store
+                      name using the same format.
+                    </FormDescription>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

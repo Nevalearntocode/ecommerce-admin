@@ -10,6 +10,8 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next";
+import { DefaultUser } from "next-auth";
+
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
@@ -34,7 +36,7 @@ export const authOptions: NextAuthOptions = {
           type: "password",
         },
       },
-      async authorize(credentials) {
+      async authorize(credentials, req) {
         if (!credentials || !credentials.email || !credentials.password) {
           throw new Error("Invalid credentials");
         }

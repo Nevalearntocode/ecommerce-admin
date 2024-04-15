@@ -1,5 +1,4 @@
 import { auth } from "@/app/api/auth/[...nextauth]/options";
-import { redirect } from "next/navigation";
 import { db } from "./db";
 
 export default async function getCurrentUser() {

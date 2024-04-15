@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id             Int       @id @default(autoincrement())
+  id             String       @id @default(cuid())
   name           String
   email          String    @unique
   emailVerified  DateTime?
@@ -48,7 +48,7 @@ model Store {
   slug       String
   name       String
   type       StoreType   @default(CLOTHING)
-  userId     Int
+  userId     String
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   categories Category[]
   billboards Billboard[]
@@ -110,7 +110,7 @@ model Technology {
 
 model Account {
   id                Int     @id @default(autoincrement())
-  userId            Int
+  userId            String
   type              String
   provider          String
   providerAccountId String

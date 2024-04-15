@@ -50,6 +50,7 @@ export async function POST(req: Request) {
         image: true,
         createdAt: true,
         updatedAt: true,
+        
       },
     });
 

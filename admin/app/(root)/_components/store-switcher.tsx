@@ -13,7 +13,6 @@ import {
   Check,
   ChevronsUpDown,
   Laptop,
-  Loader2,
   Plus,
   Shirt,
   StoreIcon,
@@ -36,18 +35,14 @@ type Props = {
 
 const StoreSwitcher = ({ stores }: Props) => {
   const [isComboboxOpen, setIsComboboxOpen] = useState(false);
+  // const stores = useStore((state) => state.stores);
+  // const refetchStores = useStore((state) => state.refetchStores);
+
   const params = useParams();
   const router = useRouter();
   const { open } = useModal();
-  
-  // const [currentStore, setCurrentStore] = useState<Store | undefined>();
-  // useEffect(() => {
-  //   setCurrentStore(stores.find((store) => store.slug === params.storeSlug));
-  // }, [stores.length]);
-  // console.log(currentStore);
 
   const currentStore = stores.find((store) => store.slug === params.storeSlug);
-
 
   const onStoreSelect = (storeSlug: string) => {
     setIsComboboxOpen(false);
