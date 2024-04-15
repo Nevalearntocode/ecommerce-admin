@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -44,53 +44,68 @@ enum Size {
 }
 
 model Store {
-  id         Int        @id @default(autoincrement())
-  slug       String     @unique
+  id         Int         @id @default(autoincrement())
+  slug       String
   name       String
-  type       StoreType  @default(CLOTHING)
+  type       StoreType   @default(CLOTHING)
   userId     Int
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   categories Category[]
+  billboards Billboard[]
 
   @@unique([userId, name])
+  @@unique([userId, slug])
 }
 
 model Category {
-  id         Int         @id @default(autoincrement())
-  name       String
-  storeId    Int
-  store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  billboards Billboard[]
-  product    Product[]
+  id          Int       @id @default(autoincrement())
+  name        String
+  storeId     Int
+  store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  billboardId Int       @unique
+  billboards  Billboard @relation(fields: [billboardId], references: [id])
+  product     Product[]
 }
 
 model Billboard {
-  id         Int      @id @default(autoincrement())
-  image      String
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  id       Int        @id @default(autoincrement())
+  name     String
+  image    String
+  category Category[]
+  storeId  Int
+  store    Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   description String?
   price       Float
-  size        Size?
-  color       String?
-  brand       String?
-  model       String?
   stock       Int
-  images      Image[]
+  images      String[]
   categoryId  Int
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  // Clothing attributes
+  clothing    Clothing?
+  technology  Technology?
 }
 
-model Image {
+// Define the Clothing model (nested within Product)
+model Clothing {
   id        Int     @id @default(autoincrement())
-  url       String
-  productId Int
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int     @unique
+  size      Size?
+  color     String?
+}
+
+// Define the Technology model (nested within Product)
+model Technology {
+  id        Int     @id @default(autoincrement())
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int     @unique
+  model     String?
+  brand     String?
 }
 
 model Account {

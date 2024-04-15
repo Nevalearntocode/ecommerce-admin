@@ -26,6 +26,9 @@ export default async function Home() {
         <div className="flex w-full items-center justify-end border px-12 py-6">
           <UserButton user={user} />
         </div>
+        <div className="flex h-full items-center justify-center">
+          <Empty />
+        </div>
       </div>
     </>
   );

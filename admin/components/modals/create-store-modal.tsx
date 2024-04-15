@@ -31,12 +31,15 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Button } from "../ui/button";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Props = {};
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long").trim(),
-  slug: z.string(),
+  slug: z.string().transform((value) => value.trim().replace(/\s+/g, "-")),
   type: z.nativeEnum(StoreType),
 });
 
@@ -45,6 +48,7 @@ type FormType = z.infer<typeof formSchema>;
 const CreateStoreModal = (props: Props) => {
   const { isOpen, close, type } = useModal();
   const isModalOpen = type === "createStore" && isOpen;
+  const router = useRouter();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -58,22 +62,31 @@ const CreateStoreModal = (props: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    console.log(data);
+    try {
+      const res = await axios.post(`/api/store`, data);
+      form.reset();
+      router.refresh();
+      close();
+      toast.success(res.data.success);
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data);
+    }
   };
 
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
-      <DialogContent>
+      <DialogContent className="w-[90%]">
         <DialogHeader className="text-xl font-bold">
           Create your new store
+          <DialogDescription className="w-full text-center text-sm font-light italic">
+            Choose your store type and name.
+          </DialogDescription>
         </DialogHeader>
-        <DialogDescription className="w-full text-center italic">
-          Choose your store type and name.
-        </DialogDescription>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-y-4"
+            className="flex flex-col gap-y-2"
           >
             <FormField
               control={form.control}
@@ -82,7 +95,7 @@ const CreateStoreModal = (props: Props) => {
                 <FormItem>
                   <FormLabel>Store name</FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input disabled={isLoading} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -95,10 +108,13 @@ const CreateStoreModal = (props: Props) => {
                 <FormItem>
                   <FormLabel>Slug</FormLabel>
                   <FormDescription className="text-xs italic">
-                    Default slug
+                    Slug format: Alphanumeric characters, hyphens (-). Spaces
+                    will be replaced with hyphens. Examples: "cool store" -&gt;
+                    "cool-store".
                   </FormDescription>
                   <FormControl>
                     <Input
+                      disabled={isLoading}
                       {...field}
                       placeholder={form
                         .watch("name")
@@ -107,6 +123,11 @@ const CreateStoreModal = (props: Props) => {
                         .replace(/\s+/g, "-")}
                     />
                   </FormControl>
+                  <FormDescription className="text-xs italic">
+                    **Default Slug:** If you leave the slug field empty, a slug
+                    will be generated automatically based on your store name
+                    using the same format.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -138,7 +159,11 @@ const CreateStoreModal = (props: Props) => {
                 </FormItem>
               )}
             />
-            <Button>Submit</Button>
+            <div className="mt-4 w-full">
+              <Button className="w-full" disabled={isLoading}>
+                Create
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>
