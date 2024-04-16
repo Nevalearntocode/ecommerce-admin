@@ -66,8 +66,10 @@ export async function POST(req: Request) {
           create: {
             userId: user.id,
             isAdmin: true,
-            canDeleteCategory: true,
             canManageStore: true,
+            canManageBillboard: true,
+            canManageCategory: true,
+            canManageProduct: true,
           },
         },
       },
@@ -82,3 +84,5 @@ export async function POST(req: Request) {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+

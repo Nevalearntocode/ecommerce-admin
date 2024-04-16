@@ -65,10 +65,9 @@ model Staff {
   store              Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
   isAdmin            Boolean @default(false)
   canManageStore     Boolean @default(false)
-  canManageCategory  Boolean @default(true)
-  canManageBillboard Boolean @default(true)
+  canManageCategory  Boolean @default(false)
+  canManageBillboard Boolean @default(false)
   canManageProduct   Boolean @default(true)
-  canDeleteCategory  Boolean @default(false)
 }
 
 model Category {

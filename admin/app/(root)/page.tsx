@@ -1,6 +1,7 @@
 import getCurrentUser from "@/lib/get-current-user";
 import Empty from "../../components/empty";
 import { gerFirstUserStoreById } from "@/lib/get-user-stores";
+import { redirect } from "next/navigation";
 export default async function Home() {
   const user = await getCurrentUser();
 
@@ -14,9 +15,6 @@ export default async function Home() {
     return <Empty label="You don't have any store yet." />;
   }
 
-  return (
-    <>
-      <div className="flex flex-col"></div>
-    </>
-  );
+  // fix it later
+  return redirect(`/${store.slug}`);
 }

@@ -30,7 +30,7 @@ export async function PATCH(
     });
 
     return NextResponse.json({
-      success: "Invite code changed, refresh to accquired new invite code",
+      success: "New invite link generated.",
     });
   } catch (error) {
     console.log("[NEW INVITE CODE]", error);

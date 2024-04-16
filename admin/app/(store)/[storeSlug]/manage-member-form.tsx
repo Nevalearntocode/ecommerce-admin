@@ -30,7 +30,6 @@ const formSchema = z.object({
   canManageCategory: z.boolean().default(true),
   canManageBillboard: z.boolean().default(true),
   canManageProduct: z.boolean().default(true),
-  canDeleteCategory: z.boolean().default(false),
 });
 
 type FormType = z.infer<typeof formSchema>;
@@ -52,7 +51,6 @@ const ManageMemberForm = ({ staff }: Props) => {
     form.setValue("canManageCategory", staff.canManageCategory);
     form.setValue("canManageBillboard", staff.canManageBillboard || false);
     form.setValue("canManageProduct", staff.canManageProduct);
-    form.setValue("canDeleteCategory", staff.canDeleteCategory);
   }, [staff]);
 
   const onSubmit = async (data: FormType) => {
@@ -79,12 +77,14 @@ const ManageMemberForm = ({ staff }: Props) => {
           <div className="space-y-4">
             <FormField
               control={form.control}
-              name="isAdmin"
+              name="canManageProduct"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Admin</FormLabel>
-                    <FormDescription>Grant full control</FormDescription>
+                    <FormLabel className="text-base">Manage Products</FormLabel>
+                    <FormDescription>
+                      Create, edit, and delete products.
+                    </FormDescription>
                   </div>
                   <FormControl>
                     <Switch
@@ -97,14 +97,15 @@ const ManageMemberForm = ({ staff }: Props) => {
             />
             <FormField
               control={form.control}
-              name="canManageStore"
+              name="canManageBillboard"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-base">Manage Stores</FormLabel>
+                    <FormLabel className="text-base">
+                      Manage Billboards
+                    </FormLabel>
                     <FormDescription>
-                      Edit store and grant all access to categories, billboards,
-                      products.
+                      Create, edit, delete billboards.
                     </FormDescription>
                   </div>
                   <FormControl>
@@ -141,55 +142,41 @@ const ManageMemberForm = ({ staff }: Props) => {
             />
             <FormField
               control={form.control}
-              name="canManageBillboard"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Manage Billboards
-                    </FormLabel>
-                    <FormDescription>
-                      Create, edit, delete billboards.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="canManageProduct"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Manage Products</FormLabel>
-                    <FormDescription>
-                      Create, edit, and delete products.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="canDeleteCategory"
+              name="canManageStore"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-red-100 p-4 text-red-700">
                   <div className="space-y-0.5">
                     <FormLabel className="text-base">
-                      Delete Categories (Caution!)
+                      Manage stores (Caution!)
                     </FormLabel>
+                    <FormDescription>
+                      Edit stores and grant all access to categories,
+                      billboards, products.
+                    </FormDescription>
+                    <FormDescription>
+                      **Use with caution:** Allows permanent deletion of
+                      categories.
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isAdmin"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-red-100 p-4 text-red-700">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">
+                      Admin (Caution!)
+                    </FormLabel>
+                    <FormDescription>Grant full access</FormDescription>
                     <FormDescription>
                       **Use with caution:** Allows permanent deletion of
                       categories.
@@ -206,9 +193,20 @@ const ManageMemberForm = ({ staff }: Props) => {
             />
           </div>
         </div>
-        <div className="w-full">
+        <div className="flex w-full">
+          <Button
+            type="submit"
+            className="mr-auto flex"
+            variant={`destructive`}
+            onClick={(e) => {
+              e.preventDefault();
+              console.log("delete");
+            }}
+          >
+            Remove staff
+          </Button>
           <Button type="submit" className="ml-auto flex">
-            Submit
+            Confirm
           </Button>
         </div>
       </form>

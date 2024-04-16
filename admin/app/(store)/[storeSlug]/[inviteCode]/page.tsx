@@ -1,7 +1,9 @@
+import Empty from "@/components/empty";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { redirect } from "next/navigation";
-import React from "react";
+import { v4 as uuidv4 } from "uuid";
+import InvalidLink from "./invalid-link";
 
 type Props = {
   params: {
@@ -12,7 +14,6 @@ type Props = {
 
 const Invite = async ({ params }: Props) => {
   const user = await getCurrentUser();
-  console.log(params.storeSlug, params.inviteCode);
   if (!user) {
     return redirect(`/login`);
   }
@@ -25,7 +26,7 @@ const Invite = async ({ params }: Props) => {
   });
 
   if (!store) {
-    return redirect(`/`);
+    return <InvalidLink label="Store not found or invite code expired" />;
   }
 
   if (store.userId === user.id) {

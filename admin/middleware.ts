@@ -8,10 +8,13 @@ export default withAuth(
     const isLoggedIn = !!req.nextauth.token;
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
     const isApiAuthRoute = nextUrl.pathname.startsWith(authPrefix);
-    const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+    const isPublicRoute =
+      publicRoutes.includes(nextUrl.pathname) ||
+      nextUrl.pathname.startsWith(`/api/store/`);
     const isAllowed =
       definedRoutes.includes(nextUrl.pathname) ||
       nextUrl.pathname.startsWith("/") ||
+      nextUrl.pathname.startsWith("/api/") ||
       nextUrl.pathname.startsWith("/api/");
 
     if (isPublicRoute) {

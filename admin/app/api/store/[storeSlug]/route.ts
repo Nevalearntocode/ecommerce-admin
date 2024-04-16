@@ -165,3 +165,35 @@ export async function DELETE(
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function GET(
+  req: Request,
+  { params }: { params: { storeSlug: string } },
+) {
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    if (!params.storeSlug) {
+      return new NextResponse("Store slug is required.", { status: 400 });
+    }
+
+    const store = await db.store.findUnique({
+      where: {
+        slug: params.storeSlug,
+      },
+    });
+
+    if (!store) {
+      return new NextResponse("Store not found.", { status: 404 });
+    }
+
+    return NextResponse.json(store);
+  } catch (error: any) {
+    console.log("[GET STORE]", error);
+    return new NextResponse("Internal Eror", { status: 500 });
+  }
+}

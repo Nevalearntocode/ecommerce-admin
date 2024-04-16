@@ -15,15 +15,12 @@ export async function PATCH(
       canManageCategory,
       canManageBillboard,
       canManageProduct,
-      canDeleteCategory,
-
     }: {
       isAdmin?: boolean;
       canManageStore?: boolean;
       canManageCategory?: boolean;
       canManageBillboard?: boolean;
       canManageProduct?: boolean;
-      canDeleteCategory?: boolean;
     } = await req.json();
 
     if (!user) {
@@ -77,7 +74,6 @@ export async function PATCH(
       canManageCategory: canManageCategory ?? staff.canManageCategory,
       canManageBillboard: canManageBillboard ?? staff.canManageBillboard,
       canManageProduct: canManageProduct ?? staff.canManageProduct,
-      canDeleteCategory: canDeleteCategory ?? staff.canDeleteCategory,
     };
 
     const updateStaff = await db.staff.update({

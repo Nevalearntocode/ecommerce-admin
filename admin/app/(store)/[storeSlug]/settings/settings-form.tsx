@@ -25,6 +25,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useModal from "@/hooks/use-modal-store";
 import { generateSlug } from "@/constant";
+import APIAlert from "@/components/api-alert";
+import { useOrigin } from "@/hooks/use-origin";
 
 type Props = {
   store: Store;
@@ -40,8 +42,8 @@ type FormType = z.infer<typeof formSchema>;
 
 const SettingsForm = ({ store, isOwner }: Props) => {
   const { open, close } = useModal();
-  const router = useRouter();
-  const formRef = useRef(null);
+  const origin = useOrigin();
+
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -127,7 +129,6 @@ const SettingsForm = ({ store, isOwner }: Props) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8"
-          ref={formRef}
           id="updateStoreForm"
         >
           <div className="grid grid-cols-3 gap-8">
@@ -180,6 +181,12 @@ const SettingsForm = ({ store, isOwner }: Props) => {
           </div>
         </form>
       </Form>
+      <Separator />
+      <APIAlert
+        title="NEXT_PUBLIC_API_URL"
+        description={`${origin}/api/store/${store.slug}`}
+        variant="public"
+      />
     </>
   );
 };

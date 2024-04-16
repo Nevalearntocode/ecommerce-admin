@@ -19,7 +19,7 @@ const MainNav = (props: Props) => {
     {
       href: `/`,
       label: "Home",
-      active: pathname === `/`,
+      active: pathname === `/${params.storeSlug}`,
     },
     {
       href: `/${params.storeSlug}/settings`,
@@ -32,7 +32,7 @@ const MainNav = (props: Props) => {
     <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
       {routes.map((route) => (
         <Link
-          href={route.href}
+          href={route.active ? `/${params.storeSlug}` : route.href}
           key={route.href}
           className={cn(
             "text-sm font-medium transition-colors hover:text-primary",
