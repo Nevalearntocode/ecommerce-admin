@@ -34,7 +34,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { generateSlug, redirectRefresh } from "@/constant";
+import { generateSlug } from "@/constant";
 
 type Props = {};
 
@@ -67,10 +67,10 @@ const CreateStoreModal = (props: Props) => {
     try {
       const res = await axios.post(`/api/store`, data);
       form.reset();
-      router.refresh();
-      redirectRefresh(`/${generateSlug({ ...data })}`);
+      setTimeout(() => {
+        window.location.assign(`/${generateSlug({ ...data })}`);
+      }, 1000);
       close();
-      // refetchStores();
       toast.success(res.data.success);
     } catch (error: any) {
       console.log(error);

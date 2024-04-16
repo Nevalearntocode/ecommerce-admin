@@ -4,6 +4,7 @@ import UserButton from "@/components/user-button";
 import StoreSwitcher from "./store-switcher";
 import getCurrentUser from "@/lib/get-current-user";
 import getUserStoresById from "@/lib/get-user-stores";
+import AddStaff from "./add-staff";
 
 type Props = {};
 
@@ -22,6 +23,7 @@ const Navbar = async ({}: Props) => {
         <StoreSwitcher stores={stores} />
         <MainNav />
         <div className="ml-auto flex items-center space-x-4">
+          <AddStaff stores={stores} userId={user.id} />
           <UserButton user={user} />
         </div>
       </div>

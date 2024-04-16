@@ -27,10 +27,7 @@ export async function POST(req: Request) {
 
     const existedStoreWithGivenName = await db.store.findUnique({
       where: {
-        userId_name: {
-          userId: user.id,
-          name,
-        },
+        name,
       },
       select: {
         id: true,
@@ -45,10 +42,7 @@ export async function POST(req: Request) {
 
     const existedStoreWithGivenSlug = await db.store.findUnique({
       where: {
-        userId_slug: {
-          userId: user.id,
-          slug,
-        },
+        slug,
       },
       select: {
         id: true,
@@ -68,6 +62,14 @@ export async function POST(req: Request) {
         slug: slug === "" ? defaultSlug : slug,
         type,
         userId: user.id,
+        staffs: {
+          create: {
+            userId: user.id,
+            isAdmin: true,
+            canDeleteCategory: true,
+            canManageStore: true,
+          },
+        },
       },
     });
 
@@ -76,7 +78,7 @@ export async function POST(req: Request) {
       newStore,
     });
   } catch (error) {
-    console.log("[routeName]", error);
+    console.log("[CREATE_STORE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

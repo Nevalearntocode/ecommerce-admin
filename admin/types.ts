@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Staff, Store, User } from "@prisma/client";
 
 export type SafeUser = {
   id: string;
@@ -7,4 +7,15 @@ export type SafeUser = {
   image: string;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type StoreWithStaffs = Store & {
+  staffs: Staff[];
+};
+
+export type StaffWithProfile = Staff & {
+  user: {
+    email: string;
+    name: string;
+  };
 };

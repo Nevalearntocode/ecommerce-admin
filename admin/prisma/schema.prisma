@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id             String       @id @default(cuid())
+  id             String    @id @default(cuid())
   name           String
   email          String    @unique
   emailVerified  DateTime?
@@ -24,7 +24,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  store Store[]
+  store  Store[]
+  staffs Staff[]
 
   accounts Account[]
 }
@@ -45,16 +46,29 @@ enum Size {
 
 model Store {
   id         Int         @id @default(autoincrement())
-  slug       String
-  name       String
+  slug       String      @unique
+  name       String      @unique
   type       StoreType   @default(CLOTHING)
   userId     String
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   categories Category[]
   billboards Billboard[]
+  staffs     Staff[]
+  inviteCode String      @unique @default(uuid())
+}
 
-  @@unique([userId, name])
-  @@unique([userId, slug])
+model Staff {
+  id                 Int     @id @default(autoincrement())
+  userId             String
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storeId            Int
+  store              Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  isAdmin            Boolean @default(false)
+  canManageStore     Boolean @default(false)
+  canManageCategory  Boolean @default(true)
+  canManageBillboard Boolean @default(true)
+  canManageProduct   Boolean @default(true)
+  canDeleteCategory  Boolean @default(false)
 }
 
 model Category {

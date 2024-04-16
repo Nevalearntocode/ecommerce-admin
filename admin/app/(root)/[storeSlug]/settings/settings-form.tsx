@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Store } from "@prisma/client";
+import { Staff, Store } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
@@ -24,10 +24,11 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useModal from "@/hooks/use-modal-store";
-import { generateSlug, redirectRefresh } from "@/constant";
+import { generateSlug } from "@/constant";
 
 type Props = {
   store: Store;
+  isOwner: boolean;
 };
 
 const formSchema = z.object({
@@ -37,7 +38,7 @@ const formSchema = z.object({
 
 type FormType = z.infer<typeof formSchema>;
 
-const SettingsForm = ({ store }: Props) => {
+const SettingsForm = ({ store, isOwner }: Props) => {
   const { open, close } = useModal();
   const router = useRouter();
   const formRef = useRef(null);
@@ -57,11 +58,17 @@ const SettingsForm = ({ store }: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
+    if (data.name === store.name && data.slug === store.slug) {
+      toast.info("Store has not changed.");
+      return;
+    }
     try {
       const res = await axios.patch(`/api/store/${store.slug}`, data);
       toast.success(res.data.success);
-      redirectRefresh(`/${generateSlug({ ...data })}/settings`);
-      router.refresh();
+
+      setTimeout(() => {
+        window.location.assign(`/${generateSlug({ ...data })}/settings`);
+      }, 1000);
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data);
@@ -71,9 +78,10 @@ const SettingsForm = ({ store }: Props) => {
   const onDelete = async () => {
     try {
       const res = await axios.delete(`/api/store/${store.slug}`);
-      router.refresh();
-      redirectRefresh(`/`);
       toast.success(res.data.success);
+      setTimeout(() => {
+        window.location.assign(`/`);
+      }, 1000);
       close();
     } catch (error: any) {
       console.log(error);
@@ -92,15 +100,17 @@ const SettingsForm = ({ store }: Props) => {
       <div className="flex items-center justify-between">
         <Header title="Settings" description="Manage your store" />
         <div className="flex gap-x-4">
-          <Button
-            disabled={isLoading}
-            variant={`destructive`}
-            size={`sm`}
-            onClick={() => open("confirmDelete", { ...deletePackage })}
-          >
-            Delete
-            <Trash className="ml-2 h-4 w-4" />
-          </Button>
+          {isOwner && (
+            <Button
+              disabled={isLoading}
+              variant={`destructive`}
+              size={`sm`}
+              onClick={() => open("confirmDelete", { ...deletePackage })}
+            >
+              Delete
+              <Trash className="ml-2 h-4 w-4" />
+            </Button>
+          )}
           <Button
             className="ml-auto flex"
             size={"sm"}

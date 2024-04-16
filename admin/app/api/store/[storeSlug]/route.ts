@@ -25,13 +25,14 @@ export async function PATCH(
 
     const existingStore = await db.store.findUnique({
       where: {
-        userId_slug: {
-          userId: user.id,
-          slug: params.storeSlug,
-        },
+        slug: params.storeSlug,
       },
-      select: {
-        id: true,
+      include: {
+        staffs: {
+          where: {
+            userId: user.id,
+          },
+        },
       },
     });
 
@@ -39,12 +40,18 @@ export async function PATCH(
       return new NextResponse("Store not found", { status: 404 });
     }
 
+    const { canManageStore, isAdmin } = existingStore.staffs[0];
+
+    if (!canManageStore && !isAdmin && user.id !== existingStore.userId) {
+      return new NextResponse(
+        "You do not have permission to perform this action.",
+        { status: 403 },
+      );
+    }
+
     const existedStoreWithGivenName = await db.store.findUnique({
       where: {
-        userId_name: {
-          userId: user.id,
-          name,
-        },
+        name,
       },
       select: {
         id: true,
@@ -62,10 +69,7 @@ export async function PATCH(
 
     const existedStoreWithGivenSlug = await db.store.findUnique({
       where: {
-        userId_slug: {
-          userId: user.id,
-          slug,
-        },
+        slug,
       },
       select: {
         id: true,
@@ -83,6 +87,7 @@ export async function PATCH(
 
     const defaultSlug = name.toLowerCase().trim().replace(/\s+/g, "-");
 
+    // admin
     const newStore = await db.store.update({
       where: {
         id: existingStore.id,
@@ -118,27 +123,45 @@ export async function DELETE(
       return new NextResponse("Store slug is required.", { status: 400 });
     }
 
-    const store = await db.store.delete({
+    const existingStore = await db.store.findUnique({
       where: {
-        userId_slug: {
-          userId: user.id,
-          slug: params.storeSlug,
+        slug: params.storeSlug,
+      },
+      include: {
+        staffs: {
+          where: {
+            userId: user.id,
+          },
         },
+      },
+    });
+
+    if (!existingStore) {
+      return new NextResponse("Store not found", { status: 404 });
+    }
+
+    const staff = existingStore.staffs[0];
+
+    if (existingStore.userId !== user.id) {
+      return new NextResponse(
+        "You do not have permission to perform this action.",
+        { status: 403 },
+      );
+    }
+
+    await db.store.delete({
+      where: {
+        id: existingStore.id,
       },
       select: {
         id: true,
       },
     });
-
-    if (!store) {
-      return new NextResponse("Store not found.", { status: 404 });
-    }
-
     return NextResponse.json({
       success: "Store deleted.",
     });
   } catch (error) {
-    console.log("[LISTING_DELETE]", error);
+    console.log("[STORE_DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

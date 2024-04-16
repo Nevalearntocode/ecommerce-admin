@@ -1,7 +1,10 @@
 import Empty from "@/components/empty";
-import { getUserStoreBySlug } from "@/lib/get-user-stores";
+import { getStoreBySlugWithStaff } from "@/lib/get-user-stores";
 import React from "react";
 import SettingsForm from "./settings-form";
+import getCurrentUser from "@/lib/get-current-user";
+import { redirect } from "next/navigation";
+import NotPermitted from "@/components/not-permitted";
 
 type Props = {
   params: {
@@ -10,16 +13,29 @@ type Props = {
 };
 
 const Settings = async ({ params }: Props) => {
-  const store = await getUserStoreBySlug(params.storeSlug);
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return redirect(`/`);
+  }
+
+  const store = await getStoreBySlugWithStaff(params.storeSlug, user.id);
 
   if (!store) {
     return <Empty label="You don't have any store with given link." />;
   }
 
+  const staff = store.staffs[0];
+  const isOwner = store.userId === user.id
+
+  if (!staff.canManageStore && !staff.isAdmin && store.userId !== user.id) {
+    return <NotPermitted />;
+  }
+
   return (
     <div className="flex flex-col">
       <div className="flex-1 space-y-4 p-8 pt-12">
-        <SettingsForm store={store} />
+        <SettingsForm store={store} isOwner={isOwner} />
       </div>
     </div>
   );
