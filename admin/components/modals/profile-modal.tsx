@@ -64,7 +64,6 @@ const ProfileModal = (props: Props) => {
       const res = await axios.patch(`/api/profile`, data);
       toast.success(res.data.success);
       router.refresh();
-      close();
     } catch (error: any) {
       console.log(error);
       toast.error("something went wrong");

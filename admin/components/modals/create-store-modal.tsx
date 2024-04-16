@@ -34,6 +34,7 @@ import { Button } from "../ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { generateSlug, redirectRefresh } from "@/constant";
 
 type Props = {};
 
@@ -67,9 +68,7 @@ const CreateStoreModal = (props: Props) => {
       const res = await axios.post(`/api/store`, data);
       form.reset();
       router.refresh();
-      window.location.assign(
-        `/${data.slug !== "" ? data.slug : data.name.toLowerCase().trim().replace(/\s+/g, "-")}`,
-      );
+      redirectRefresh(`/${generateSlug({ ...data })}`);
       close();
       // refetchStores();
       toast.success(res.data.success);

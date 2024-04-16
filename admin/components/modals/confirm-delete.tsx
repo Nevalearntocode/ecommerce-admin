@@ -41,9 +41,7 @@ const ConfirmDeleteModal = (props: Props) => {
           <Button
             className="w-1/3"
             variant={`destructive`}
-            onClick={() => (
-              data.confirmDelete?.(), close(), window.location.assign(`/`)
-            )}
+            onClick={data.confirmDelete}
           >
             Confirm
           </Button>

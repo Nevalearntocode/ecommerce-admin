@@ -24,6 +24,7 @@ import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useModal from "@/hooks/use-modal-store";
+import { generateSlug, redirectRefresh } from "@/constant";
 
 type Props = {
   store: Store;
@@ -37,7 +38,7 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const SettingsForm = ({ store }: Props) => {
-  const { open } = useModal();
+  const { open, close } = useModal();
   const router = useRouter();
   const formRef = useRef(null);
   const form = useForm<FormType>({
@@ -58,11 +59,9 @@ const SettingsForm = ({ store }: Props) => {
   const onSubmit = async (data: FormType) => {
     try {
       const res = await axios.patch(`/api/store/${store.slug}`, data);
-      router.refresh();
       toast.success(res.data.success);
-      router.push(
-        `/${data.slug !== "" ? data.slug : data.name.toLowerCase().trim().replace(/\s+/g, "-")}/settings`,
-      );
+      redirectRefresh(`/${generateSlug({ ...data })}/settings`);
+      router.refresh();
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data);
@@ -73,8 +72,9 @@ const SettingsForm = ({ store }: Props) => {
     try {
       const res = await axios.delete(`/api/store/${store.slug}`);
       router.refresh();
-      router.push(`/`);
+      redirectRefresh(`/`);
       toast.success(res.data.success);
+      close();
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data);
@@ -93,6 +93,7 @@ const SettingsForm = ({ store }: Props) => {
         <Header title="Settings" description="Manage your store" />
         <div className="flex gap-x-4">
           <Button
+            disabled={isLoading}
             variant={`destructive`}
             size={`sm`}
             onClick={() => open("confirmDelete", { ...deletePackage })}
