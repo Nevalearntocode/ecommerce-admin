@@ -26,7 +26,7 @@ const Settings = async ({ params }: Props) => {
   }
 
   const staff = store.staffs[0];
-  const isOwner = store.userId === user.id
+  const isOwner = store.userId === user.id;
 
   if (!staff.canManageStore && !staff.isAdmin && store.userId !== user.id) {
     return <NotPermitted />;
@@ -34,7 +34,7 @@ const Settings = async ({ params }: Props) => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-12">
+      <div className="flex-1 space-y-4 p-8 pt-6">
         <SettingsForm store={store} isOwner={isOwner} />
       </div>
     </div>

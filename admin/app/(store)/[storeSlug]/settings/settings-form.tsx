@@ -104,6 +104,7 @@ const SettingsForm = ({ store, isOwner }: Props) => {
         <div className="flex gap-x-4">
           {isOwner && (
             <Button
+              className="h-10 w-32"
               disabled={isLoading}
               variant={`destructive`}
               size={`sm`}
@@ -114,7 +115,7 @@ const SettingsForm = ({ store, isOwner }: Props) => {
             </Button>
           )}
           <Button
-            className="ml-auto flex"
+            className="ml-auto flex h-10 w-32"
             size={"sm"}
             disabled={isLoading}
             type="submit"
@@ -131,7 +132,7 @@ const SettingsForm = ({ store, isOwner }: Props) => {
           className="space-y-8"
           id="updateStoreForm"
         >
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <FormField
               control={form.control}
               name="name"

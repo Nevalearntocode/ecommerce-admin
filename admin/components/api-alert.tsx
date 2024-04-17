@@ -43,7 +43,7 @@ const APIAlert = ({ description, title, variant }: Props) => {
         <Badge variant={variantMap[variant]}>{textMap[variant]}</Badge>
       </AlertTitle>
       <AlertDescription className="mt-4 flex items-center justify-between">
-        <code className="relative rounded bg-muted px-[0.3rem] font-mono text-sm font-semibold ">
+        <code className="relative rounded bg-muted px-[0.3rem] font-mono text-sm font-semibold">
           {description}
         </code>
         <Button

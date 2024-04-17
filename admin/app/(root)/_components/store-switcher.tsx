@@ -55,7 +55,7 @@ const StoreSwitcher = ({ stores }: Props) => {
         <Button
           variant={`ghost`}
           size={"sm"}
-          className="min-w-[200px] justify-between"
+          className="justify-between md:min-w-[200px]"
         >
           {currentStore ? (
             <>
@@ -65,7 +65,7 @@ const StoreSwitcher = ({ stores }: Props) => {
               {currentStore.type === "TECHNOLOGY" && (
                 <Laptop className="mr-2 h-4 w-4" />
               )}
-              <p className="mr-2">{currentStore?.name}</p>
+              <p className="mr-2 hidden md:block">{currentStore?.name}</p>
             </>
           ) : (
             <>

@@ -39,7 +39,7 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const BillboardForm = ({ billboard }: Props) => {
-  const { open } = useModal();
+  const { open, close } = useModal();
   const origin = useOrigin();
   const router = useRouter();
   const params = useParams();
@@ -53,7 +53,6 @@ const BillboardForm = ({ billboard }: Props) => {
 
   useEffect(() => {
     if (billboard) {
-      console.log("called");
       form.setValue("name", billboard.name);
       form.setValue("image", billboard.image);
     }
@@ -68,10 +67,8 @@ const BillboardForm = ({ billboard }: Props) => {
         data,
       );
       toast.success(res.data.success);
-      router.push(`/${params.storeSlug}/billboards`);
-      // setTimeout(() => {
-      //   window.location.assign(`/${params.storeSlug}/billboards`);
-      // }, 1000);
+      router.refresh();
+      form.reset();
     } catch (error: any) {
       toast.error(error.response.data);
     }
@@ -79,10 +76,12 @@ const BillboardForm = ({ billboard }: Props) => {
 
   const onDelete = async () => {
     try {
-      const res = await axios.delete(`/api/store/`);
+      const res = await axios.delete(
+        `/api/store/${params.storeSlug}/billboards/${billboard?.id}`,
+      );
       toast.success(res.data.success);
       setTimeout(() => {
-        window.location.assign(`/`);
+        window.location.assign(`/${params.storeSlug}/billboards`);
       }, 1000);
       close();
     } catch (error: any) {
@@ -99,33 +98,38 @@ const BillboardForm = ({ billboard }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <Header
-          title={
-            billboard
-              ? `Manage ${billboard.name} billboard`
-              : "Create new billboard"
-          }
-          description="Create or manage your billboard"
-        />
+      <div className="flex items-center justify-end md:justify-between">
+        <div className="hidden md:block">
+          <Header
+            title={
+              billboard
+                ? `Manage ${billboard.name} billboard`
+                : "Create new billboard"
+            }
+            description="Create or manage your billboard"
+          />
+        </div>
         <div className="flex gap-x-4">
+          {billboard && (
+            <Button
+              className="md:h-10 md:w-32"
+              disabled={isLoading}
+              variant={`destructive`}
+              size={`sm`}
+              onClick={() => open("confirmDelete", { ...deletePackage })}
+            >
+              Delete
+              <Trash className="ml-2 h-4 w-4" />
+            </Button>
+          )}
           <Button
-            disabled={isLoading}
-            variant={`destructive`}
-            size={`sm`}
-            onClick={() => open("confirmDelete", { ...deletePackage })}
-          >
-            Delete
-            <Trash className="ml-2 h-4 w-4" />
-          </Button>
-          <Button
-            className="ml-auto flex"
+            className="ml-auto flex md:h-10 md:w-32"
             size={"sm"}
             disabled={isLoading}
             type="submit"
             form="billboardForm"
           >
-            Save changes
+            {billboard ? "Save changes" : "Save"}
           </Button>
         </div>
       </div>
@@ -136,7 +140,7 @@ const BillboardForm = ({ billboard }: Props) => {
           className="space-y-8"
           id="billboardForm"
         >
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="flex flex-col gap-y-8">
               <FormField
                 control={form.control}

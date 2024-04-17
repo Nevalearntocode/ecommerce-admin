@@ -3,6 +3,7 @@ import BillboardClient from "./billboard-client";
 import { getCurrentStaff } from "@/lib/get-store-staffs";
 import { canManageBillboard } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
+import { db } from "@/lib/db";
 
 type Props = {
   params: {
@@ -12,6 +13,13 @@ type Props = {
 
 const Billboards = async ({ params }: Props) => {
   const staff = await getCurrentStaff(params.storeSlug);
+  const billboards = await db.billboard.findMany({
+    where: {
+      store: {
+        slug: params.storeSlug,
+      },
+    },
+  });
 
   if (!staff) {
     return null;
@@ -26,7 +34,7 @@ const Billboards = async ({ params }: Props) => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <BillboardClient />
+        <BillboardClient billboards={billboards} />
       </div>
     </div>
   );
