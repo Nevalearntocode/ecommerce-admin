@@ -54,7 +54,7 @@ const AddStaff = ({ stores, userId }: Props) => {
     }
   };
 
-  const inviteSlug = `${origin}/${store?.slug}/${store?.inviteCode}`;
+  const inviteSlug = `${origin}/${store?.slug}/staff/${store?.inviteCode}`;
   const onCopy = () => {
     navigator.clipboard.writeText(inviteSlug);
     toast.success("Invite link copied.");

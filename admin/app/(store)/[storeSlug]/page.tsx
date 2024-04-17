@@ -27,7 +27,7 @@ const StorePage = async ({ params }: Props) => {
           .filter((staff) => staff.userId !== store.userId)
           .map((staff) => (
             <div key={staff.id}>
-              <ManageMemberForm staff={staff} />
+              <ManageMemberForm staff={staff} storeUserId={store.userId} />
             </div>
           ))}
       </div>

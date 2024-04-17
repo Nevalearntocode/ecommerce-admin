@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Store } from "@prisma/client";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import {
   Popover,
   PopoverContent,
@@ -35,8 +35,8 @@ type Props = {
 
 const StoreSwitcher = ({ stores }: Props) => {
   const [isComboboxOpen, setIsComboboxOpen] = useState(false);
-  // const stores = useStore((state) => state.stores);
-  // const refetchStores = useStore((state) => state.refetchStores);
+  const pathname = usePathname();
+  const currentPath = pathname.split("/")[2];
 
   const params = useParams();
   const router = useRouter();
@@ -46,7 +46,7 @@ const StoreSwitcher = ({ stores }: Props) => {
 
   const onStoreSelect = (storeSlug: string) => {
     setIsComboboxOpen(false);
-    router.push(`/${storeSlug}`);
+    router.push(`/${storeSlug}/${currentPath}`);
   };
 
   return (

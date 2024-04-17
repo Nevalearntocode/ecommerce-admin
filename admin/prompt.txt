@@ -1,0 +1,2 @@
+/, /[storeSlug], /[storeSlug]/settings, /[storeSlug]/billboards, /[storeSlug]/staff/[inviteCode]
+/api/store, /api/store/[storeSlug], /api/store/[storeSlug]/invite, /api/store/[storeSlug]/staff/[staffId], /api/profile

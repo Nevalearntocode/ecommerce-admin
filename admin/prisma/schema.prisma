@@ -20,14 +20,11 @@ model User {
   emailVerified  DateTime?
   image          String
   hashedPassword String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  store  Store[]
-  staffs Staff[]
-
-  accounts Account[]
+  store          Store[]
+  staffs         Staff[]
+  accounts       Account[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 enum StoreType {
@@ -55,19 +52,23 @@ model Store {
   billboards Billboard[]
   staffs     Staff[]
   inviteCode String      @unique @default(uuid())
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 }
 
 model Staff {
-  id                 Int     @id @default(autoincrement())
+  id                 Int      @id @default(autoincrement())
   userId             String
-  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   storeId            Int
-  store              Store   @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  isAdmin            Boolean @default(false)
-  canManageStore     Boolean @default(false)
-  canManageCategory  Boolean @default(false)
-  canManageBillboard Boolean @default(false)
-  canManageProduct   Boolean @default(true)
+  store              Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  isAdmin            Boolean  @default(false)
+  canManageStore     Boolean  @default(false)
+  canManageCategory  Boolean  @default(false)
+  canManageBillboard Boolean  @default(false)
+  canManageProduct   Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
 
 model Category {
@@ -78,15 +79,19 @@ model Category {
   billboardId Int       @unique
   billboards  Billboard @relation(fields: [billboardId], references: [id])
   product     Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Billboard {
-  id       Int        @id @default(autoincrement())
-  name     String
-  image    String
-  category Category[]
-  storeId  Int
-  store    Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  id        Int        @id @default(autoincrement())
+  name      String
+  image     String
+  category  Category[]
+  storeId   Int
+  store     Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Product {
@@ -98,27 +103,30 @@ model Product {
   images      String[]
   categoryId  Int
   category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  // Clothing attributes
   clothing    Clothing?
   technology  Technology?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
 }
 
-// Define the Clothing model (nested within Product)
 model Clothing {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int     @unique
+  id        Int      @id @default(autoincrement())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @unique
   size      Size?
   color     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
-// Define the Technology model (nested within Product)
 model Technology {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int     @unique
+  id        Int      @id @default(autoincrement())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int      @unique
   model     String?
   brand     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Account {

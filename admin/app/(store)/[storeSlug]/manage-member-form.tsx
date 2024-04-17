@@ -22,6 +22,7 @@ import { useParams, useRouter } from "next/navigation";
 
 type Props = {
   staff: StaffWithProfile;
+  storeUserId: string;
 };
 
 const formSchema = z.object({
@@ -34,7 +35,7 @@ const formSchema = z.object({
 
 type FormType = z.infer<typeof formSchema>;
 
-const ManageMemberForm = ({ staff }: Props) => {
+const ManageMemberForm = ({ staff, storeUserId }: Props) => {
   const router = useRouter();
   const params = useParams();
 
@@ -167,30 +168,32 @@ const ManageMemberForm = ({ staff }: Props) => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="isAdmin"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-red-100 p-4 text-red-700">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">
-                      Admin (Caution!)
-                    </FormLabel>
-                    <FormDescription>Grant full access</FormDescription>
-                    <FormDescription>
-                      **Use with caution:** Allows permanent deletion of
-                      categories.
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            {storeUserId === staff.userId && (
+              <FormField
+                control={form.control}
+                name="isAdmin"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-red-100 p-4 text-red-700">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Admin (Caution!)
+                      </FormLabel>
+                      <FormDescription>Grant full access</FormDescription>
+                      <FormDescription>
+                        **Use with caution:** Allows permanent deletion of
+                        categories.
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            )}
           </div>
         </div>
         <div className="flex w-full">

@@ -1,4 +1,4 @@
-import { Staff, Store, User } from "@prisma/client";
+import { Staff, Store } from "@prisma/client";
 
 export type SafeUser = {
   id: string;

@@ -2,11 +2,12 @@
 
 import React from "react";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type Props = {};
 
 const NotPermitted = ({}: Props) => {
+  const params = useParams();
   const router = useRouter();
 
   return (
@@ -16,7 +17,10 @@ const NotPermitted = ({}: Props) => {
           Your current role does not have permission to access this route.
         </h1>
         <p>Ask your manager for more information</p>
-        <Button className="flex gap-x-2 pr-3" onClick={() => router.back()}>
+        <Button
+          className="flex gap-x-2 pr-3"
+          onClick={() => router.push(`/${params.storeSlug}`)}
+        >
           <p className="">Go back.</p>
         </Button>
       </div>
