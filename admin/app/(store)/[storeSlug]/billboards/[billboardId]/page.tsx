@@ -1,16 +1,19 @@
+import { getBillboardById } from "@/lib/get-store-billboards";
 import React from "react";
-import BillboardClient from "./billboard-client";
+import BillboardForm from "./billboard-form";
 import { getCurrentStaff } from "@/lib/get-store-staffs";
 import { canManageBillboard } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 
 type Props = {
   params: {
+    billboardId: string;
     storeSlug: string;
   };
 };
 
-const Billboards = async ({ params }: Props) => {
+const BillboardPage = async ({ params }: Props) => {
+  const billboard = await getBillboardById(params.billboardId);
   const staff = await getCurrentStaff(params.storeSlug);
 
   if (!staff) {
@@ -26,10 +29,13 @@ const Billboards = async ({ params }: Props) => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <BillboardClient />
+        <BillboardForm
+          billboard={billboard}
+          canManageBillboard={isAuthorized}
+        />
       </div>
     </div>
   );
 };
 
-export default Billboards;
+export default BillboardPage;

@@ -87,6 +87,7 @@ const ProfileModal = (props: Props) => {
                   <FormItem className="h-full">
                     <div className="h-full w-full pt-4">
                       <ImageUpload
+                        type="profile"
                         onChange={field.onChange}
                         value={field.value}
                         endpoint="profileImage"

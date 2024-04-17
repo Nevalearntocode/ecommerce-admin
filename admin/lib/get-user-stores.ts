@@ -111,3 +111,20 @@ export async function gerFirstUserStore() {
 
   return store;
 }
+
+export async function getStoreWithCurrentStaff(slug: string, userId: string) {
+  const store = await db.store.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      staffs: {
+        where: {
+          userId,
+        },
+      },
+    },
+  });
+
+  return store;
+}

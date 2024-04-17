@@ -5,26 +5,34 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { UploadButton } from "@/lib/uploadthing";
 import "@uploadthing/react/styles.css";
+import { cn } from "@/lib/utils";
 
 type Props = {
   onChange: (value: string) => void;
   value: string;
   endpoint: "profileImage";
+  type: "billboard" | "profile";
 };
 
-const ImageUpload = ({ onChange, value, endpoint }: Props) => {
+const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
   const fileType = value.split(".").pop();
 
   if (value && fileType !== "pdf") {
     return (
-      <div className="relative flex h-[185px] justify-center">
+      <div
+        className={cn(
+          "relative flex justify-center",
+          type === "profile" && "h-[185px]",
+          type === "billboard" && "h-auto",
+        )}
+      >
         <div>
           <Image
             src={value}
             alt="your_home"
             height={720}
             width={720}
-            className="h-full w-full object-fill"
+            className="aspect-video h-full w-full object-fill"
           />
         </div>
         <Button
