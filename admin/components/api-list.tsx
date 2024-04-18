@@ -26,7 +26,7 @@ const APIList = ({ id, name }: Props) => {
       <APIAlert
         title="GET"
         variant="public"
-        description={`/api/v2/${name}/[${id}]`}
+        description={`${baseUrl}/${name}/[${id}]`}
       />
       <APIAlert
         title="POST"

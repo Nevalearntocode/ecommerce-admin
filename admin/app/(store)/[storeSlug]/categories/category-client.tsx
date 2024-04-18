@@ -3,29 +3,29 @@
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Billboard } from "@prisma/client";
 import { Image, Plus, Search, Table } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import BillboardCard from "./billboard-card";
+import CategoryCard from "./category-card";
 import ActionTooltip from "@/components/action-tooltip";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
-import { BillboardColumn, columns } from "./billboard-column";
+import { CategoryColumn, columns } from "./category-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/datatable";
 import APIList from "@/components/api-list";
+import { CategoryWithBillboard } from "@/types";
 
 type Props = {
-  billboards: Billboard[];
+  categories: CategoryWithBillboard[];
 };
 
-const BillboardClient = ({ billboards }: Props) => {
-  const [billboardViewState, setBillboardViewState] = useState<
+const CategoryClient = ({ categories }: Props) => {
+  const [categoryViewState, setCategoryViewState] = useState<
     "datatable" | "card" | null
   >(null);
   const [searchInput, setSearchInput] = useState("");
-  const [filteredBillboards, setFilteredBillboards] = useState(billboards);
+  const [filteredCategories, setFilteredCategories] = useState(categories);
   const router = useRouter();
   const params = useParams();
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,68 +33,69 @@ const BillboardClient = ({ billboards }: Props) => {
 
   useEffect(() => {
     if (searchInput.trim() === "") {
-      setFilteredBillboards(billboards); // Show all billboards if search is empty
+      setFilteredCategories(categories); // Show all categories if search is empty
     } else {
       const lowerCaseSearch = searchInput.toLowerCase();
-      const filtered = billboards.filter((billboard) =>
-        billboard.name.toLowerCase().includes(lowerCaseSearch),
+      const filtered = categories.filter((category) =>
+        category.name.toLowerCase().includes(lowerCaseSearch),
       );
-      setFilteredBillboards(filtered);
+      setFilteredCategories(filtered);
       setCurrentPage(1);
     }
-  }, [searchInput, billboards]);
+  }, [searchInput, categories]);
 
   useEffect(() => {
-    const currentBillboardViewState =
-      localStorage.getItem("billboardViewState");
-    if (currentBillboardViewState === null) {
-      setBillboardViewState("card");
+    const currentCategoryViewState = localStorage.getItem("categoryViewState");
+    if (currentCategoryViewState === null) {
+      setCategoryViewState("card");
     } else {
-      setBillboardViewState(
-        currentBillboardViewState as typeof billboardViewState,
+      setCategoryViewState(
+        currentCategoryViewState as typeof categoryViewState,
       );
     }
   }, []);
 
   useEffect(() => {
-    if (billboardViewState) {
-      localStorage.setItem("billboardViewState", billboardViewState);
+    if (categoryViewState) {
+      localStorage.setItem("categoryViewState", categoryViewState);
     }
-  }, [billboardViewState]);
+  }, [categoryViewState]);
 
-  const formattedBillboards: BillboardColumn[] = filteredBillboards.map(
-    (billboard) => ({
-      id: billboard.id,
-      name: billboard.name,
-      createdAt: format(billboard.createdAt, "h:mm MMMM do, yyyy"),
-      updatedAt: format(billboard.updatedAt, "h:mm MMMM do, yyyy"),
+  const formattedCategories: CategoryColumn[] = filteredCategories.map(
+    (category) => ({
+      slug: category.slug,
+      name: category.name,
+      billboardId: category.billboardId,
+      billboardName: category.billboard.name,
+      createdAt: format(category.createdAt, "h:mm MMMM do, yyyy"),
+      updatedAt: format(category.updatedAt, "h:mm MMMM do, yyyy"),
     }),
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentBillboards = filteredBillboards.slice(startIndex, endIndex);
+  const currentCategories = filteredCategories.slice(startIndex, endIndex);
 
   return (
     <>
       <div className="flex items-center justify-between">
         <Header
           title={
-            billboards.length === 1
-              ? `Billboard (${billboards.length})`
-              : `Billboards (${billboards.length})`
+            categories.length <= 1
+              ? `Category (${categories.length})`
+              : `Categories (${categories.length})`
           }
-          description="Manage your billboards for your store"
+          description="Manage your categories for your store"
         />
         <div className="flex gap-x-4">
           <ActionTooltip tooltip="Switch to image view">
             <Button
-              onClick={() => setBillboardViewState("card")}
+              onClick={() => setCategoryViewState("card")}
               variant={`ghost`}
               size={`icon`}
               className={cn(
                 "flex items-center justify-center",
-                billboardViewState === "card" && "bg-black/15",
+                categoryViewState === "card" && "bg-black/15",
               )}
             >
               <Image className="h-1/2 w-1/2" />
@@ -102,19 +103,19 @@ const BillboardClient = ({ billboards }: Props) => {
           </ActionTooltip>
           <ActionTooltip tooltip="Switch to datatable view">
             <Button
-              onClick={() => setBillboardViewState("datatable")}
+              onClick={() => setCategoryViewState("datatable")}
               variant={`ghost`}
               size={`icon`}
               className={cn(
                 "flex items-center justify-center",
-                billboardViewState === "datatable" && "bg-black/15",
+                categoryViewState === "datatable" && "bg-black/15",
               )}
             >
               <Table className="h-1/2 w-1/2" />
             </Button>
           </ActionTooltip>
           <Button
-            onClick={() => router.push(`/${params.storeSlug}/billboards/new`)}
+            onClick={() => router.push(`/${params.storeSlug}/categories/new`)}
           >
             <Plus className="mr-2 h-4 w-4" />
             Add new
@@ -127,7 +128,7 @@ const BillboardClient = ({ billboards }: Props) => {
         <div className="relative">
           <Input
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search billboard by name..."
+            placeholder="Search category by name..."
           />
           <Button
             className="absolute right-0 top-0 rounded-full"
@@ -138,20 +139,20 @@ const BillboardClient = ({ billboards }: Props) => {
           </Button>
         </div>
       </div>
-      {billboardViewState === "datatable" && (
-        <DataTable columns={columns} data={formattedBillboards} />
+      {categoryViewState === "datatable" && (
+        <DataTable columns={columns} data={formattedCategories} />
       )}
-      {billboardViewState === "card" && (
+      {categoryViewState === "card" && (
         <>
-          {filteredBillboards.length === 0 ? (
+          {filteredCategories.length === 0 ? (
             <div>
-              <p>No billboards found.</p>
+              <p>No categories found.</p>
             </div>
           ) : (
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {currentBillboards.map((billboard) => (
-                  <BillboardCard billboard={billboard} key={billboard.id} />
+                {currentCategories.map((category) => (
+                  <CategoryCard category={category} key={category.id} />
                 ))}
               </div>
               {/* Previous Button */}
@@ -169,7 +170,7 @@ const BillboardClient = ({ billboards }: Props) => {
                 <div>
                   {[
                     ...Array(
-                      Math.ceil(filteredBillboards.length / itemsPerPage),
+                      Math.ceil(filteredCategories.length / itemsPerPage),
                     ),
                   ].map((_, i) => (
                     <Button
@@ -190,7 +191,7 @@ const BillboardClient = ({ billboards }: Props) => {
                 <Button
                   disabled={
                     currentPage ===
-                    Math.ceil(filteredBillboards.length / itemsPerPage)
+                    Math.ceil(filteredCategories.length / itemsPerPage)
                   }
                   onClick={() => setCurrentPage(currentPage + 1)}
                   className="h-8"
@@ -203,10 +204,10 @@ const BillboardClient = ({ billboards }: Props) => {
           )}
         </>
       )}
-      <Header title="API" description="API calls for Billboards" />
-      <APIList name="billboards" id="billboard-id" />
+      <Header title="API" description="API calls for Categories" />
+      <APIList name="categories" id="category-slug" />
     </>
   );
 };
 
-export default BillboardClient;
+export default CategoryClient;

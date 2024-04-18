@@ -76,25 +76,28 @@ model Staff {
 model Category {
   id          Int       @id @default(autoincrement())
   name        String
-  slug        String    @unique
+  slug        String    
   storeId     Int
   store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   billboardId Int       @unique
-  billboards  Billboard @relation(fields: [billboardId], references: [id], onDelete: Restrict)
+  billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Restrict)
   product     Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  @@unique([name, storeId])
+  @@unique([slug, storeId])
 }
 
 model Billboard {
-  id        Int        @id @default(autoincrement())
-  name      String
-  image     String
-  category  Category[]
-  storeId   Int
-  store     Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id         Int        @id @default(autoincrement())
+  name       String
+  image      String
+  categories Category[]
+  storeId    Int
+  store      Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 
   @@unique([name, storeId])
 }

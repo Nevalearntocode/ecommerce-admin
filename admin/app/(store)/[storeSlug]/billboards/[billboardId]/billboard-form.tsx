@@ -124,7 +124,7 @@ const BillboardForm = ({ billboard }: Props) => {
           <Header
             title={
               billboard
-                ? `Manage ${billboard.name} billboard`
+                ? `Manage ${billboard.name} Billboard`
                 : "Create new billboard"
             }
             description="Create or manage your billboard"

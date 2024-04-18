@@ -12,41 +12,29 @@ export async function getBillboardById(id: string) {
     where: {
       id: billboardId,
     },
-  });
-
-  return billboard;
-}
-
-export async function getBillboardsAndCurrentStaff(slug: string) {
-  const user = await getCurrentUser();
-
-  if (!user) {
-    return null;
-  }
-
-  const store = await db.store.findUnique({
-    where: {
-      slug,
-    },
     include: {
-      billboards: true,
-      staffs: {
-        where: {
-          userId: user.id,
+      categories: {
+        select: {
+          id: true,
         },
       },
     },
   });
 
-  if (!store) {
-    return {
-      staff: null,
-      billboards: null,
-    }
-  }
+  return billboard;
+}
 
-  const staff = store.staffs[0];
-  const billboards = store.billboards;
-
-  return { staff, billboards };
+export async function getBillboardByNameAndStoreId(
+  name: string,
+  storeId: number,
+) {
+  const billboard = await db.billboard.findUnique({
+    where: {
+      name_storeId: {
+        name,
+        storeId,
+      },
+    },
+  });
+  return billboard;
 }

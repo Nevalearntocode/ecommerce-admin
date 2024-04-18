@@ -2,14 +2,12 @@
 
 import { cn } from "@/lib/utils";
 import { StoreWithStaffs } from "@/types";
-import { Staff } from "@prisma/client";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
 
 type Props = {
   stores: StoreWithStaffs[];
-  userId: string;
 };
 
 // Defines the possible permission names for staff members come from schema
@@ -19,7 +17,7 @@ type StaffPermissionName =
   | "canManageBillboard"
   | "canManageProduct";
 
-const MainNav = ({ stores, userId }: Props) => {
+const MainNav = ({ stores }: Props) => {
   const params = useParams();
   const pathname = usePathname();
 
@@ -58,6 +56,12 @@ const MainNav = ({ stores, userId }: Props) => {
       label: "Billboards",
       active: pathname === `/${params.storeSlug}/billboards`,
       requireAdminOrPermission: "canManageBillboard",
+    },
+    {
+      href: `/${params.storeSlug}/categories`,
+      label: "Categories",
+      active: pathname === `/${params.storeSlug}/categories`,
+      requireAdminOrPermission: "canManageCategory",
     },
   ];
 

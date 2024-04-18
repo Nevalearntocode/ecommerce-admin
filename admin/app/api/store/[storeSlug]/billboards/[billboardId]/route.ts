@@ -76,7 +76,7 @@ export async function PATCH(
 
     if (hasNameConflictBillboard) {
       return new NextResponse(
-        `A billboard with the name '${name}' already exists in this store.`,
+        `A billboard with the name '${updateData.name}' already exists in this store.`,
         { status: 409 },
       );
     }
@@ -139,6 +139,13 @@ export async function DELETE(
       return new NextResponse("Billboard not found.", { status: 404 });
     }
 
+    if (existingBillboard.categories.length !== 0) {
+      return new NextResponse(
+        "Please remove all categories associated with this billboard before deleting it..",
+        { status: 400 },
+      );
+    }
+
     await db.billboard.delete({
       where: {
         id: existingBillboard.id,
@@ -148,6 +155,30 @@ export async function DELETE(
     return NextResponse.json({ success: "Billboard deleted." });
   } catch (error) {
     console.log("[BILLBOARD DELETE]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { billboardId: string } },
+) {
+  try {
+    const { billboardId } = params;
+
+    if (!billboardId) {
+      return new NextResponse("Store slug is required.", { status: 400 });
+    }
+
+    const billboard = await getBillboardById(params.billboardId);
+
+    if (!billboard) {
+      return new NextResponse("Billboard not found.", { status: 404 });
+    }
+
+    return NextResponse.json(billboard);
+  } catch (error: any) {
+    console.log("[GET BILLBOARD BY ID]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
