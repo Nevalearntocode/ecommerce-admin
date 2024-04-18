@@ -1,5 +1,9 @@
 import { Staff } from "@prisma/client";
 
+export function canManageStaff(staff: Staff) {
+  return staff.isAdmin;
+}
+
 export function canManageStore(staff: Staff) {
   return staff.isAdmin || staff.canManageStore;
 }

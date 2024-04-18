@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
-import { getBillboardById } from "@/lib/get-store-billboards";
-import { getStoreWithCurrentStaff } from "@/lib/get-user-stores";
+import { getBillboardById } from "@/lib/get-billboards";
+import { getStoreWithCurrentStaff } from "@/lib/get-stores";
 import { canManageBillboard } from "@/lib/permission-hierarchy";
 import { NextResponse } from "next/server";
 
@@ -53,6 +53,13 @@ export async function PATCH(
       name: name ? name : existingBillboard.name,
     };
 
+    if (
+      existingBillboard.name === updateData.name &&
+      existingBillboard.image === updateData.image
+    ) {
+      return new NextResponse("Billboard has not changed.", { status: 200 });
+    }
+
     const hasNameConflictBillboard = await db.billboard.findUnique({
       where: {
         name_storeId: {
@@ -86,7 +93,7 @@ export async function PATCH(
       billboard: newBillboard,
     });
   } catch (error) {
-    console.log("[LISTING_DELETE]", error);
+    console.log("[BILLBOARD PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -140,7 +147,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: "Billboard deleted." });
   } catch (error) {
-    console.log("[LISTING_DELETE]", error);
+    console.log("[BILLBOARD DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -1,7 +1,7 @@
-import { getBillboardById } from "@/lib/get-store-billboards";
+import { getBillboardById } from "@/lib/get-billboards";
 import React from "react";
 import BillboardForm from "./billboard-form";
-import { getCurrentStaff } from "@/lib/get-store-staffs";
+import { getCurrentStaff } from "@/lib/get-staffs";
 import { canManageBillboard } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 

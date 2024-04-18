@@ -128,3 +128,19 @@ export async function getStoreWithCurrentStaff(slug: string, userId: string) {
 
   return store;
 }
+
+export async function getStoreById(id: string) {
+  const storeId = Number(id);
+
+  if (!storeId) {
+    return null;
+  }
+
+  const store = await db.store.findUnique({
+    where: {
+      id: storeId,
+    },
+  });
+
+  return store;
+}

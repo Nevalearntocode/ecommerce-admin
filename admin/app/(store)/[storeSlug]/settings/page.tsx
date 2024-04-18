@@ -1,5 +1,5 @@
 import Empty from "@/components/empty";
-import { getStoreBySlugWithStaff } from "@/lib/get-user-stores";
+import { getStoreBySlugWithStaff } from "@/lib/get-stores";
 import React from "react";
 import SettingsForm from "./settings-form";
 import getCurrentUser from "@/lib/get-current-user";

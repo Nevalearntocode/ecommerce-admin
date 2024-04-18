@@ -10,11 +10,11 @@ export default withAuth(
     const isApiAuthRoute = nextUrl.pathname.startsWith(authPrefix);
     const isPublicRoute =
       publicRoutes.includes(nextUrl.pathname) ||
-      nextUrl.pathname.startsWith(`/api/store/`);
+      nextUrl.pathname.startsWith(`/api/store/`) ||
+      nextUrl.pathname.startsWith(`/api/v2/`);
     const isAllowed =
       definedRoutes.includes(nextUrl.pathname) ||
-      nextUrl.pathname.startsWith("/") ||
-      nextUrl.pathname.startsWith("/api/");
+      nextUrl.pathname.startsWith("/");
 
     if (isPublicRoute) {
       return null;

@@ -43,6 +43,7 @@ type FormType = z.infer<typeof formSchema>;
 const SettingsForm = ({ store, isOwner }: Props) => {
   const { open, close } = useModal();
   const origin = useOrigin();
+  const router = useRouter();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -67,10 +68,8 @@ const SettingsForm = ({ store, isOwner }: Props) => {
     try {
       const res = await axios.patch(`/api/store/${store.slug}`, data);
       toast.success(res.data.success);
-
-      setTimeout(() => {
-        window.location.assign(`/${generateSlug({ ...data })}/settings`);
-      }, 1000);
+      router.push(`/${generateSlug({ ...data })}/settings`);
+      router.refresh();
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data);
@@ -186,6 +185,11 @@ const SettingsForm = ({ store, isOwner }: Props) => {
       <APIAlert
         title="NEXT_PUBLIC_API_URL"
         description={`${origin}/api/store/${store.slug}`}
+        variant="public"
+      />
+      <APIAlert
+        title="NEXT_PUBLIC_API_URL"
+        description={`${origin}/api/v2/stores/${store.id}`}
         variant="public"
       />
     </>

@@ -23,6 +23,12 @@ export async function PATCH(
       return new NextResponse("Store slug is required.", { status: 400 });
     }
 
+    const defaultSlug = name.toLowerCase().trim().replace(/\s+/g, "-");
+
+    const updateData = {
+      slug: slug === "" ? defaultSlug : slug,
+    };
+
     const existingStore = await db.store.findUnique({
       where: {
         slug: params.storeSlug,
@@ -69,7 +75,7 @@ export async function PATCH(
 
     const existedStoreWithGivenSlug = await db.store.findUnique({
       where: {
-        slug,
+        slug: updateData.slug,
       },
       select: {
         id: true,
@@ -85,16 +91,13 @@ export async function PATCH(
       });
     }
 
-    const defaultSlug = name.toLowerCase().trim().replace(/\s+/g, "-");
-
-    // admin
     const newStore = await db.store.update({
       where: {
         id: existingStore.id,
       },
       data: {
         name,
-        slug: slug === "" ? defaultSlug : slug,
+        slug: updateData.slug,
       },
     });
 
@@ -171,12 +174,6 @@ export async function GET(
   { params }: { params: { storeSlug: string } },
 ) {
   try {
-    const user = await getCurrentUser();
-
-    if (!user) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
     if (!params.storeSlug) {
       return new NextResponse("Store slug is required.", { status: 400 });
     }

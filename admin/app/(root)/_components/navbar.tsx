@@ -3,7 +3,7 @@ import MainNav from "./main-nav";
 import UserButton from "@/components/user-button";
 import StoreSwitcher from "./store-switcher";
 import getCurrentUser from "@/lib/get-current-user";
-import getUserStoresById from "@/lib/get-user-stores";
+import getUserStoresById from "@/lib/get-stores";
 import AddStaff from "./add-staff";
 
 type Props = {};

@@ -1,6 +1,6 @@
 import getCurrentUser from "@/lib/get-current-user";
 import Empty from "../../components/empty";
-import { gerFirstUserStoreById } from "@/lib/get-user-stores";
+import { gerFirstUserStoreById } from "@/lib/get-stores";
 import { redirect } from "next/navigation";
 export default async function Home() {
   const user = await getCurrentUser();

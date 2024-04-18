@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { BillboardColumn, columns } from "./billboard-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/datatable";
+import APIList from "@/components/api-list";
 
 type Props = {
   billboards: Billboard[];
@@ -25,6 +26,8 @@ const BillboardClient = ({ billboards }: Props) => {
   const [filteredBillboards, setFilteredBillboards] = useState(billboards);
   const router = useRouter();
   const params = useParams();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
   useEffect(() => {
     if (searchInput.trim() === "") {
@@ -35,6 +38,7 @@ const BillboardClient = ({ billboards }: Props) => {
         billboard.name.toLowerCase().includes(lowerCaseSearch),
       );
       setFilteredBillboards(filtered);
+      setCurrentPage(1);
     }
   }, [searchInput, billboards]);
 
@@ -61,6 +65,10 @@ const BillboardClient = ({ billboards }: Props) => {
       updatedAt: format(billboard.updatedAt, "h:mm MMMM do, yyyy"),
     }),
   );
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentBillboards = filteredBillboards.slice(startIndex, endIndex);
 
   return (
     <>
@@ -135,14 +143,63 @@ const BillboardClient = ({ billboards }: Props) => {
               <p>No billboards found.</p>
             </div>
           ) : (
-            <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {filteredBillboards.map((billboard) => (
-                <BillboardCard billboard={billboard} key={billboard.id} />
-              ))}
-            </div>
+            <>
+              <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {currentBillboards.map((billboard) => (
+                  <BillboardCard billboard={billboard} key={billboard.id} />
+                ))}
+              </div>
+              {/* Previous Button */}
+              <div className="flex w-full items-center justify-center gap-x-2">
+                <Button
+                  variant={`ghost`}
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  className="h-8"
+                >
+                  Previous
+                </Button>
+
+                {/* Page Numbers (example) */}
+                <div>
+                  {[
+                    ...Array(
+                      Math.ceil(filteredBillboards.length / itemsPerPage),
+                    ),
+                  ].map((_, i) => (
+                    <Button
+                      variant={`ghost`}
+                      key={i + 1}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={cn(
+                        "h-8",
+                        currentPage === i + 1 && "bg-black/20",
+                      )}
+                    >
+                      {i + 1}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* Next Button */}
+                <Button
+                  disabled={
+                    currentPage ===
+                    Math.ceil(filteredBillboards.length / itemsPerPage)
+                  }
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  className="h-8"
+                  variant={`ghost`}
+                >
+                  Next
+                </Button>
+              </div>
+            </>
           )}
         </>
       )}
+      <Header title="API" description="API calls for Billboards" />
+      <APIList name="billboards" id="billboard-id" />
     </>
   );
 };

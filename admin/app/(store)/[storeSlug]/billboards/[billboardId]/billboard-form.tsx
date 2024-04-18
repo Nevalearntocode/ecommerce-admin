@@ -62,6 +62,14 @@ const BillboardForm = ({ billboard }: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
+    if (
+      billboard &&
+      billboard.name === data.name &&
+      billboard.image === data.image
+    ) {
+      toast.info("Billboard has not changed.");
+      return;
+    }
     try {
       if (billboard) {
         await axios
@@ -94,9 +102,8 @@ const BillboardForm = ({ billboard }: Props) => {
         `/api/store/${params.storeSlug}/billboards/${billboard?.id}`,
       );
       toast.success(res.data.success);
-      setTimeout(() => {
-        window.location.assign(`/${params.storeSlug}/billboards`);
-      }, 1000);
+      router.push(`/${params.storeSlug}/billboards`);
+      router.refresh();
       close();
     } catch (error: any) {
       console.log(error);
@@ -199,9 +206,9 @@ const BillboardForm = ({ billboard }: Props) => {
       </Form>
       <Separator />
       <APIAlert
-        title="NEXT_PUBLIC_API_URL"
-        description={`${origin}/api/store/`}
-        variant="public"
+        title={billboard ? "PATCH" : "POST"}
+        description={`${origin}/api/store/${params.storeSlug}/billboards/${billboard ? billboard.id : ``}`}
+        variant="staff"
       />
     </>
   );

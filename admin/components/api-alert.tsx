@@ -10,17 +10,17 @@ import { toast } from "sonner";
 type Props = {
   title: string;
   description: string;
-  variant: "public" | "admin";
+  variant: "public" | "staff";
 };
 
 const textMap: Record<Props["variant"], string> = {
   public: "Public",
-  admin: "Admin",
+  staff: "Staff",
 };
 
 const variantMap: Record<Props["variant"], BadgeProps["variant"]> = {
   public: "secondary",
-  admin: "destructive",
+  staff: "destructive",
 };
 
 const APIAlert = ({ description, title, variant }: Props) => {

@@ -67,9 +67,8 @@ const CreateStoreModal = (props: Props) => {
     try {
       const res = await axios.post(`/api/store`, data);
       form.reset();
-      setTimeout(() => {
-        window.location.assign(`/${generateSlug({ ...data })}`);
-      }, 1000);
+      router.push(`/${generateSlug({ ...data })}`);
+      router.refresh();
       close();
       toast.success(res.data.success);
     } catch (error: any) {

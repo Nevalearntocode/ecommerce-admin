@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
-import { getStoreWithCurrentStaff } from "@/lib/get-user-stores";
+import { getStoreWithCurrentStaff } from "@/lib/get-stores";
 import { canManageBillboard } from "@/lib/permission-hierarchy";
 
 export async function POST(
@@ -75,6 +75,41 @@ export async function POST(
     });
   } catch (error) {
     console.log("[CREATE BILLBOARD]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { storeSlug: string } },
+) {
+  try {
+    const { storeSlug } = params;
+
+    if (!storeSlug) {
+      return new NextResponse("Store slug is required.", { status: 400 });
+    }
+
+    const existingStore = await db.store.findUnique({
+      where: {
+        slug: storeSlug,
+      },
+      include: {
+        billboards: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+      },
+    });
+
+    if (!existingStore) {
+      return new NextResponse("Store not found.", { status: 404 });
+    }
+
+    return NextResponse.json({ billboards: existingStore.billboards });
+  } catch (error: any) {
+    console.log("[GET BILLBOARDS]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
