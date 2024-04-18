@@ -15,3 +15,7 @@ export function canManageCategory(staff: Staff) {
 export function canManageBillboard(staff: Staff) {
   return canManageCategory(staff) || staff.canManageBillboard;
 }
+
+export function canManageProduct(staff: Staff) {
+  return canManageBillboard(staff) || staff.canManageProduct;
+}

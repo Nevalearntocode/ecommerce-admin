@@ -65,6 +65,15 @@ const MainNav = ({ stores }: Props) => {
     },
   ];
 
+  if (existingStore.storeType === "CLOTHING") {
+    routes.push({
+      href: `/${params.storeSlug}/sizes`,
+      label: "Sizes",
+      active: pathname === `/${params.storeSlug}/sizes`,
+      requireAdminOrPermission: "canManageProduct",
+    });
+  }
+
   return (
     <nav className="mx-6 flex items-center space-x-4 lg:space-x-6">
       {routes.map((route) => {

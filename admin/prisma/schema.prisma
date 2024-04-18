@@ -32,7 +32,7 @@ enum StoreType {
   TECHNOLOGY
 }
 
-enum Size {
+enum SizeValue {
   XS
   S
   M
@@ -45,15 +45,67 @@ model Store {
   id         Int         @id @default(autoincrement())
   slug       String      @unique
   name       String      @unique
-  type       StoreType   @default(CLOTHING)
+  storeType  StoreType   @default(CLOTHING)
   userId     String
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   categories Category[]
   billboards Billboard[]
   staffs     Staff[]
+  sizes      Size[]
+  colors     Color[]
+  models     Model[]
+  types      Type[]
   inviteCode String      @unique @default(uuid())
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
+}
+
+model Size {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  value     SizeValue
+  Store     Store     @relation(fields: [storeId], references: [id])
+  storeId   Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([name, storeId])
+}
+
+model Color {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  value     String
+  Store     Store    @relation(fields: [storeId], references: [id])
+  storeId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, storeId])
+}
+
+model Model {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  value     String
+  Store     Store    @relation(fields: [storeId], references: [id])
+  storeId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, storeId])
+}
+
+model Type {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  value     String
+  Store     Store    @relation(fields: [storeId], references: [id])
+  storeId   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([name, storeId])
 }
 
 model Staff {
@@ -76,7 +128,7 @@ model Staff {
 model Category {
   id          Int       @id @default(autoincrement())
   name        String
-  slug        String    
+  slug        String
   storeId     Int
   store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   billboardId Int       @unique
@@ -103,40 +155,18 @@ model Billboard {
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
-  slug        String      @unique
+  slug        String   @unique
   description String?
   price       Float
   stock       Int
   images      String[]
   categoryId  Int
   brand       String
-  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  clothing    Clothing?
-  technology  Technology?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-}
-
-model Clothing {
-  id        Int      @id @default(autoincrement())
-  product   Product  @relation(fields: [productId], references: [id])
-  productId Int      @unique
-  size      Size
-  color     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Technology {
-  id        Int      @id @default(autoincrement())
-  product   Product  @relation(fields: [productId], references: [id])
-  productId Int      @unique
-  model     String
-  type      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Account {

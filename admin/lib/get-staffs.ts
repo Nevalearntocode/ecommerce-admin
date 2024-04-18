@@ -19,3 +19,29 @@ export async function getCurrentStaff(storeSlug: string) {
 
   return staff;
 }
+
+export async function getCurrentStaffAndStoreType(storeSlug: string) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const staff = await db.staff.findFirst({
+    where: {
+      userId: user.id,
+      store: {
+        slug: storeSlug,
+      },
+    },
+    include: {
+      store: {
+        select: {
+          storeType: true,
+        },
+      },
+    },
+  });
+
+  return staff;
+}

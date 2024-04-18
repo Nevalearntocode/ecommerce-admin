@@ -59,10 +59,10 @@ const StoreSwitcher = ({ stores }: Props) => {
         >
           {currentStore ? (
             <>
-              {currentStore.type === "CLOTHING" && (
+              {currentStore.storeType === "CLOTHING" && (
                 <Shirt className="mr-2 h-4 w-4" />
               )}
-              {currentStore.type === "TECHNOLOGY" && (
+              {currentStore.storeType === "TECHNOLOGY" && (
                 <Laptop className="mr-2 h-4 w-4" />
               )}
               <p className="mr-2 hidden md:block">{currentStore?.name}</p>
@@ -88,10 +88,10 @@ const StoreSwitcher = ({ stores }: Props) => {
                   key={store.id}
                   onSelect={() => onStoreSelect(store.slug)}
                 >
-                  {store.type === "CLOTHING" && (
+                  {store.storeType === "CLOTHING" && (
                     <Shirt className="mr-2 h-4 w-4" />
                   )}
-                  {store.type === "TECHNOLOGY" && (
+                  {store.storeType === "TECHNOLOGY" && (
                     <Laptop className="mr-2 h-4 w-4" />
                   )}
                   {store.name}
