@@ -1,4 +1,3 @@
-import { StoreWithStaffs } from "@/types";
 import { Staff } from "@prisma/client";
 
 export function canManageStore(staff: Staff) {

@@ -45,6 +45,22 @@ export async function POST(
       );
     }
 
+    const existingBillboard = await db.billboard.findUnique({
+      where: {
+        name_storeId: {
+          storeId: existingStore.id,
+          name,
+        },
+      },
+    });
+
+    if (existingBillboard) {
+      return new NextResponse(
+        `A billboard with the name '${name}' already exists in this store.`,
+        { status: 409 },
+      );
+    }
+
     const billboard = await db.billboard.create({
       data: {
         image,

@@ -26,6 +26,7 @@ function BillboardCard({ billboard }: Props) {
       >
         <div className="h-full">
           <Image
+            priority={true}
             src={billboard.image}
             alt={billboard.name}
             height={720}

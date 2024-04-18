@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { UploadButton } from "@/lib/uploadthing";
+import { UploadButton, UploadDropzone } from "@/lib/uploadthing";
 import "@uploadthing/react/styles.css";
 import { cn } from "@/lib/utils";
 
@@ -32,7 +32,7 @@ const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
             alt="your_home"
             height={720}
             width={720}
-            className="aspect-video h-full w-full object-fill"
+            className="aspect-video h-full w-full rounded-md object-fill"
           />
         </div>
         <Button
@@ -48,14 +48,25 @@ const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
   }
 
   return (
-    <div className="flex h-full items-center justify-center">
-      <UploadButton
-        endpoint={endpoint}
-        onClientUploadComplete={(res) => onChange(res?.[0].url)}
-        // add toast later
-        onUploadError={(error: Error) => console.log(error)}
-        className="group mb-4 h-[70%] cursor-pointer"
-      />
+    <div className="flex h-full w-full items-center justify-center">
+      {type === "billboard" && (
+        <UploadDropzone
+          endpoint={endpoint}
+          onClientUploadComplete={(res) => onChange(res?.[0].url)}
+          // add toast later
+          onUploadError={(error: Error) => console.log(error)}
+          className="group mb-4 mt-0 w-full cursor-pointer pt-0"
+        />
+      )}
+      {type === "profile" && (
+        <UploadButton
+          endpoint={endpoint}
+          onClientUploadComplete={(res) => onChange(res?.[0].url)}
+          // add toast later
+          onUploadError={(error: Error) => console.log(error)}
+          className="group mb-4 h-[70%] cursor-pointer"
+        />
+      )}
     </div>
     // <Button
     //   variant={'outline'}

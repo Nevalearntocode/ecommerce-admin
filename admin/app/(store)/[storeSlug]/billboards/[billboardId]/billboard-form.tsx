@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -62,13 +63,26 @@ const BillboardForm = ({ billboard }: Props) => {
 
   const onSubmit = async (data: FormType) => {
     try {
-      const res = await axios.post(
-        `/api/store/${params.storeSlug}/billboards`,
-        data,
-      );
-      toast.success(res.data.success);
-      router.refresh();
-      form.reset();
+      if (billboard) {
+        await axios
+          .patch(
+            `/api/store/${params.storeSlug}/billboards/${billboard.id}`,
+            data,
+          )
+          .then((res) => {
+            form.reset();
+            toast.success(res.data.success);
+            router.refresh();
+          });
+      } else {
+        await axios
+          .post(`/api/store/${params.storeSlug}/billboards`, data)
+          .then((res) => {
+            form.reset();
+            toast.success(res.data.success);
+            router.refresh();
+          });
+      }
     } catch (error: any) {
       toast.error(error.response.data);
     }
@@ -159,8 +173,14 @@ const BillboardForm = ({ billboard }: Props) => {
                 control={form.control}
                 name="image"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col">
                     <FormLabel>Billboard Image</FormLabel>
+                    {!field.value && (
+                      <FormDescription className="text-xs italic">
+                        We'll show you a preview of your image after upload.
+                        Make sure it fills the preview area for an optimal view.
+                      </FormDescription>
+                    )}
                     <FormControl>
                       <ImageUpload
                         endpoint="profileImage"

@@ -15,6 +15,5 @@ export default async function Home() {
     return <Empty label="You don't have any store yet." />;
   }
 
-  // fix it later
   return redirect(`/${store.slug}`);
 }

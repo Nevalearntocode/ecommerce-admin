@@ -95,6 +95,8 @@ model Billboard {
   store     Store      @relation(fields: [storeId], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+
+  @@unique([name, storeId])
 }
 
 model Product {
@@ -106,6 +108,7 @@ model Product {
   stock       Int
   images      String[]
   categoryId  Int
+  brand       String
   category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   clothing    Clothing?
   technology  Technology?
@@ -117,8 +120,8 @@ model Clothing {
   id        Int      @id @default(autoincrement())
   product   Product  @relation(fields: [productId], references: [id])
   productId Int      @unique
-  size      Size?
-  color     String?
+  size      Size
+  color     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -127,8 +130,8 @@ model Technology {
   id        Int      @id @default(autoincrement())
   product   Product  @relation(fields: [productId], references: [id])
   productId Int      @unique
-  model     String?
-  brand     String?
+  model     String
+  type      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -13,17 +13,19 @@ type Props = {
 
 const Billboards = async ({ params }: Props) => {
   const staff = await getCurrentStaff(params.storeSlug);
+  if (!staff) {
+    return null;
+  }
   const billboards = await db.billboard.findMany({
     where: {
       store: {
         slug: params.storeSlug,
       },
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
-
-  if (!staff) {
-    return null;
-  }
 
   const isAuthorized = canManageBillboard(staff);
 
