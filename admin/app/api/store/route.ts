@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       data: {
         name,
         slug: slug === "" ? defaultSlug : slug,
-        type,
+        storeType: type,
         userId: user.id,
         staffs: {
           create: {

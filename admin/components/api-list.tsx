@@ -31,7 +31,7 @@ const APIList = ({ id, name }: Props) => {
       <APIAlert
         title="POST"
         variant="staff"
-        description={`${baseUrl}/${name}/[${id}]`}
+        description={`${baseUrl}/${name}`}
       />
       <APIAlert
         title="PATCH"

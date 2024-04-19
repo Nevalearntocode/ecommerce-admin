@@ -1,5 +1,5 @@
 import Empty from "@/components/empty";
-import { getStoreBySlugWithStaff } from "@/lib/get-stores";
+import { getStoreWithCurrentStaff } from "@/lib/get-stores";
 import React from "react";
 import SettingsForm from "./settings-form";
 import getCurrentUser from "@/lib/get-current-user";
@@ -19,7 +19,7 @@ const Settings = async ({ params }: Props) => {
     return redirect(`/`);
   }
 
-  const store = await getStoreBySlugWithStaff(params.storeSlug, user.id);
+  const store = await getStoreWithCurrentStaff(params.storeSlug, user.id);
 
   if (!store) {
     return <Empty label="You don't have any store with given link." />;

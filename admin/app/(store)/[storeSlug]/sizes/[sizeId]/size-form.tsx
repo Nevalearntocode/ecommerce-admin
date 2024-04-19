@@ -25,7 +25,6 @@ import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
-import ImageUpload from "@/components/upload-image";
 import { useParams, useRouter } from "next/navigation";
 import {
   Select,
@@ -213,6 +212,13 @@ const SizeForm = ({ size }: Props) => {
         description={`${origin}/api/store/${params.storeSlug}/sizes/${size ? size.id : ``}`}
         variant="staff"
       />
+      {size && (
+        <APIAlert
+          title={"DELETE"}
+          description={`${origin}/api/store/${params.storeSlug}/sizes/${size ? size.id : ``}`}
+          variant="staff"
+        />
+      )}
     </>
   );
 };

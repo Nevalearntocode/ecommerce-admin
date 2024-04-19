@@ -27,7 +27,7 @@ export default async function getUserStoresById(userId: string) {
   return stores;
 }
 
-export async function getStoreBySlugWithStaff(slug: string, userId: string) {
+export async function getStoreWithCurrentStaff(slug: string, userId: string) {
   const store = await db.store.findUnique({
     where: {
       slug,
@@ -43,6 +43,7 @@ export async function getStoreBySlugWithStaff(slug: string, userId: string) {
 
   return store;
 }
+
 
 export async function getUserStoreBySlug(slug: string) {
   const store = await db.store.findUnique({
@@ -112,22 +113,6 @@ export async function gerFirstUserStore() {
   return store;
 }
 
-export async function getStoreWithCurrentStaff(slug: string, userId: string) {
-  const store = await db.store.findUnique({
-    where: {
-      slug,
-    },
-    include: {
-      staffs: {
-        where: {
-          userId,
-        },
-      },
-    },
-  });
-
-  return store;
-}
 
 export async function getStoreById(id: string) {
   const storeId = Number(id);

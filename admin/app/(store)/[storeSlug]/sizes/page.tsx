@@ -27,7 +27,7 @@ const Sizes = async ({ params }: Props) => {
       },
     },
     orderBy: {
-      createdAt: "desc",
+      value: "asc",
     },
   });
 

@@ -210,6 +210,13 @@ const BillboardForm = ({ billboard }: Props) => {
         description={`${origin}/api/store/${params.storeSlug}/billboards/${billboard ? billboard.id : ``}`}
         variant="staff"
       />
+      {billboard && (
+        <APIAlert
+          title={"DELETE"}
+          description={`${origin}/api/store/${params.storeSlug}/billboards/${billboard ? billboard.id : ``}`}
+          variant="staff"
+        />
+      )}
     </>
   );
 };

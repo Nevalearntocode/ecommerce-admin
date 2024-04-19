@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Store } from "@prisma/client";
+import { Store, StoreType } from "@prisma/client";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import {
   Popover,
@@ -33,6 +33,11 @@ type Props = {
   stores: Store[];
 };
 
+const IconMap = {
+  CLOTHING: <Shirt className="mr-2 h-4 w-4" />,
+  TECHNOLOGY: <Laptop className="mr-2 h-4 w-4" />,
+};
+
 const StoreSwitcher = ({ stores }: Props) => {
   const [isComboboxOpen, setIsComboboxOpen] = useState(false);
   const pathname = usePathname();
@@ -59,12 +64,7 @@ const StoreSwitcher = ({ stores }: Props) => {
         >
           {currentStore ? (
             <>
-              {currentStore.storeType === "CLOTHING" && (
-                <Shirt className="mr-2 h-4 w-4" />
-              )}
-              {currentStore.storeType === "TECHNOLOGY" && (
-                <Laptop className="mr-2 h-4 w-4" />
-              )}
+              {IconMap[currentStore.storeType]}
               <p className="mr-2 hidden md:block">{currentStore?.name}</p>
             </>
           ) : (
