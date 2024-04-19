@@ -28,7 +28,7 @@ const Types = async ({ params }: Props) => {
       },
     },
     orderBy: {
-      value: "asc",
+      createdAt: "desc",
     },
   });
 

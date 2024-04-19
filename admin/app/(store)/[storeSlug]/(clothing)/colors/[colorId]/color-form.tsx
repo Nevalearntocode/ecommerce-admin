@@ -182,6 +182,10 @@ const ColorForm = ({ color }: Props) => {
                             {...field}
                             placeholder={"#1F1F1F"}
                           />
+                          <div
+                            className="rounded-full border bg-[#1f1f1f] p-4"
+                            style={{ backgroundColor: field.value }}
+                          />
                         </div>
                       </FormControl>
                       <FormDescription className="text-xs italic">
@@ -191,12 +195,6 @@ const ColorForm = ({ color }: Props) => {
                         (red), "#008000" (green).
                       </FormDescription>
                       <FormMessage />
-                    </div>
-                    <div>
-                      <BlockPicker
-                        color={field.value}
-                        onChange={(e) => field.onChange(e.hex)}
-                      />
                     </div>
                   </FormItem>
                 )}

@@ -28,7 +28,7 @@ const Models = async ({ params }: Props) => {
       },
     },
     orderBy: {
-      value: "asc",
+      createdAt: "desc",
     },
   });
 

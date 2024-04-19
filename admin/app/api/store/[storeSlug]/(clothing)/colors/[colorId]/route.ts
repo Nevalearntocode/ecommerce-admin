@@ -4,6 +4,7 @@ import { getColorById } from "@/lib/get-colors";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
 import { canManageProduct } from "@/lib/permission-hierarchy";
 import { NextResponse } from "next/server";
+import { expandHexCode } from "@/lib/convert-hex-code";
 
 export async function PATCH(
   req: Request,
@@ -12,8 +13,7 @@ export async function PATCH(
   try {
     const user = await getCurrentUser();
 
-    const { value, name }: { value?: string; name?: string } =
-      await req.json();
+    const { value, name }: { value?: string; name?: string } = await req.json();
 
     const { storeSlug, colorId } = params;
 
@@ -55,6 +55,10 @@ export async function PATCH(
       value: value ? value : existingColor.value,
     };
 
+    if (updateData.value.length === 4) {
+      updateData.value = expandHexCode(updateData.value);
+    }
+
     if (
       updateData.name == existingColor.name &&
       updateData.value == existingColor.value
@@ -74,7 +78,7 @@ export async function PATCH(
       color: newColor,
     });
   } catch (error) {
-    console.log("[COLOR DELETE]", error);
+    console.log("[COLOR PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

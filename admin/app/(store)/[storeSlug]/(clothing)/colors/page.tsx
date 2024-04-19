@@ -28,7 +28,7 @@ const Colors = async ({ params }: Props) => {
       },
     },
     orderBy: {
-      value: "asc",
+      createdAt: "desc"
     },
   });
 

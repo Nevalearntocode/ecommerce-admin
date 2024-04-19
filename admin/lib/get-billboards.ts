@@ -1,5 +1,4 @@
 import { db } from "./db";
-import getCurrentUser from "./get-current-user";
 
 export async function getBillboardById(id: string) {
   const billboardId = Number(id);

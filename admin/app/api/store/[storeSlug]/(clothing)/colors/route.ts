@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
 import { canManageProduct } from "@/lib/permission-hierarchy";
+import { expandHexCode } from "@/lib/convert-hex-code";
 
 export async function POST(
   req: Request,
@@ -31,6 +32,14 @@ export async function POST(
       return new NextResponse("Color value is required.", { status: 400 });
     }
 
+    const updateData = {
+      value: "",
+    };
+
+    if (value.length === 4) {
+      updateData.value = expandHexCode(value);
+    }
+
     const existingStore = await getStoreWithCurrentStaff(storeSlug, user.id);
 
     if (!existingStore) {
@@ -56,7 +65,7 @@ export async function POST(
     const newColor = await db.color.create({
       data: {
         name,
-        value,
+        value: updateData.value,
         storeId: existingStore.id,
       },
     });
