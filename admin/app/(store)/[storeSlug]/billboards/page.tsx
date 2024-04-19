@@ -16,6 +16,12 @@ const Billboards = async ({ params }: Props) => {
   if (!staff) {
     return null;
   }
+  const isAuthorized = canManageBillboard(staff);
+
+  if (!isAuthorized) {
+    return <NotPermitted />;
+  }
+
   const billboards = await db.billboard.findMany({
     where: {
       store: {
@@ -26,12 +32,6 @@ const Billboards = async ({ params }: Props) => {
       createdAt: "desc",
     },
   });
-
-  const isAuthorized = canManageBillboard(staff);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
-  }
 
   return (
     <div className="flex-col">

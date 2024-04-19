@@ -10,8 +10,8 @@ import { cn } from "@/lib/utils";
 type Props = {
   onChange: (value: string) => void;
   value: string;
-  endpoint: "profileImage";
-  type: "billboard" | "profile";
+  endpoint: "profileImage" | "billboardImage" | "productImages";
+  type: "billboard" | "profile" | "productImages";
 };
 
 const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
@@ -68,21 +68,6 @@ const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
         />
       )}
     </div>
-    // <Button
-    //   variant={'outline'}
-    //   className="flex h-[80%] w-full flex-col items-center justify-center gap-8"
-    //   onClick={(e) => {
-    //     e.preventDefault();
-    //     open?.();
-    //   }}
-    // >
-    //   <TbPhotoPlus size={50} />
-    //   {value && (
-    //     <div className="absolute inset-0 h-full w-full">
-    //       <Image alt="upload" fill style={{ objectFit: 'cover' }} src={value} />
-    //     </div>
-    //   )}
-    // </Button>
   );
 };
 

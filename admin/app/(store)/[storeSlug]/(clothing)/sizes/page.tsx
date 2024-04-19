@@ -3,6 +3,8 @@ import SizeClient from "./size-client";
 import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
+import { canManageProduct } from "@/lib/permission-hierarchy";
+import NotPermitted from "@/components/not-permitted";
 
 type Props = {
   params: {
@@ -14,6 +16,11 @@ const Sizes = async ({ params }: Props) => {
   const staff = await getCurrentStaffAndStoreType(params.storeSlug);
   if (!staff) {
     return null;
+  }
+  const isAuthorized = canManageProduct(staff);
+
+  if (!isAuthorized) {
+    return <NotPermitted />;
   }
 
   if (staff.store.storeType !== "CLOTHING") {

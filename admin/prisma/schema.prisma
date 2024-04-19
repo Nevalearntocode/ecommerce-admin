@@ -156,7 +156,7 @@ model Billboard {
 model Product {
   id          Int      @id @default(autoincrement())
   name        String
-  slug        String   @unique
+  slug        String   
   description String?
   price       Float
   stock       Int
@@ -178,6 +178,8 @@ model Product {
   typeId      Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@unique([slug, storeId])
 }
 
 model Account {

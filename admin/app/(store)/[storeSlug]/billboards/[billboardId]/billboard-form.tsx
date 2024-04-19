@@ -190,7 +190,7 @@ const BillboardForm = ({ billboard }: Props) => {
                     )}
                     <FormControl>
                       <ImageUpload
-                        endpoint="profileImage"
+                        endpoint="billboardImage"
                         type="billboard"
                         onChange={field.onChange}
                         value={field.value}

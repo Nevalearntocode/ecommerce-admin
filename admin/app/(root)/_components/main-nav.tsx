@@ -70,6 +70,12 @@ const MainNav = ({ stores }: Props) => {
       active: pathname === `/${params.storeSlug}/categories`,
       requireAdminOrPermission: "canManageCategory",
     },
+    {
+      href: `/${params.storeSlug}/products`,
+      label: "Products",
+      active: pathname === `/${params.storeSlug}/products`,
+      requireAdminOrPermission: "canManageProduct",
+    },
   ];
 
   // Array of routes specifically for stores of type "CLOTHING"

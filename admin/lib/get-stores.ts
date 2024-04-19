@@ -44,7 +44,6 @@ export async function getStoreWithCurrentStaff(slug: string, userId: string) {
   return store;
 }
 
-
 export async function getUserStoreBySlug(slug: string) {
   const store = await db.store.findUnique({
     where: {
@@ -113,7 +112,6 @@ export async function gerFirstUserStore() {
   return store;
 }
 
-
 export async function getStoreById(id: string) {
   const storeId = Number(id);
 
@@ -128,4 +126,35 @@ export async function getStoreById(id: string) {
   });
 
   return store;
+}
+
+export async function getCategoryAndClothingFieldsInStore(id: number) {
+  const store = await db.store.findUnique({
+    where: {
+      id
+    },
+    include: {
+      categories: {
+        select: {
+          name: true,
+        },
+      },
+      sizes: {
+        select: {
+          name: true,
+        },
+      },
+      colors: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  return {
+    categories: store?.categories,
+    sizes: store?.sizes,
+    colors: store?.colors,
+  };
 }

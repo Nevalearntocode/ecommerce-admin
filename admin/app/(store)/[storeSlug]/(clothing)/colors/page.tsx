@@ -3,6 +3,8 @@ import ColorClient from "./color-client";
 import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
+import { canManageProduct } from "@/lib/permission-hierarchy";
+import NotPermitted from "@/components/not-permitted";
 
 type Props = {
   params: {
@@ -17,6 +19,12 @@ const Colors = async ({ params }: Props) => {
     return null;
   }
 
+  const isAuthorized = canManageProduct(staff);
+
+  if (!isAuthorized) {
+    return <NotPermitted />;
+  }
+
   if (staff.store.storeType !== "CLOTHING") {
     return redirect(`/${params.storeSlug}`);
   }
@@ -28,7 +36,7 @@ const Colors = async ({ params }: Props) => {
       },
     },
     orderBy: {
-      createdAt: "desc"
+      createdAt: "desc",
     },
   });
 

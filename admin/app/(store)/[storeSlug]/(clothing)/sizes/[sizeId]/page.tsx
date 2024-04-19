@@ -2,6 +2,8 @@ import { getSizeById } from "@/lib/get-sizes";
 import React from "react";
 import SizeForm from "./size-form";
 import { getCurrentStaff } from "@/lib/get-staffs";
+import { canManageProduct } from "@/lib/permission-hierarchy";
+import NotPermitted from "@/components/not-permitted";
 
 type Props = {
   params: {
@@ -16,6 +18,11 @@ const SizePage = async ({ params }: Props) => {
 
   if (!staff) {
     return null;
+  }
+  const isAuthorized = canManageProduct(staff);
+
+  if (!isAuthorized) {
+    return <NotPermitted />;
   }
 
   return (

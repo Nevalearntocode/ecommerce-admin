@@ -1,4 +1,14 @@
-import { Billboard, Category, Staff, Store } from "@prisma/client";
+import {
+  Billboard,
+  Category,
+  Color,
+  Model,
+  Product,
+  Size,
+  Staff,
+  Store,
+  Type,
+} from "@prisma/client";
 
 export type SafeUser = {
   id: string;
@@ -22,4 +32,16 @@ export type StaffWithProfile = Staff & {
 
 export type CategoryWithBillboard = Category & {
   billboard: Billboard;
+};
+
+export type ClothingProduct = Product & {
+  size: Size | null;
+  color: Color | null;
+  category: Category;
+};
+
+export type TechnologyProduct = Product & {
+  model: Model | null;
+  type: Type | null;
+  category: Category;
 };
