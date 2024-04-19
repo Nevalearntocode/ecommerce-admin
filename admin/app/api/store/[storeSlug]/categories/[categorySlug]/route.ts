@@ -223,13 +223,8 @@ export async function GET(
   { params }: { params: { storeSlug: string; categorySlug: string } },
 ) {
   try {
-    const user = await getCurrentUser();
 
     const { categorySlug, storeSlug } = params;
-
-    if (!user) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
 
     if (!storeSlug) {
       return new NextResponse("Store slug is required.", { status: 400 });

@@ -3,44 +3,44 @@
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Size } from "@prisma/client";
+import { Type } from "@prisma/client";
 import { Plus, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { SizeColumn, columns } from "./size-column";
+import { TypeColumn, columns } from "./type-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/datatable";
 import APIList from "@/components/api-list";
 import { useParams, useRouter } from "next/navigation";
 
 type Props = {
-  sizes: Size[];
+  types: Type[];
 };
 
-const SizeClient = ({ sizes }: Props) => {
+const TypeClient = ({ types }: Props) => {
   const [searchInput, setSearchInput] = useState("");
-  const [filteredSizes, setFilteredSizes] = useState(sizes);
+  const [filteredTypes, setFilteredTypes] = useState(types);
   const router = useRouter();
   const params = useParams();
 
   useEffect(() => {
     if (searchInput.trim() === "") {
-      setFilteredSizes(sizes); // Show all sizes if search is empty
+      setFilteredTypes(types); // Show all types if search is empty
     } else {
       const lowerCaseSearch = searchInput.toLowerCase();
-      const filtered = sizes.filter((size) =>
-        size.name.toLowerCase().includes(lowerCaseSearch),
+      const filtered = types.filter((type) =>
+        type.name.toLowerCase().includes(lowerCaseSearch),
       );
-      setFilteredSizes(filtered);
+      setFilteredTypes(filtered);
     }
-  }, [searchInput, sizes]);
+  }, [searchInput, types]);
 
-  const formattedSizes: SizeColumn[] = filteredSizes.map((size) => ({
-    id: size.id,
-    name: size.name,
-    value: size.value,
-    createdAt: format(size.createdAt, "h:mm MMMM do, yyyy"),
-    updatedAt: format(size.updatedAt, "h:mm MMMM do, yyyy"),
+  const formattedTypes: TypeColumn[] = filteredTypes.map((type) => ({
+    id: type.id,
+    name: type.name,
+    value: type.value,
+    createdAt: format(type.createdAt, "h:mm MMMM do, yyyy"),
+    updatedAt: format(type.updatedAt, "h:mm MMMM do, yyyy"),
   }));
 
   return (
@@ -48,14 +48,16 @@ const SizeClient = ({ sizes }: Props) => {
       <div className="flex items-center justify-between">
         <Header
           title={
-            sizes.length === 1
-              ? `Size (${sizes.length})`
-              : `Sizes (${sizes.length})`
+            types.length <= 1
+              ? `Type (${types.length})`
+              : `Types (${types.length})`
           }
-          description="Manage your sizes for your store"
+          description="Manage your types for your store"
         />
         <div className="flex gap-x-4">
-          <Button onClick={() => router.push(`/${params.storeSlug}/sizes/new`)}>
+          <Button
+            onClick={() => router.push(`/${params.storeSlug}/types/new`)}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Add new
           </Button>
@@ -67,7 +69,7 @@ const SizeClient = ({ sizes }: Props) => {
         <div className="relative">
           <Input
             onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search size by name..."
+            placeholder="Search type by name..."
           />
           <Button
             className="absolute right-0 top-0 rounded-full"
@@ -78,11 +80,11 @@ const SizeClient = ({ sizes }: Props) => {
           </Button>
         </div>
       </div>
-      <DataTable columns={columns} data={formattedSizes} />
-      <Header title="API" description="API calls for Sizes" />
-      <APIList name="sizes" id="size-id" />
+      <DataTable columns={columns} data={formattedTypes} />
+      <Header title="API" description="API calls for Types" />
+      <APIList name="types" id="type-id" />
     </>
   );
 };
 
-export default SizeClient;
+export default TypeClient;

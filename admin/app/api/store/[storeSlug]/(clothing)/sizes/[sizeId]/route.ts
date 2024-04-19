@@ -75,7 +75,7 @@ export async function PATCH(
       size: newSize,
     });
   } catch (error) {
-    console.log("[SIZE DELETE]", error);
+    console.log("[SIZE PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -131,6 +131,27 @@ export async function DELETE(
     });
   } catch (error) {
     console.log("[SIZE DELETE]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { sizeId: string } },
+) {
+  try {
+    if (!params.sizeId) {
+      return new NextResponse("Size ID is required.", { status: 400 });
+    }
+    const size = await getSizeById(params.sizeId);
+
+    if (!size) {
+      return new NextResponse("No sizes found.", { status: 404 });
+    }
+
+    return NextResponse.json(size);
+  } catch (error) {
+    console.log("[POST SIZE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -207,18 +207,25 @@ const SizeForm = ({ size }: Props) => {
         </form>
       </Form>
       <Separator />
+      {size && (
+        <>
+          <APIAlert
+            title={"GET"}
+            description={`${origin}/api/store/${params.storeSlug}/sizes/${size ? size.id : ``}`}
+            variant="public"
+          />
+          <APIAlert
+            title={"DELETE"}
+            description={`${origin}/api/store/${params.storeSlug}/sizes/${size ? size.id : ``}`}
+            variant="staff"
+          />
+        </>
+      )}
       <APIAlert
         title={size ? "PATCH" : "POST"}
         description={`${origin}/api/store/${params.storeSlug}/sizes/${size ? size.id : ``}`}
         variant="staff"
       />
-      {size && (
-        <APIAlert
-          title={"DELETE"}
-          description={`${origin}/api/store/${params.storeSlug}/sizes/${size ? size.id : ``}`}
-          variant="staff"
-        />
-      )}
     </>
   );
 };

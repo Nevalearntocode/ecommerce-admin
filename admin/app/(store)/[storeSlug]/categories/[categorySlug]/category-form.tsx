@@ -270,6 +270,20 @@ const CategoryForm = ({ category, billboardNames }: Props) => {
         </form>
       </Form>
       <Separator />
+      {category && (
+        <>
+          <APIAlert
+            title={"GET"}
+            description={`${origin}/api/store/${params.storeSlug}/categories/${category ? category.slug : ``}`}
+            variant="public"
+          />
+          <APIAlert
+            title={"DELETE"}
+            description={`${origin}/api/store/${params.storeSlug}/categories/${category ? category.slug : ``}`}
+            variant="staff"
+          />
+        </>
+      )}
       <APIAlert
         title={category ? "PATCH" : "POST"}
         description={`${origin}/api/store/${params.storeSlug}/categories/${category ? category.slug : ``}`}

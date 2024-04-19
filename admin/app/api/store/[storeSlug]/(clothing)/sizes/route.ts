@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { SizeValue } from "@prisma/client";
-import { getStoreWithCurrentStaff } from "@/lib/get-stores";
+import { getStoreWithCurrentStaff, getUserStoreBySlug } from "@/lib/get-stores";
 import { canManageProduct } from "@/lib/permission-hierarchy";
 
 export async function POST(
@@ -15,8 +15,14 @@ export async function POST(
     const { name, value }: { name: string; value: SizeValue } =
       await req.json();
 
+    const { storeSlug } = params;
+
     if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    if (!storeSlug) {
+      return new NextResponse("Store slug is required.", { status: 400 });
     }
 
     if (!name) {
@@ -27,18 +33,15 @@ export async function POST(
       return new NextResponse("Size value is required.", { status: 400 });
     }
 
-    const existingStore = await getStoreWithCurrentStaff(
-      params.storeSlug,
-      user.id,
-    );
+    const existingStore = await getStoreWithCurrentStaff(storeSlug, user.id);
 
     if (!existingStore) {
       return new NextResponse("Store not found.", { status: 404 });
     }
 
-    if (existingStore.storeType === "TECHNOLOGY") {
+    if (existingStore.storeType !== "CLOTHING") {
       return new NextResponse(
-        "Size is not a valid attribute for technology products. Please use relevant attributes like model or type.",
+        "Size is not a valid attribute for this product. Please use relevant attributes.",
         { status: 400 },
       );
     }
@@ -61,6 +64,50 @@ export async function POST(
     });
 
     return NextResponse.json({ success: "Size created.", newSize });
+  } catch (error) {
+    console.log("[POST SIZE]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { storeSlug: string } },
+) {
+  try {
+    const { storeSlug } = params;
+
+    if (!storeSlug) {
+      return new NextResponse("Store slug is required.", { status: 400 });
+    }
+
+    const existingStore = await db.store.findUnique({
+      where: {
+        slug: storeSlug,
+      },
+      include: {
+        sizes: {
+          orderBy: {
+            value: "asc",
+          },
+        },
+      },
+    });
+
+    if (!existingStore) {
+      return new NextResponse("Store not found.", { status: 404 });
+    }
+
+    if (existingStore.storeType !== "CLOTHING") {
+      return new NextResponse(
+        "Size is not a valid attribute for this product. Please use relevant attributes.",
+        { status: 400 },
+      );
+    }
+
+    return NextResponse.json({
+      sizes: existingStore.sizes,
+    });
   } catch (error) {
     console.log("[POST SIZE]", error);
     return new NextResponse("Internal Error", { status: 500 });

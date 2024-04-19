@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Billboard } from "@prisma/client";
+import { Model } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import APIAlert from "@/components/api-alert";
 import { Button } from "@/components/ui/button";
@@ -25,21 +25,22 @@ import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
-import ImageUpload from "@/components/upload-image";
 import { useParams, useRouter } from "next/navigation";
 
 type Props = {
-  billboard: Billboard | null;
+  model: Model | null;
 };
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name needs at least 2 characters" }),
-  image: z.string(),
+  value: z
+    .string()
+    .min(2, { message: "Model value needs at least 2 characters" }),
 });
 
 type FormType = z.infer<typeof formSchema>;
 
-const BillboardForm = ({ billboard }: Props) => {
+const ModelForm = ({ model }: Props) => {
   const { open, close } = useModal();
   const origin = useOrigin();
   const router = useRouter();
@@ -48,35 +49,29 @@ const BillboardForm = ({ billboard }: Props) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      image: "",
+      value: "",
     },
   });
 
   useEffect(() => {
-    if (billboard) {
-      form.setValue("name", billboard.name);
-      form.setValue("image", billboard.image);
+    if (model) {
+      form.setValue("name", model.name);
+      form.setValue("value", model.value);
     }
-  }, [billboard]);
+  }, [model]);
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    if (
-      billboard &&
-      billboard.name === data.name &&
-      billboard.image === data.image
-    ) {
-      toast.info("Billboard has not changed.");
+    console.log(data);
+    if (model && model.name === data.name && model.value === data.value) {
+      toast.info("Model has not changed.");
       return;
     }
     try {
-      if (billboard) {
+      if (model) {
         await axios
-          .patch(
-            `/api/store/${params.storeSlug}/billboards/${billboard.id}`,
-            data,
-          )
+          .patch(`/api/store/${params.storeSlug}/models/${model.id}`, data)
           .then((res) => {
             form.reset();
             toast.success(res.data.success);
@@ -84,7 +79,7 @@ const BillboardForm = ({ billboard }: Props) => {
           });
       } else {
         await axios
-          .post(`/api/store/${params.storeSlug}/billboards`, data)
+          .post(`/api/store/${params.storeSlug}/models`, data)
           .then((res) => {
             form.reset();
             toast.success(res.data.success);
@@ -99,10 +94,10 @@ const BillboardForm = ({ billboard }: Props) => {
   const onDelete = async () => {
     try {
       const res = await axios.delete(
-        `/api/store/${params.storeSlug}/billboards/${billboard?.id}`,
+        `/api/store/${params.storeSlug}/models/${model?.id}`,
       );
       toast.success(res.data.success);
-      router.push(`/${params.storeSlug}/billboards`);
+      router.push(`/${params.storeSlug}/models`);
       router.refresh();
       close();
     } catch (error: any) {
@@ -113,8 +108,8 @@ const BillboardForm = ({ billboard }: Props) => {
 
   const deletePackage = {
     confirmDelete: onDelete,
-    headerDelete: " Delete billboard?",
-    descriptionDelete: `Deleting "${billboard?.name}" will permanently remove it and all its content. This is irreversible.`,
+    headerDelete: " Delete model?",
+    descriptionDelete: `Deleting "${model?.name}" will permanently remove it and all its content. This is irreversible.`,
   };
 
   return (
@@ -122,16 +117,12 @@ const BillboardForm = ({ billboard }: Props) => {
       <div className="flex items-center justify-end md:justify-between">
         <div className="hidden md:block">
           <Header
-            title={
-              billboard
-                ? `Manage ${billboard.name} Billboard`
-                : "Create new billboard"
-            }
-            description="Create or manage your billboard"
+            title={model ? `Manage ${model.name} Model` : "Create new model"}
+            description="Create or manage your product models"
           />
         </div>
         <div className="flex gap-x-4">
-          {billboard && (
+          {model && (
             <Button
               className="md:h-10 md:w-32"
               disabled={isLoading}
@@ -148,9 +139,9 @@ const BillboardForm = ({ billboard }: Props) => {
             size={"sm"}
             disabled={isLoading}
             type="submit"
-            form="billboardForm"
+            form="modelForm"
           >
-            {billboard ? "Save changes" : "Save"}
+            {model ? "Save changes" : "Save"}
           </Button>
         </div>
       </div>
@@ -159,44 +150,50 @@ const BillboardForm = ({ billboard }: Props) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8"
-          id="billboardForm"
+          id="modelForm"
         >
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="flex flex-col gap-y-8">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="">
+                  <FormLabel>Model name</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isLoading}
+                      {...field}
+                      placeholder="ASUS Zenbook Pro 14 Duo OLED (UX8402)"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="col-span-2">
               <FormField
                 control={form.control}
-                name="name"
+                name="value"
                 render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Billboard name</FormLabel>
-                    <FormControl>
-                      <Input disabled={isLoading} {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="image"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Billboard Image</FormLabel>
-                    {!field.value && (
-                      <FormDescription className="text-xs italic">
-                        We'll show you a preview of your image after upload.
-                        Make sure it fills the preview area for an optimal view.
+                  <FormItem className="flex gap-x-4">
+                    <div className="mt-1 flex w-1/2 flex-col gap-y-2">
+                      <FormLabel>Model value</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center justify-center gap-x-4">
+                          <Input
+                            disabled={isLoading}
+                            {...field}
+                            placeholder={"i7-12700H/RTX3050Ti/16GB/1TB"}
+                          />
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Please enter key specifications separated by slashes,
+                        for example: Processor/Graphics Card/RAM/Storage (e.g.,
+                        i7-12700H/RTX3050Ti/16GB/1TB).
                       </FormDescription>
-                    )}
-                    <FormControl>
-                      <ImageUpload
-                        endpoint="profileImage"
-                        type="billboard"
-                        onChange={field.onChange}
-                        value={field.value}
-                      />
-                    </FormControl>
-                    <FormMessage />
+                      <FormMessage />
+                    </div>
                   </FormItem>
                 )}
               />
@@ -205,27 +202,27 @@ const BillboardForm = ({ billboard }: Props) => {
         </form>
       </Form>
       <Separator />
-      {billboard && (
+      {model && (
         <>
           <APIAlert
             title={"GET"}
-            description={`${origin}/api/store/${params.storeSlug}/billboards/${billboard ? billboard.id : ``}`}
+            description={`${origin}/api/store/${params.storeSlug}/models/${model ? model.id : ``}`}
             variant="public"
           />
           <APIAlert
             title={"DELETE"}
-            description={`${origin}/api/store/${params.storeSlug}/billboards/${billboard ? billboard.id : ``}`}
+            description={`${origin}/api/store/${params.storeSlug}/models/${model ? model.id : ``}`}
             variant="staff"
           />
         </>
       )}
       <APIAlert
-        title={billboard ? "PATCH" : "POST"}
-        description={`${origin}/api/store/${params.storeSlug}/billboards/${billboard ? billboard.id : ``}`}
+        title={model ? "PATCH" : "POST"}
+        description={`${origin}/api/store/${params.storeSlug}/models/${model ? model.id : ``}`}
         variant="staff"
       />
     </>
   );
 };
 
-export default BillboardForm;
+export default ModelForm;

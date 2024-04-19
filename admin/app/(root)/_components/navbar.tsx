@@ -20,8 +20,13 @@ const Navbar = async ({}: Props) => {
   return (
     <div className="border-b">
       <div className="flex h-16 items-center px-4">
+        <div className="sm:flex lg:hidden">
+          <MainNav stores={stores} />
+        </div>
         <StoreSwitcher stores={stores} />
-        <MainNav stores={stores} />
+        <div className="hidden lg:block">
+          <MainNav stores={stores} />
+        </div>
         <div className="ml-auto flex items-center space-x-4">
           <AddStaff stores={stores} userId={user.id} />
           <UserButton user={user} />
