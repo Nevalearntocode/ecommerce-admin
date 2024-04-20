@@ -80,9 +80,8 @@ const SettingsForm = ({ store, isOwner }: Props) => {
     try {
       const res = await axios.delete(`/api/store/${store.slug}`);
       toast.success(res.data.success);
-      setTimeout(() => {
-        window.location.assign(`/`);
-      }, 1000);
+      router.push(`/`);
+      router.refresh();
       close();
     } catch (error: any) {
       console.log(error);

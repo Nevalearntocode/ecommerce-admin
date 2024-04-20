@@ -22,7 +22,7 @@ export const ourFileRouter = {
   billboardImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
-  productImages: f({ image: { maxFileSize: "4MB", maxFileCount: 4 } })
+  productImage: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(() => handleAuth())
     .onUploadComplete(() => {}),
 } satisfies FileRouter;

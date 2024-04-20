@@ -86,7 +86,7 @@ export async function PATCH(
       data: { ...updateData },
     });
 
-    return NextResponse.json({ success: "User roles updated", updateStaff });
+    return NextResponse.json({ success: "Staff roles updated", updateStaff });
   } catch (error) {
     console.log("[STAFF ROLES]", error);
     return new NextResponse("Internal Error", { status: 500 });

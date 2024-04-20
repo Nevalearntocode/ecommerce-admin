@@ -52,10 +52,30 @@ export async function getClothingProductWithStoreType(
       },
     },
     include: {
+      model: true,
+      type: true,
+      category: true,
+    },
+  });
+  return product as ClothingProduct | null;
+}
+
+export async function getTechnologyProductWithStoreType(
+  storeId: number,
+  slug: string,
+) {
+  const product = await db.product.findUnique({
+    where: {
+      slug_storeId: {
+        slug,
+        storeId,
+      },
+    },
+    include: {
       size: true,
       color: true,
       category: true,
     },
   });
-  return product as ClothingProduct | null;
+  return product as TechnologyProduct | null;
 }

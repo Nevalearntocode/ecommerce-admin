@@ -9,42 +9,47 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   onChange: (value: string) => void;
-  value: string;
-  endpoint: "profileImage" | "billboardImage" | "productImages";
-  type: "billboard" | "profile" | "productImages";
+  value: string | string[];
+  endpoint: "profileImage" | "billboardImage" | "productImage";
+  type: "billboard" | "profile";
 };
 
 const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
-  const fileType = value.split(".").pop();
+  if (typeof value === "string") {
+    const fileType = value && value.split(".").pop();
 
-  if (value && fileType !== "pdf") {
-    return (
-      <div
-        className={cn(
-          "relative flex justify-center",
-          type === "profile" && "h-[185px]",
-          type === "billboard" && "h-auto",
-        )}
-      >
-        <div>
-          <Image
-            src={value}
-            alt="your_home"
-            height={720}
-            width={720}
-            className="aspect-video h-full w-full rounded-md object-fill"
-          />
-        </div>
-        <Button
-          variant={"outline"}
-          size={`icon`}
-          className="absolute -right-2 -top-2 h-4 w-4 rounded-full"
-          onClick={() => onChange("")}
+    if (value && fileType !== "pdf") {
+      return (
+        <div
+          className={cn(
+            "relative flex justify-center",
+            type === "profile" && "h-[185px]",
+            type === "billboard" && "h-auto",
+          )}
         >
-          <X />
-        </Button>
-      </div>
-    );
+          <div>
+            <Image
+              src={value}
+              alt="billboard"
+              height={720}
+              width={720}
+              className="aspect-video h-full w-full rounded-md object-fill"
+            />
+          </div>
+          <Button
+            variant={"outline"}
+            size={`icon`}
+            className="absolute -right-2 -top-2 h-4 w-4 rounded-full"
+            onClick={(e) => {
+              e.preventDefault();
+              onChange("");
+            }}
+          >
+            <X />
+          </Button>
+        </div>
+      );
+    }
   }
 
   return (

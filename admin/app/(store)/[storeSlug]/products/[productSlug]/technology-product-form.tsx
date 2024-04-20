@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ClothingProduct } from "@/types";
+import { ClothingProduct, TechnologyProduct } from "@/types";
 import { useParams } from "next/navigation";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
@@ -36,18 +36,18 @@ import ProductImage from "@/components/product-image";
 import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
-  product: ClothingProduct | null;
+  product: TechnologyProduct | null;
   categories:
     | {
         name: string;
       }[]
     | undefined;
-  sizes:
+  models:
     | {
         name: string;
       }[]
     | undefined;
-  colors:
+  types:
     | {
         name: string;
       }[]
@@ -64,13 +64,18 @@ const formSchema = z.object({
   brand: z.string().optional(),
   isFeatured: z.boolean().optional(),
   categoryName: z.string().min(1, "Category is required"),
-  sizeName: z.string().min(1, "Size is required"),
-  colorName: z.string().min(1, "Color is required"),
+  modelName: z.string().min(1, "Model is required"),
+  typeName: z.string().min(1, "Type is required"),
 });
 
 type FormType = z.infer<typeof formSchema>;
 
-const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
+const TechnologyProductForm = ({
+  product,
+  categories,
+  types,
+  models,
+}: Props) => {
   const params = useParams();
   const origin = useOrigin();
 
@@ -86,8 +91,8 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
       brand: "",
       isFeatured: false,
       categoryName: "",
-      sizeName: "",
-      colorName: "",
+      modelName: "",
+      typeName: "",
     },
   });
 
@@ -111,6 +116,10 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
   const onSubmit = async (data: FormType) => {
     if (!parseFloat(data.price)) {
       toast.info("Product price need to be a number.");
+      return;
+    }
+    if (data.images.length === 0) {
+      toast.info("You need at least 1 image for your product.");
       return;
     }
     console.log(data);
@@ -229,10 +238,10 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
             />
             <FormField
               control={form.control}
-              name="colorName"
+              name="typeName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Color</FormLabel>
+                  <FormLabel>Product Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -246,7 +255,7 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {colors?.map(({ name }) => (
+                      {types?.map(({ name }) => (
                         <SelectItem value={name} key={name}>
                           {name[0].toUpperCase() + name.slice(1).toLowerCase()}
                         </SelectItem>
@@ -259,10 +268,10 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
             />
             <FormField
               control={form.control}
-              name="sizeName"
+              name="modelName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Size</FormLabel>
+                  <FormLabel>Product Model</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -276,7 +285,7 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {sizes?.map(({ name }) => (
+                      {models?.map(({ name }) => (
                         <SelectItem value={name} key={name}>
                           {name[0].toUpperCase() + name.slice(1).toLowerCase()}
                         </SelectItem>
@@ -441,4 +450,4 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
   );
 };
 
-export default ClothingProductForm;
+export default TechnologyProductForm;

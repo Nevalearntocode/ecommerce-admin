@@ -152,9 +152,42 @@ export async function getCategoryAndClothingFieldsInStore(id: number) {
     },
   });
 
+  
+
   return {
     categories: store?.categories,
     sizes: store?.sizes,
     colors: store?.colors,
+  };
+}
+
+export async function getCategoryAndTechnologyFieldsInStore(id: number) {
+  const store = await db.store.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      categories: {
+        select: {
+          name: true,
+        },
+      },
+      models: {
+        select: {
+          name: true,
+        },
+      },
+      types: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+
+  return {
+    categories: store?.categories,
+    models: store?.models,
+    types: store?.types,
   };
 }
