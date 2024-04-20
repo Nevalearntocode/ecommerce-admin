@@ -42,7 +42,7 @@ model Store {
   storeType  StoreType   @default(CLOTHING)
   inviteCode String      @unique @default(uuid())
   staffs     Staff[]
-  Product    Product[]
+  products   Product[]
   categories Category[]
   billboards Billboard[]
   sizes      Size[]
@@ -59,11 +59,11 @@ model Size {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   value     SizeValue
-  Store     Store     @relation(fields: [storeId], references: [id])
+  store     Store     @relation(fields: [storeId], references: [id])
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Product   Product[]
+  products   Product[]
 
   @@unique([name, storeId])
 }
@@ -72,11 +72,11 @@ model Color {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   value     String
-  Store     Store     @relation(fields: [storeId], references: [id])
+  store     Store     @relation(fields: [storeId], references: [id])
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Product   Product[]
+  products   Product[]
 
   @@unique([name, storeId])
 }
@@ -85,11 +85,11 @@ model Model {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   value     String
-  Store     Store     @relation(fields: [storeId], references: [id])
+  store     Store     @relation(fields: [storeId], references: [id])
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Product   Product[]
+  products   Product[]
 
   @@unique([name, storeId])
 }
@@ -98,11 +98,11 @@ model Type {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   value     String
-  Store     Store     @relation(fields: [storeId], references: [id])
+  store     Store     @relation(fields: [storeId], references: [id])
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Product   Product[]
+  products   Product[]
 
   @@unique([name, storeId])
 }
@@ -132,7 +132,7 @@ model Category {
   storeId     Int
   billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Restrict)
   billboardId Int       @unique
-  product     Product[]
+  products     Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -156,11 +156,11 @@ model Billboard {
 model Product {
   id          Int      @id @default(autoincrement())
   name        String
-  slug        String   
-  description String?
+  slug        String
   price       Float
   stock       Int
   images      String[]
+  description String?
   brand       String?
   isFeatured  Boolean  @default(false)
   isArchived  Boolean  @default(false)
@@ -180,6 +180,7 @@ model Product {
   updatedAt   DateTime @updatedAt
 
   @@unique([slug, storeId])
+  @@unique([name, storeId])
 }
 
 model Account {

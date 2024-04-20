@@ -30,7 +30,7 @@ const Types = async ({ params }: Props) => {
 
   const types = await db.type.findMany({
     where: {
-      Store: {
+      store: {
         slug: params.storeSlug,
       },
     },

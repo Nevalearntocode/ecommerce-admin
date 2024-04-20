@@ -1,46 +1,38 @@
-import { StoreType } from "@prisma/client";
 import { db } from "./db";
 import { ClothingProduct, TechnologyProduct } from "@/types";
 
-export async function getProductsWithStoreType(
-  storeSlug: string,
-  storeType: StoreType,
+export async function getTechnologyProductsWithStoreType(
+  storeId: number,
 ) {
-  if (storeType === "CLOTHING") {
-    const products = await db.product.findMany({
-      where: {
-        store: {
-          slug: storeSlug,
-        },
-      },
-      include: {
-        color: true,
-        size: true,
-        category: true,
-      },
-    });
-    return products;
-  }
-  if (storeType === "TECHNOLOGY") {
-    const products = await db.product.findMany({
-      where: {
-        store: {
-          slug: storeSlug,
-        },
-      },
-      include: {
-        model: true,
-        type: true,
-        category: true,
-      },
-    });
-    return products;
-  }
-
-  return [] as (ClothingProduct | TechnologyProduct)[];
+  const products = await db.product.findMany({
+    where: {
+      storeId
+    },
+    include: {
+      model: true,
+      type: true,
+      category: true,
+    },
+  });
+  return products as TechnologyProduct[];
+}
+export async function getClothingProductsWithStoreType(
+  storeId: number,
+) {
+  const products = await db.product.findMany({
+    where: {
+      storeId
+    },
+    include: {
+      size: true,
+      color: true,
+      category: true,
+    },
+  });
+  return products as ClothingProduct[];
 }
 
-export async function getClothingProductWithStoreType(
+export async function getTechnologyProductWithStoreType(
   storeId: number,
   slug: string,
 ) {
@@ -57,13 +49,10 @@ export async function getClothingProductWithStoreType(
       category: true,
     },
   });
-  return product as ClothingProduct | null;
+  return product as TechnologyProduct | null;
 }
 
-export async function getTechnologyProductWithStoreType(
-  storeId: number,
-  slug: string,
-) {
+export async function getClothingProductWithStoreType(storeId: number, slug: string) {
   const product = await db.product.findUnique({
     where: {
       slug_storeId: {
@@ -77,5 +66,5 @@ export async function getTechnologyProductWithStoreType(
       category: true,
     },
   });
-  return product as TechnologyProduct | null;
+  return product as ClothingProduct | null;
 }

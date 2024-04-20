@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ClothingProduct } from "@/types";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/select";
 import ProductImage from "@/components/product-image";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
 
 type Props = {
   product: ClothingProduct | null;
@@ -50,13 +51,13 @@ type Props = {
   colors:
     | {
         name: string;
+        value: string;
       }[]
     | undefined;
 };
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  slug: z.string().transform((value) => value.trim().replace(/\s+/g, "-")),
   description: z.string().optional(),
   price: z.string(),
   stock: z.number().int().nonnegative("Stock must be non-negative"),
@@ -73,12 +74,12 @@ type FormType = z.infer<typeof formSchema>;
 const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
   const params = useParams();
   const origin = useOrigin();
+  const router = useRouter();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
-      slug: "",
       description: "",
       price: "",
       stock: 0,
@@ -90,6 +91,23 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
       colorName: "",
     },
   });
+
+  useEffect(() => {
+    if (product && product.size && product.color) {
+      form.setValue("name", product.name || "");
+      form.setValue("description", product.description || "");
+      form.setValue("price", product.price.toString() || ""); // Assuming price is a number, convert to string
+      form.setValue("stock", product.stock || 0);
+      form.setValue("images", product.images || []);
+      form.setValue("brand", product.brand || "");
+      form.setValue("isFeatured", product.isFeatured || false);
+
+      // Access nested properties for category, size, and color
+      form.setValue("categoryName", product.category.name || "");
+      form.setValue("sizeName", product.size.name || "");
+      form.setValue("colorName", product.color.name || "");
+    }
+  }, [product]);
 
   const onChange = (value: string, state: "upload" | "remove") => {
     const currentImages = form.getValues("images") || []; // Get current images array
@@ -113,7 +131,22 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
       toast.info("Product price need to be a number.");
       return;
     }
-    console.log(data);
+    if (data.images.length === 0) {
+      toast.info("You need at least 1 image for your product.");
+      return;
+    }
+    try {
+      const res = await axios.post(
+        `/api/store/${params.storeSlug}/products`,
+        data,
+      );
+      toast.success(res.data.success);
+      router.refresh();
+      form.reset();
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.message);
+    }
   };
 
   return (
@@ -238,7 +271,7 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="flex justify-between">
                         <SelectValue
                           defaultValue={field.value}
                           placeholder={field.value}
@@ -246,9 +279,20 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {colors?.map(({ name }) => (
-                        <SelectItem value={name} key={name}>
-                          {name[0].toUpperCase() + name.slice(1).toLowerCase()}
+                      {colors?.map(({ name, value }) => (
+                        <SelectItem
+                          value={name}
+                          key={name}
+                          className="flex w-full"
+                        >
+                          <div className="flex w-full items-center justify-between gap-x-4">
+                            {name[0].toUpperCase() +
+                              name.slice(1).toLowerCase()}
+                            <div
+                              className="rounded-full border-2 p-2"
+                              style={{ backgroundColor: value }}
+                            />
+                          </div>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -422,19 +466,19 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
         <>
           <APIAlert
             title={"GET"}
-            description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.id : ``}`}
+            description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.slug : ``}`}
             variant="public"
           />
           <APIAlert
             title={"DELETE"}
-            description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.id : ``}`}
+            description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.slug : ``}`}
             variant="staff"
           />
         </>
       )}
       <APIAlert
         title={product ? "PATCH" : "POST"}
-        description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.id : ``}`}
+        description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.slug : ``}`}
         variant="staff"
       />
     </>

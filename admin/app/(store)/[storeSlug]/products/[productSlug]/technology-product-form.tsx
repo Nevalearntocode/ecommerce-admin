@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { ClothingProduct, TechnologyProduct } from "@/types";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/select";
 import ProductImage from "@/components/product-image";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
 
 type Props = {
   product: TechnologyProduct | null;
@@ -78,6 +79,7 @@ const TechnologyProductForm = ({
 }: Props) => {
   const params = useParams();
   const origin = useOrigin();
+  const router = useRouter();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -95,6 +97,23 @@ const TechnologyProductForm = ({
       typeName: "",
     },
   });
+
+  useEffect(() => {
+    if (product && product.model && product.type) {
+      form.setValue("name", product.name || "");
+      form.setValue("description", product.description || "");
+      form.setValue("price", product.price.toString() || ""); // Assuming price is a number, convert to string
+      form.setValue("stock", product.stock || 0);
+      form.setValue("images", product.images || []);
+      form.setValue("brand", product.brand || "");
+      form.setValue("isFeatured", product.isFeatured || false);
+
+      // Access nested properties for category, model, and type
+      form.setValue("categoryName", product.category.name || "");
+      form.setValue("modelName", product.model.name || "");
+      form.setValue("typeName", product.type.name || "");
+    }
+  }, [product]);
 
   const onChange = (value: string, state: "upload" | "remove") => {
     const currentImages = form.getValues("images") || []; // Get current images array
@@ -122,7 +141,18 @@ const TechnologyProductForm = ({
       toast.info("You need at least 1 image for your product.");
       return;
     }
-    console.log(data);
+    try {
+      const res = await axios.post(
+        `/api/store/${params.storeSlug}/products`,
+        data,
+      );
+      toast.success(res.data.success);
+      router.refresh();
+      form.reset();
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.message);
+    }
   };
 
   return (
@@ -431,19 +461,19 @@ const TechnologyProductForm = ({
         <>
           <APIAlert
             title={"GET"}
-            description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.id : ``}`}
+            description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.slug : ``}`}
             variant="public"
           />
           <APIAlert
             title={"DELETE"}
-            description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.id : ``}`}
+            description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.slug : ``}`}
             variant="staff"
           />
         </>
       )}
       <APIAlert
         title={product ? "PATCH" : "POST"}
-        description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.id : ``}`}
+        description={`${origin}/api/store/${params.storeSlug}/products/${product ? product.slug : ``}`}
         variant="staff"
       />
     </>

@@ -15,3 +15,16 @@ export async function getTypeById(typeId: string) {
 
   return type;
 }
+
+export async function getTypeByNameAndStoreId(name: string, storeId: number) {
+  const type = await db.type.findUnique({
+    where: {
+      name_storeId: {
+        name,
+        storeId,
+      },
+    },
+  });
+
+  return type;
+}

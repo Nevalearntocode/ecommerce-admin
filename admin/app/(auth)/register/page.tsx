@@ -13,11 +13,11 @@ const Register = (props: Props) => {
       </div>
       <div className="hidden h-full w-[75%] items-center justify-center bg-muted xl:flex">
         <Image
-          src="/celestial.png"
+          src="/admin-dashboard.png"
           alt="Image"
           width="1600"
           height="900"
-          className="h-5/6 w-5/6 object-cover dark:brightness-[0.2] dark:grayscale"
+          className="aspect-video h-5/6 w-5/6 dark:brightness-[0.2] dark:grayscale"
         />
       </div>
     </div>

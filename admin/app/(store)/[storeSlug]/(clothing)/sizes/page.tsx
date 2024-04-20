@@ -29,7 +29,7 @@ const Sizes = async ({ params }: Props) => {
 
   const sizes = await db.size.findMany({
     where: {
-      Store: {
+      store: {
         slug: params.storeSlug,
       },
     },

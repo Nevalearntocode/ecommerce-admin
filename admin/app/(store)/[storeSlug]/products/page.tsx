@@ -1,10 +1,10 @@
 import NotPermitted from "@/components/not-permitted";
-import { getProductsWithStoreType } from "@/lib/get-products";
+import { getClothingProductsWithStoreType, getTechnologyProductsWithStoreType } from "@/lib/get-products";
 import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
 import { canManageProduct } from "@/lib/permission-hierarchy";
 import React from "react";
-import ProductClient from "./product-client";
-import { ClothingProduct, TechnologyProduct } from "@/types";
+import ClothingProductClient from "./_components/clothing/clothing-product-client";
+import TechnologyProductClient from "./_components/technology/technology-product-client";
 
 type Props = {
   params: {
@@ -24,18 +24,27 @@ const Products = async ({ params }: Props) => {
     return <NotPermitted />;
   }
 
-  const products = await getProductsWithStoreType(
-    params.storeSlug,
-    staff.store.storeType,
-  );
-
-  return (
-    <div className="flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">
-        <ProductClient products={products} />
+  if (staff.store.storeType === "CLOTHING") {
+    const products = await getClothingProductsWithStoreType(staff.storeId);
+    return (
+      <div className="flex-col">
+        <div className="flex-1 space-y-4 p-8 pt-6">
+          <ClothingProductClient clothingProducts={products} />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  if (staff.store.storeType === "TECHNOLOGY") {
+    const products = await getTechnologyProductsWithStoreType(staff.storeId);
+    return (
+      <div className="flex-col">
+        <div className="flex-1 space-y-4 p-8 pt-6">
+          <TechnologyProductClient technologyProducts={products} />
+        </div>
+      </div>
+    );
+  }
 };
 
 export default Products;

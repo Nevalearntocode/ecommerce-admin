@@ -3,7 +3,7 @@ import { getCurrentStaff } from "@/lib/get-staffs";
 import { canManageCategory } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 import { db } from "@/lib/db";
-import CategoryClient from "./category-client";
+import CategoryClient from "./_components/category-client";
 
 type Props = {
   params: {

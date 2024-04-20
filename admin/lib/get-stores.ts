@@ -44,6 +44,94 @@ export async function getStoreWithCurrentStaff(slug: string, userId: string) {
   return store;
 }
 
+export async function getStoreToCreateProduct(
+  slug: string,
+  userId: string,
+  productName: string,
+  categoryName: string,
+) {
+  const store = await db.store.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      staffs: {
+        where: {
+          userId,
+        },
+      },
+      products: {
+        where: {
+          name: productName,
+        },
+        select: {
+          slug: true,
+        },
+      },
+      categories: {
+        where: {
+          name: categoryName,
+        },
+        select: {
+          id: true,
+        },
+      },
+    },
+  });
+
+  return store;
+}
+
+export async function getClothingAttributeIds(
+  storeId: number,
+  sizeName: string,
+  colorName: string,
+) {
+  const store = await db.store.findUnique({
+    where: {
+      id: storeId,
+    },
+    include: {
+      sizes: {
+        where: {
+          name: sizeName,
+        },
+      },
+      colors: {
+        where: {
+          name: colorName,
+        },
+      },
+    },
+  });
+  return store;
+}
+
+export async function getTechnologyAttributeIds(
+  storeId: number,
+  modelName: string,
+  typeName: string,
+) {
+  const store = await db.store.findUnique({
+    where: {
+      id: storeId,
+    },
+    include: {
+      models: {
+        where: {
+          name: modelName,
+        },
+      },
+      types: {
+        where: {
+          name: typeName,
+        },
+      },
+    },
+  });
+  return store;
+}
+
 export async function getUserStoreBySlug(slug: string) {
   const store = await db.store.findUnique({
     where: {
@@ -131,7 +219,7 @@ export async function getStoreById(id: string) {
 export async function getCategoryAndClothingFieldsInStore(id: number) {
   const store = await db.store.findUnique({
     where: {
-      id
+      id,
     },
     include: {
       categories: {
@@ -147,12 +235,11 @@ export async function getCategoryAndClothingFieldsInStore(id: number) {
       colors: {
         select: {
           name: true,
+          value: true
         },
       },
     },
   });
-
-  
 
   return {
     categories: store?.categories,

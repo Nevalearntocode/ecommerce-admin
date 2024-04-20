@@ -31,7 +31,7 @@ const Colors = async ({ params }: Props) => {
 
   const colors = await db.color.findMany({
     where: {
-      Store: {
+      store: {
         slug: params.storeSlug,
       },
     },
