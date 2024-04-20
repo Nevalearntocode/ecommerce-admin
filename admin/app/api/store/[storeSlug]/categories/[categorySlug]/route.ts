@@ -74,7 +74,7 @@ export async function PATCH(
     }
 
     const updateData = {
-      name: name ? name : existingCategory.name,
+      name: name || name === "" ? name : existingCategory.name,
       slug: slug ? slug : existingCategory.slug,
     };
 
@@ -223,7 +223,6 @@ export async function GET(
   { params }: { params: { storeSlug: string; categorySlug: string } },
 ) {
   try {
-
     const { categorySlug, storeSlug } = params;
 
     if (!storeSlug) {

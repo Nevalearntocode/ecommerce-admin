@@ -55,58 +55,6 @@ model Store {
   updatedAt  DateTime    @updatedAt
 }
 
-model Size {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  value     SizeValue
-  store     Store     @relation(fields: [storeId], references: [id])
-  storeId   Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products   Product[]
-
-  @@unique([name, storeId])
-}
-
-model Color {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  value     String
-  store     Store     @relation(fields: [storeId], references: [id])
-  storeId   Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products   Product[]
-
-  @@unique([name, storeId])
-}
-
-model Model {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  value     String
-  store     Store     @relation(fields: [storeId], references: [id])
-  storeId   Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products   Product[]
-
-  @@unique([name, storeId])
-}
-
-model Type {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  value     String
-  store     Store     @relation(fields: [storeId], references: [id])
-  storeId   Int
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  products   Product[]
-
-  @@unique([name, storeId])
-}
-
 model Staff {
   id                 Int      @id @default(autoincrement())
   user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -180,6 +128,58 @@ model Product {
   updatedAt   DateTime @updatedAt
 
   @@unique([slug, storeId])
+  @@unique([name, storeId])
+}
+
+model Size {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  value     SizeValue
+  store     Store     @relation(fields: [storeId], references: [id])
+  storeId   Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products   Product[]
+
+  @@unique([name, storeId])
+}
+
+model Color {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  value     String
+  store     Store     @relation(fields: [storeId], references: [id])
+  storeId   Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products   Product[]
+
+  @@unique([name, storeId])
+}
+
+model Model {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  value     String
+  store     Store     @relation(fields: [storeId], references: [id])
+  storeId   Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products   Product[]
+
+  @@unique([name, storeId])
+}
+
+model Type {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  value     String
+  store     Store     @relation(fields: [storeId], references: [id])
+  storeId   Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  products   Product[]
+
   @@unique([name, storeId])
 }
 

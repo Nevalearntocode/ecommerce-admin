@@ -1,12 +1,11 @@
+import { StoreType } from "@prisma/client";
 import { db } from "./db";
 import { ClothingProduct, TechnologyProduct } from "@/types";
 
-export async function getTechnologyProductsWithStoreType(
-  storeId: number,
-) {
+export async function getTechnologyProductsWithStoreType(storeId: number) {
   const products = await db.product.findMany({
     where: {
-      storeId
+      storeId,
     },
     include: {
       model: true,
@@ -16,12 +15,10 @@ export async function getTechnologyProductsWithStoreType(
   });
   return products as TechnologyProduct[];
 }
-export async function getClothingProductsWithStoreType(
-  storeId: number,
-) {
+export async function getClothingProductsWithStoreType(storeId: number) {
   const products = await db.product.findMany({
     where: {
-      storeId
+      storeId,
     },
     include: {
       size: true,
@@ -52,7 +49,10 @@ export async function getTechnologyProductWithStoreType(
   return product as TechnologyProduct | null;
 }
 
-export async function getClothingProductWithStoreType(storeId: number, slug: string) {
+export async function getClothingProductWithStoreType(
+  storeId: number,
+  slug: string,
+) {
   const product = await db.product.findUnique({
     where: {
       slug_storeId: {
@@ -67,4 +67,20 @@ export async function getClothingProductWithStoreType(storeId: number, slug: str
     },
   });
   return product as ClothingProduct | null;
+}
+
+export async function getProductUsingStoreType<T extends ClothingProduct | TechnologyProduct>(
+  storeId: number,
+  slug: string,
+  storeType: StoreType,
+) {
+  if (storeType == "CLOTHING") {
+    const product = await getClothingProductWithStoreType(storeId, slug);
+
+    return product;
+  }
+  if (storeType == "TECHNOLOGY") {
+    const product = await getTechnologyProductWithStoreType(storeId, slug);
+    return product;
+  }
 }

@@ -35,6 +35,7 @@ import {
 import ProductImage from "@/components/product-image";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
+import { generateSlug } from "@/constant";
 
 type Props = {
   product: ClothingProduct | null;
@@ -136,16 +137,31 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
       return;
     }
     try {
-      const res = await axios.post(
-        `/api/store/${params.storeSlug}/products`,
-        data,
-      );
-      toast.success(res.data.success);
-      router.refresh();
-      form.reset();
+      if (product) {
+        await axios
+          .patch(
+            `/api/store/${params.storeSlug}/products/${product.slug}`,
+            data,
+          )
+          .then((res) => {
+            form.reset();
+            toast.success(res.data.success);
+            router.push(
+              `/${params.storeSlug}/products/${data.name.toLowerCase().trim().replace(/\s+/g, "-")}`,
+            );
+            router.refresh();
+          });
+      } else {
+        await axios
+          .post(`/api/store/${params.storeSlug}/products`, data)
+          .then((res) => {
+            form.reset();
+            toast.success(res.data.success);
+            router.refresh();
+          });
+      }
     } catch (error: any) {
-      console.log(error);
-      toast.error(error.response.message);
+      toast.error(error.response.data);
     }
   };
 

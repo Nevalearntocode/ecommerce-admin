@@ -81,6 +81,10 @@ export async function POST(
       return new NextResponse("At least one product image is required.", {
         status: 400,
       });
+    } else if (images.length > 3) {
+      return new NextResponse("At most three product images can be uploaded.", {
+        status: 400,
+      });
     }
 
     const existingStore = await getStoreToCreateProduct(
