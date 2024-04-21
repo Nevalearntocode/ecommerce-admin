@@ -35,6 +35,7 @@ import {
 import ProductImage from "@/components/product-image";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
+import useModal from "@/hooks/use-modal-store";
 
 type Props = {
   product: TechnologyProduct | null;
@@ -80,6 +81,7 @@ const TechnologyProductForm = ({
   const params = useParams();
   const origin = useOrigin();
   const router = useRouter();
+  const { open, close } = useModal();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -142,17 +144,53 @@ const TechnologyProductForm = ({
       return;
     }
     try {
-      const res = await axios.post(
-        `/api/store/${params.storeSlug}/products`,
-        data,
+      if (product) {
+        await axios
+          .patch(
+            `/api/store/${params.storeSlug}/products/${product.slug}`,
+            data,
+          )
+          .then((res) => {
+            form.reset();
+            toast.success(res.data.success);
+            router.push(
+              `/${params.storeSlug}/products/${data.name.toLowerCase().trim().replace(/\s+/g, "-")}`,
+            );
+            router.refresh();
+          });
+      } else {
+        await axios
+          .post(`/api/store/${params.storeSlug}/products`, data)
+          .then((res) => {
+            form.reset();
+            toast.success(res.data.success);
+            router.refresh();
+          });
+      }
+    } catch (error: any) {
+      toast.error(error.response.data);
+    }
+  };
+
+  const onDelete = async () => {
+    try {
+      const res = await axios.delete(
+        `/api/store/${params.storeSlug}/products/${product?.slug}`,
       );
       toast.success(res.data.success);
+      router.push(`/${params.storeSlug}/products`);
       router.refresh();
-      form.reset();
+      close();
     } catch (error: any) {
       console.log(error);
-      toast.error(error.response.message);
+      toast.error(error.response.data);
     }
+  };
+
+  const deletePackage = {
+    confirmDelete: onDelete,
+    headerDelete: " Delete product?",
+    descriptionDelete: `"${product?.name}" Will permanently be removed. This is irreversible.`,
   };
 
   return (
@@ -173,7 +211,7 @@ const TechnologyProductForm = ({
               disabled={isLoading}
               variant={`destructive`}
               size={`sm`}
-              // onClick={() => open("confirmDelete", { ...deletePackage })}
+              onClick={() => open("confirmDelete", { ...deletePackage })}
             >
               Delete
               <Trash className="ml-2 h-4 w-4" />

@@ -31,10 +31,12 @@ const TechnologyProductCellAction = ({ formattedTechnologyProduct }: Props) => {
 
   const onDelete = async () => {
     try {
+      console.log("Delete");
       const res = await axios.delete(
-        `/api/store/${params.storeSlug}/products/${formattedTechnologyProduct.slug}`,
+        `/api/store/${params.storeSlug}/products/${formattedTechnologyProduct?.slug}`,
       );
       toast.success(res.data.success);
+      router.push(`/${params.storeSlug}/products`);
       router.refresh();
       close();
     } catch (error: any) {
@@ -45,8 +47,8 @@ const TechnologyProductCellAction = ({ formattedTechnologyProduct }: Props) => {
 
   const deletePackage = {
     confirmDelete: onDelete,
-    headerDelete: " Delete technologyProduct?",
-    descriptionDelete: `Deleting "${formattedTechnologyProduct.name}" will permanently remove it and all its content. This is irreversible.`,
+    headerDelete: " Delete product?",
+    descriptionDelete: `"${formattedTechnologyProduct?.name}" Will permanently be removed. This is irreversible.`,
   };
 
   return (

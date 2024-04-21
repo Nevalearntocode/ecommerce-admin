@@ -31,10 +31,12 @@ const ClothingProductCellAction = ({ formattedClothingProduct }: Props) => {
 
   const onDelete = async () => {
     try {
+      console.log("Delete");
       const res = await axios.delete(
-        `/api/store/${params.storeSlug}/products/${formattedClothingProduct.slug}`,
+        `/api/store/${params.storeSlug}/products/${formattedClothingProduct?.slug}`,
       );
       toast.success(res.data.success);
+      router.push(`/${params.storeSlug}/products`);
       router.refresh();
       close();
     } catch (error: any) {
@@ -45,9 +47,10 @@ const ClothingProductCellAction = ({ formattedClothingProduct }: Props) => {
 
   const deletePackage = {
     confirmDelete: onDelete,
-    headerDelete: " Delete clothingProduct?",
-    descriptionDelete: `Deleting "${formattedClothingProduct.name}" will permanently remove it and all its content. This is irreversible.`,
+    headerDelete: " Delete product?",
+    descriptionDelete: `"${formattedClothingProduct?.name}" Will permanently be removed. This is irreversible.`,
   };
+
 
   return (
     <DropdownMenu>

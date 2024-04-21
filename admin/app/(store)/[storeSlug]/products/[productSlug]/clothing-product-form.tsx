@@ -36,6 +36,7 @@ import ProductImage from "@/components/product-image";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { generateSlug } from "@/constant";
+import useModal from "@/hooks/use-modal-store";
 
 type Props = {
   product: ClothingProduct | null;
@@ -76,6 +77,7 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
   const params = useParams();
   const origin = useOrigin();
   const router = useRouter();
+  const { open, close } = useModal();
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -165,6 +167,27 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
     }
   };
 
+  const onDelete = async () => {
+    try {
+      const res = await axios.delete(
+        `/api/store/${params.storeSlug}/products/${product?.slug}`,
+      );
+      toast.success(res.data.success);
+      router.push(`/${params.storeSlug}/products`);
+      router.refresh();
+      close();
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data);
+    }
+  };
+
+  const deletePackage = {
+    confirmDelete: onDelete,
+    headerDelete: " Delete product?",
+    descriptionDelete: `"${product?.name}" Will permanently be removed. This is irreversible.`,
+  };
+
   return (
     <>
       <div className="flex items-center justify-end md:justify-between">
@@ -183,7 +206,7 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
               disabled={isLoading}
               variant={`destructive`}
               size={`sm`}
-              // onClick={() => open("confirmDelete", { ...deletePackage })}
+              onClick={() => open("confirmDelete", { ...deletePackage })}
             >
               Delete
               <Trash className="ml-2 h-4 w-4" />

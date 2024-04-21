@@ -103,7 +103,7 @@ export async function PATCH(
           ? name.toLowerCase().trim().replace(/\s+/g, "-")
           : existingProduct.slug,
         brand: brand ? brand : existingProduct.brand,
-        isFeatured: isFeatured ? isFeatured : existingProduct.isFeatured,
+        isFeatured: isFeatured ?? existingProduct.isFeatured,
         description: description ? description : existingProduct.description,
         images: images.length > 0 ? images : existingProduct.images,
         categoryId: existingProduct.categoryId,
@@ -226,7 +226,7 @@ export async function PATCH(
           ? name.toLowerCase().trim().replace(/\s+/g, "-")
           : existingProduct.slug,
         brand: brand ? brand : existingProduct.brand,
-        isFeatured: isFeatured ? isFeatured : existingProduct.isFeatured,
+        isFeatured: isFeatured ?? existingProduct.isFeatured,
         description: description ? description : existingProduct.description,
         images: images.length > 0 ? images : existingProduct.images,
         categoryId: existingProduct.categoryId,
@@ -328,6 +328,78 @@ export async function PATCH(
     return new NextResponse("Something went wrong.", { status: 500 });
   } catch (error) {
     console.log("[UPDATE PRODUCT]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  {
+    params,
+  }: {
+    params: {
+      storeSlug: string;
+      productSlug: string;
+    };
+  },
+) {
+  try {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const { storeSlug, productSlug } = params;
+
+    if (!storeSlug) {
+      return new NextResponse("Store slug is required.", { status: 400 });
+    }
+
+    if (!productSlug) {
+      return new NextResponse("Product slug is required.", { status: 400 });
+    }
+
+    const existingStore = await getStoreWithCurrentStaff(storeSlug, user.id);
+
+    if (!existingStore) {
+      return new NextResponse("Store not found.", { status: 404 });
+    }
+
+    if (
+      !existingStore.staffs[0] &&
+      !canManageProduct(existingStore.staffs[0])
+    ) {
+      return new NextResponse(
+        "You do not have permission to perform this action.",
+        { status: 403 },
+      );
+    }
+
+    const existingProduct = await db.product.findUnique({
+      where: {
+        slug_storeId: {
+          storeId: existingStore.id,
+          slug: productSlug,
+        },
+      },
+    });
+
+    if (!existingProduct) {
+      return new NextResponse("Product not found.", { status: 404 });
+    }
+
+    await db.product.delete({
+      where: {
+        id: existingProduct.id,
+      },
+    });
+
+    return NextResponse.json({
+      success: "Product deleted.",
+    });
+  } catch (error) {
+    console.log("[PRODUCT DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
