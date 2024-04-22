@@ -2,7 +2,7 @@ import React from "react";
 import CategoryForm from "./category-form";
 import { getCurrentStaff } from "@/lib/get-staffs";
 import { canManageCategory, isOwner } from "@/lib/permission-hierarchy";
-import NotPermitted from "@/components/not-permitted";
+import NotPermitted from "@/components/mainpages/not-permitted";
 import { getCategoryByStoreSlugAndCategorySlug } from "@/lib/get-categories";
 import { db } from "@/lib/db";
 

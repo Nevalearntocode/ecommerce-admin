@@ -1,4 +1,4 @@
-import Empty from "@/components/empty";
+import Empty from "@/components/mainpages/empty";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { redirect } from "next/navigation";

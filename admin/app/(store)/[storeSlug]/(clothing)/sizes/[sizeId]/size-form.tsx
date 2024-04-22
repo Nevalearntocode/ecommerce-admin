@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Size, SizeValue } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
-import APIAlert from "@/components/api-alert";
+import APIAlert from "@/components/apis/api-alert";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
 import { useOrigin } from "@/hooks/use-origin";

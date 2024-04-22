@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
-import APIAlert from "@/components/api-alert";
+import APIAlert from "@/components/apis/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
@@ -32,7 +32,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import ProductImage from "@/components/product-image";
+import ProductImage from "@/components/uploadthing/product-image";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";

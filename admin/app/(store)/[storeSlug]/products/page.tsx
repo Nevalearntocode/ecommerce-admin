@@ -1,5 +1,8 @@
-import NotPermitted from "@/components/not-permitted";
-import { getClothingProductsWithStoreType, getTechnologyProductsWithStoreType } from "@/lib/get-products";
+import NotPermitted from "@/components/mainpages/not-permitted";
+import {
+  getClothingProductsWithStoreType,
+  getTechnologyProductsWithStoreType,
+} from "@/lib/get-products";
 import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
 import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import React from "react";

@@ -25,7 +25,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useModal from "@/hooks/use-modal-store";
 import { generateSlug } from "@/constant";
-import APIAlert from "@/components/api-alert";
+import APIAlert from "@/components/apis/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 
 type Props = {

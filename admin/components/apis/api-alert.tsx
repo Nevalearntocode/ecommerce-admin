@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Check, Copy, ServerIcon } from "lucide-react";
-import { Badge, BadgeProps } from "./ui/badge";
-import { Button } from "./ui/button";
+import { Badge, BadgeProps } from "../ui/badge";
+import { Button } from "../ui/button";
 import { toast } from "sonner";
 
 type Props = {

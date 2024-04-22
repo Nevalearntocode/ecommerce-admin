@@ -9,31 +9,24 @@ import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { ColorColumn, columns } from "./color-column";
 import { format } from "date-fns";
-import { DataTable } from "@/components/datatable";
-import APIList from "@/components/api-list";
+import { DataTable } from "@/components/clients/datatable";
+import APIList from "@/components/apis/api-list";
 import { useParams, useRouter } from "next/navigation";
+import useFilter from "@/hooks/use-filter";
+import HeaderWithActions from "@/components/clients/header-with-actions";
 
 type Props = {
   colors: Color[];
 };
 
 const ColorClient = ({ colors }: Props) => {
-  const [searchInput, setSearchInput] = useState("");
-  const [filteredColors, setFilteredColors] = useState(colors);
   const router = useRouter();
   const params = useParams();
 
-  useEffect(() => {
-    if (searchInput.trim() === "") {
-      setFilteredColors(colors); // Show all colors if search is empty
-    } else {
-      const lowerCaseSearch = searchInput.toLowerCase();
-      const filtered = colors.filter((color) =>
-        color.name.toLowerCase().includes(lowerCaseSearch),
-      );
-      setFilteredColors(filtered);
-    }
-  }, [searchInput, colors]);
+  const { setSearchInput, filteredItems: filteredColors } = useFilter(
+    colors,
+    "name",
+  );
 
   const formattedColors: ColorColumn[] = filteredColors.map((color) => ({
     id: color.id,
@@ -45,24 +38,21 @@ const ColorClient = ({ colors }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <Header
-          title={
-            colors.length <= 1
-              ? `Color (${colors.length})`
-              : `Colors (${colors.length})`
-          }
-          description="Manage your colors for your store"
-        />
-        <div className="flex gap-x-4">
-          <Button
-            onClick={() => router.push(`/${params.storeSlug}/colors/new`)}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add new
-          </Button>
-        </div>
-      </div>
+      <HeaderWithActions
+        title={
+          colors.length <= 1
+            ? `Color (${colors.length})`
+            : `Colors (${colors.length})`
+        }
+        description="Manage colors for your store"
+        actions={[
+          {
+            label: "Add new",
+            icon: <Plus className="mr-2 h-4 w-4" />,
+            onClick: () => router.push(`/${params.storeSlug}/colors/new`),
+          },
+        ]}
+      />
       <Separator />
       {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

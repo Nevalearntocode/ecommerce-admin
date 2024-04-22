@@ -20,7 +20,7 @@ import { Input } from "../ui/input";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
-import ImageUpload from "../upload-image";
+import ImageUpload from "../uploadthing/upload-image";
 import { toast } from "sonner";
 import axios from "axios";
 import { useRouter } from "next/navigation";

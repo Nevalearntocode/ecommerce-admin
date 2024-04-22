@@ -17,7 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Billboard } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
-import APIAlert from "@/components/api-alert";
+import APIAlert from "@/components/apis/api-alert";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
 import { useOrigin } from "@/hooks/use-origin";
@@ -25,7 +25,7 @@ import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
-import ImageUpload from "@/components/upload-image";
+import ImageUpload from "@/components/uploadthing/upload-image";
 import { useParams, useRouter } from "next/navigation";
 
 type Props = {

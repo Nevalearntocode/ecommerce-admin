@@ -1,6 +1,6 @@
 import { getUserStoreBySlug } from "@/lib/get-stores";
 import React from "react";
-import Empty from "../../../components/empty";
+import Empty from "../../../components/mainpages/empty";
 import ManageMemberForm from "./manage-member-form";
 
 type Props = {

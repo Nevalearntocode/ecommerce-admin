@@ -1,4 +1,4 @@
-import NotPermitted from "@/components/not-permitted";
+import NotPermitted from "@/components/mainpages/not-permitted";
 import {
   getClothingProductWithStoreType,
   getTechnologyProductWithStoreType,

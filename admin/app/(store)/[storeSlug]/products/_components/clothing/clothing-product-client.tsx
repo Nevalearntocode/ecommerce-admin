@@ -6,67 +6,38 @@ import { Separator } from "@/components/ui/separator";
 import { Image, Plus, Search, Table } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import ActionTooltip from "@/components/action-tooltip";
+import ActionTooltip from "@/components/clients/action-tooltip";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
-import { DataTable } from "@/components/datatable";
-import APIList from "@/components/api-list";
+import { DataTable } from "@/components/clients/datatable";
+import APIList from "@/components/apis/api-list";
 import { ClothingProduct } from "@/types";
 import { ClothingProductColumn, columns } from "./clothing-product-column";
 import ClothingProductCard from "./clothing-product-card";
 import { SizeValue } from "@prisma/client";
+import useFilter from "@/hooks/use-filter";
+import Pagination from "@/components/clients/pagination";
+import useDefaultView from "@/hooks/use-default-view";
+import HeaderWithActions from "@/components/clients/header-with-actions";
 
 type Props = {
   clothingProducts: ClothingProduct[];
 };
 
 const ClothingProductClient = ({ clothingProducts }: Props) => {
-  const [clothingProductViewState, setClothingProductViewState] = useState<
-    "datatable" | "card" | null
-  >(null);
-  const [searchInput, setSearchInput] = useState("");
-  const [filteredClothingProducts, setFilteredClothingProducts] =
-    useState(clothingProducts);
+  const { viewState, handleCardViewClick, handleDatatableViewClick } =
+    useDefaultView("clothingProductView", "card");
+
+  const { filteredItems: filteredClothingProducts, setSearchInput } = useFilter(
+    clothingProducts,
+    "name",
+  );
+
   const router = useRouter();
   const params = useParams();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-
-  useEffect(() => {
-    if (searchInput.trim() === "") {
-      setFilteredClothingProducts(clothingProducts); // Show all clothingProducts if search is empty
-    } else {
-      const lowerCaseSearch = searchInput.toLowerCase();
-      const filtered = clothingProducts.filter((clothingProduct) =>
-        clothingProduct.name.toLowerCase().includes(lowerCaseSearch),
-      );
-      setFilteredClothingProducts(filtered);
-      setCurrentPage(1);
-    }
-  }, [searchInput, clothingProducts]);
-
-  useEffect(() => {
-    const currentClothingProductViewState = localStorage.getItem(
-      "clothingProductViewState",
-    );
-    if (currentClothingProductViewState === null) {
-      setClothingProductViewState("card");
-    } else {
-      setClothingProductViewState(
-        currentClothingProductViewState as typeof clothingProductViewState,
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    if (clothingProductViewState) {
-      localStorage.setItem(
-        "clothingProductViewState",
-        clothingProductViewState,
-      );
-    }
-  }, [clothingProductViewState]);
 
   const formattedClothingProducts: ClothingProductColumn[] =
     filteredClothingProducts.map((clothingProduct) => ({
@@ -89,52 +60,28 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
     endIndex,
   );
 
+  const totalPages = Math.ceil(filteredClothingProducts.length / itemsPerPage);
+
   return (
     <>
-      <div className="flex items-center justify-between">
-        <Header
-          title={
-            clothingProducts.length === 1
-              ? `Product (${clothingProducts.length})`
-              : `Products (${clothingProducts.length})`
-          }
-          description="Manage products for your store"
-        />
-        <div className="flex gap-x-4">
-          <ActionTooltip tooltip="Switch to image view">
-            <Button
-              onClick={() => setClothingProductViewState("card")}
-              variant={`ghost`}
-              size={`icon`}
-              className={cn(
-                "flex items-center justify-center",
-                clothingProductViewState === "card" && "bg-black/15",
-              )}
-            >
-              <Image className="h-1/2 w-1/2" />
-            </Button>
-          </ActionTooltip>
-          <ActionTooltip tooltip="Switch to datatable view">
-            <Button
-              onClick={() => setClothingProductViewState("datatable")}
-              variant={`ghost`}
-              size={`icon`}
-              className={cn(
-                "flex items-center justify-center",
-                clothingProductViewState === "datatable" && "bg-black/15",
-              )}
-            >
-              <Table className="h-1/2 w-1/2" />
-            </Button>
-          </ActionTooltip>
-          <Button
-            onClick={() => router.push(`/${params.storeSlug}/products/new`)}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add new
-          </Button>
-        </div>
-      </div>
+      <HeaderWithActions
+        title={
+          clothingProducts.length <= 1
+            ? `Product (${clothingProducts.length})`
+            : `Products (${clothingProducts.length})`
+        }
+        description="Manage products for your store"
+        actions={[
+          {
+            label: "Add new",
+            icon: <Plus className="mr-2 h-4 w-4" />,
+            onClick: () => router.push(`/${params.storeSlug}/products/new`),
+          },
+        ]}
+        viewState={viewState}
+        onCardView={handleCardViewClick}
+        onDataView={handleDatatableViewClick}
+      />
       <Separator />
       {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -152,10 +99,10 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
           </Button>
         </div>
       </div>
-      {clothingProductViewState === "datatable" && (
+      {viewState === "datatable" && (
         <DataTable columns={columns} data={formattedClothingProducts} />
       )}
-      {clothingProductViewState === "card" && (
+      {viewState === "card" && (
         <>
           {filteredClothingProducts.length === 0 ? (
             <div>
@@ -172,50 +119,11 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
                 ))}
               </div>
               {/* Previous Button */}
-              <div className="flex w-full items-center justify-center gap-x-2">
-                <Button
-                  variant={`ghost`}
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                  className="h-8"
-                >
-                  Previous
-                </Button>
-
-                {/* Page Numbers (example) */}
-                <div>
-                  {[
-                    ...Array(
-                      Math.ceil(filteredClothingProducts.length / itemsPerPage),
-                    ),
-                  ].map((_, i) => (
-                    <Button
-                      variant={`ghost`}
-                      key={i + 1}
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={cn(
-                        "h-8",
-                        currentPage === i + 1 && "bg-black/20",
-                      )}
-                    >
-                      {i + 1}
-                    </Button>
-                  ))}
-                </div>
-
-                {/* Next Button */}
-                <Button
-                  disabled={
-                    currentPage ===
-                    Math.ceil(filteredClothingProducts.length / itemsPerPage)
-                  }
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                  className="h-8"
-                  variant={`ghost`}
-                >
-                  Next
-                </Button>
-              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </>
           )}
         </>

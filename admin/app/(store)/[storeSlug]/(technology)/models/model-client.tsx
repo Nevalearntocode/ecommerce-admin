@@ -9,31 +9,24 @@ import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { ModelColumn, columns } from "./model-column";
 import { format } from "date-fns";
-import { DataTable } from "@/components/datatable";
-import APIList from "@/components/api-list";
+import { DataTable } from "@/components/clients/datatable";
+import APIList from "@/components/apis/api-list";
 import { useParams, useRouter } from "next/navigation";
+import useFilter from "@/hooks/use-filter";
+import HeaderWithActions from "@/components/clients/header-with-actions";
 
 type Props = {
   models: Model[];
 };
 
 const ModelClient = ({ models }: Props) => {
-  const [searchInput, setSearchInput] = useState("");
-  const [filteredModels, setFilteredModels] = useState(models);
   const router = useRouter();
   const params = useParams();
 
-  useEffect(() => {
-    if (searchInput.trim() === "") {
-      setFilteredModels(models); // Show all models if search is empty
-    } else {
-      const lowerCaseSearch = searchInput.toLowerCase();
-      const filtered = models.filter((model) =>
-        model.name.toLowerCase().includes(lowerCaseSearch),
-      );
-      setFilteredModels(filtered);
-    }
-  }, [searchInput, models]);
+  const { setSearchInput, filteredItems: filteredModels } = useFilter(
+    models,
+    "name",
+  );
 
   const formattedModels: ModelColumn[] = filteredModels.map((model) => ({
     id: model.id,
@@ -45,24 +38,21 @@ const ModelClient = ({ models }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <Header
-          title={
-            models.length <= 1
-              ? `Model (${models.length})`
-              : `Models (${models.length})`
-          }
-          description="Manage your models for your store"
-        />
-        <div className="flex gap-x-4">
-          <Button
-            onClick={() => router.push(`/${params.storeSlug}/models/new`)}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add new
-          </Button>
-        </div>
-      </div>
+      <HeaderWithActions
+        title={
+          models.length <= 1
+            ? `Model (${models.length})`
+            : `Models (${models.length})`
+        }
+        description="Manage models for your store"
+        actions={[
+          {
+            label: "Add new",
+            icon: <Plus className="mr-2 h-4 w-4" />,
+            onClick: () => router.push(`/${params.storeSlug}/models/new`),
+          },
+        ]}
+      />
       <Separator />
       {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

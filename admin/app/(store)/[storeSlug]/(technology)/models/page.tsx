@@ -4,7 +4,7 @@ import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
-import NotPermitted from "@/components/not-permitted";
+import NotPermitted from "@/components/mainpages/not-permitted";
 
 type Props = {
   params: {

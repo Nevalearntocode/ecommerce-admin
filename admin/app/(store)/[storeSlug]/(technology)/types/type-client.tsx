@@ -5,35 +5,27 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Type } from "@prisma/client";
 import { Plus, Search } from "lucide-react";
-import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { TypeColumn, columns } from "./type-column";
 import { format } from "date-fns";
-import { DataTable } from "@/components/datatable";
-import APIList from "@/components/api-list";
+import { DataTable } from "@/components/clients/datatable";
+import APIList from "@/components/apis/api-list";
 import { useParams, useRouter } from "next/navigation";
+import useFilter from "@/hooks/use-filter";
+import HeaderWithActions from "@/components/clients/header-with-actions";
 
 type Props = {
   types: Type[];
 };
 
 const TypeClient = ({ types }: Props) => {
-  const [searchInput, setSearchInput] = useState("");
-  const [filteredTypes, setFilteredTypes] = useState(types);
   const router = useRouter();
   const params = useParams();
 
-  useEffect(() => {
-    if (searchInput.trim() === "") {
-      setFilteredTypes(types); // Show all types if search is empty
-    } else {
-      const lowerCaseSearch = searchInput.toLowerCase();
-      const filtered = types.filter((type) =>
-        type.name.toLowerCase().includes(lowerCaseSearch),
-      );
-      setFilteredTypes(filtered);
-    }
-  }, [searchInput, types]);
+  const { setSearchInput, filteredItems: filteredTypes } = useFilter(
+    types,
+    "name",
+  );
 
   const formattedTypes: TypeColumn[] = filteredTypes.map((type) => ({
     id: type.id,
@@ -45,24 +37,21 @@ const TypeClient = ({ types }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <Header
-          title={
-            types.length <= 1
-              ? `Type (${types.length})`
-              : `Types (${types.length})`
-          }
-          description="Manage your types for your store"
-        />
-        <div className="flex gap-x-4">
-          <Button
-            onClick={() => router.push(`/${params.storeSlug}/types/new`)}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add new
-          </Button>
-        </div>
-      </div>
+      <HeaderWithActions
+        title={
+          types.length <= 1
+            ? `Type (${types.length})`
+            : `Types (${types.length})`
+        }
+        description="Manage types for your store"
+        actions={[
+          {
+            label: "Add new",
+            icon: <Plus className="mr-2 h-4 w-4" />,
+            onClick: () => router.push(`/${params.storeSlug}/types/new`),
+          },
+        ]}
+      />
       <Separator />
       {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
