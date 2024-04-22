@@ -113,8 +113,8 @@ const TypeForm = ({ type }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-end md:justify-between">
-        <div className="hidden md:block">
+      <div className="flex items-center justify-between">
+        <div>
           <Header
             title={type ? `Manage ${type.name} Type` : "Create new type"}
             description="Create or manage your product types"

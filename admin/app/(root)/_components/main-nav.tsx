@@ -52,7 +52,7 @@ const MainNav = ({ stores, userId }: Props) => {
 
   // Array of routes that are common to all store types
   const DEFAULT_ROUTES: RouteType[] = [
-    { href: `/`, label: "Home", active: pathname === `/${params.storeSlug}` },
+    { href: `/${params.storeSlug}`, label: "Home", active: pathname === `/${params.storeSlug}` },
     {
       href: `/${params.storeSlug}/settings`,
       label: "Settings",

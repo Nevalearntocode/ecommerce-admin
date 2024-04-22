@@ -119,8 +119,8 @@ const SizeForm = ({ size }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-end md:justify-between">
-        <div className="hidden md:block">
+      <div className="flex items-center justify-between">
+        <div className="block">
           <Header
             title={size ? `Manage ${size.name} Size` : "Create new size"}
             description="Create or manage your size"

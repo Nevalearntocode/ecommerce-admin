@@ -195,8 +195,8 @@ const TechnologyProductForm = ({
 
   return (
     <>
-      <div className="flex items-center justify-end md:justify-between">
-        <div className="hidden md:block">
+      <div className="flex items-center justify-between">
+        <div className="block">
           <Header
             title={
               product ? `Manage ${product.name} Product` : "Create new product"
@@ -207,7 +207,7 @@ const TechnologyProductForm = ({
         <div className="flex gap-x-4">
           {product && (
             <Button
-              className="md:h-10 md:w-32"
+              className="hidden md:h-10 md:w-32 lg:flex"
               disabled={isLoading}
               variant={`destructive`}
               size={`sm`}
@@ -218,7 +218,7 @@ const TechnologyProductForm = ({
             </Button>
           )}
           <Button
-            className="ml-auto flex md:h-10 md:w-32"
+            className="ml-auto hidden md:h-10 md:w-32 lg:flex"
             size={"sm"}
             disabled={isLoading}
             type="submit"
@@ -241,7 +241,7 @@ const TechnologyProductForm = ({
               name="name"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel>Product Name</FormLabel>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input disabled={isLoading} {...field} />
                   </FormControl>
@@ -265,7 +265,7 @@ const TechnologyProductForm = ({
               name="price"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel>Product Price</FormLabel>
+                  <FormLabel>Price</FormLabel>
                   <FormControl>
                     <Input disabled={isLoading} {...field} />
                   </FormControl>
@@ -278,7 +278,7 @@ const TechnologyProductForm = ({
               name="stock"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel>Product Stock</FormLabel>
+                  <FormLabel>Stock</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -296,7 +296,7 @@ const TechnologyProductForm = ({
               name="brand"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel>Product Brand</FormLabel>
+                  <FormLabel>Brand</FormLabel>
                   <FormControl>
                     <Input disabled={isLoading} {...field} />
                   </FormControl>
@@ -309,7 +309,7 @@ const TechnologyProductForm = ({
               name="typeName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Type</FormLabel>
+                  <FormLabel>Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -339,7 +339,7 @@ const TechnologyProductForm = ({
               name="modelName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Model</FormLabel>
+                  <FormLabel>Model</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -369,7 +369,7 @@ const TechnologyProductForm = ({
               name="categoryName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Product Category</FormLabel>
+                  <FormLabel>Category</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -417,7 +417,7 @@ const TechnologyProductForm = ({
               name="description"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel>Product description</FormLabel>
+                  <FormLabel>description</FormLabel>
                   <FormControl>
                     <Textarea className="" disabled={isLoading} {...field} />
                   </FormControl>
@@ -491,6 +491,26 @@ const TechnologyProductForm = ({
                 )}
               </div>
             </div>
+          </div>
+          <div className="flex items-center justify-between gap-x-8 md:justify-end lg:hidden">
+            {product && (
+              <Button
+                className="h-10 w-32"
+                disabled={isLoading}
+                variant={`destructive`}
+                size={`sm`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  open("confirmDelete", { ...deletePackage });
+                }}
+              >
+                Delete
+                <Trash className="ml-2 h-4 w-4" />
+              </Button>
+            )}
+            <Button className="flex h-10 w-32">
+              {product ? "Save changes" : "Save"}
+            </Button>
           </div>
         </form>
       </Form>

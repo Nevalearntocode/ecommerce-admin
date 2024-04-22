@@ -115,8 +115,8 @@ const ColorForm = ({ color }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-end md:justify-between">
-        <div className="hidden md:block">
+      <div className="flex items-center justify-between">
+        <div className="">
           <Header
             title={color ? `Manage ${color.name} Color` : "Create new color"}
             description="Create or manage your color"

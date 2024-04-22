@@ -77,8 +77,8 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
       type: technologyProduct.type?.value || "",
       price: technologyProduct.price,
       stock: technologyProduct.stock,
-      createdAt: format(technologyProduct.createdAt, "mm/dd/yy"),
-      updatedAt: format(technologyProduct.updatedAt, "mm/dd/yy"),
+      createdAt: format(technologyProduct.createdAt, "dd/M/yy"),
+      updatedAt: format(technologyProduct.updatedAt, "dd/M/yy"),
     }));
 
   const startIndex = (currentPage - 1) * itemsPerPage;

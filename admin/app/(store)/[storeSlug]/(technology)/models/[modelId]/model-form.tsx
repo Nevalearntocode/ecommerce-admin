@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -114,8 +114,8 @@ const ModelForm = ({ model }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-end md:justify-between">
-        <div className="hidden md:block">
+      <div className="flex items-center justify-between">
+        <div>
           <Header
             title={model ? `Manage ${model.name} Model` : "Create new model"}
             description="Create or manage your product models"

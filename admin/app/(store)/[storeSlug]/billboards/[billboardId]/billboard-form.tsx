@@ -119,8 +119,8 @@ const BillboardForm = ({ billboard }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-end md:justify-between">
-        <div className="hidden md:block">
+      <div className="flex items-center justify-between">
+        <div className="md:block">
           <Header
             title={
               billboard

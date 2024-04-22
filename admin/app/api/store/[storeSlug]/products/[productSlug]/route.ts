@@ -79,14 +79,27 @@ export async function PATCH(
       );
     }
 
-    if (existingStore.storeType === "CLOTHING") {
-      if (modelName || typeName) {
-        return new NextResponse(
-          "Your products don't have type or model attribute.",
-          { status: 400 },
-        );
-      }
+    if (
+      ((sizeName && sizeName !== "") || (colorName && colorName !== "")) &&
+      existingStore.storeType !== "CLOTHING"
+    ) {
+      return new NextResponse(
+        "The products of your store do not have attributes size or color.",
+        { status: 400 },
+      );
+    }
 
+    if (
+      ((modelName && modelName !== "") || (typeName && typeName !== "")) &&
+      existingStore.storeType !== "TECHNOLOGY"
+    ) {
+      return new NextResponse(
+        "The products of your store do not have attributes model or type.",
+        { status: 400 },
+      );
+    }
+
+    if (existingStore.storeType === "CLOTHING") {
       const existingProduct = await getClothingProductWithStoreType(
         existingStore.id,
         productSlug,
@@ -112,7 +125,6 @@ export async function PATCH(
         colorId: existingProduct.colorId,
       };
 
-      //   Check if category has changed
       if (
         categoryName &&
         categoryName !== "" &&
@@ -203,13 +215,6 @@ export async function PATCH(
       });
     }
     if (existingStore.storeType === "TECHNOLOGY") {
-      if (sizeName || colorName) {
-        return new NextResponse(
-          "Your products don't have color or size attribute.",
-          { status: 400 },
-        );
-      }
-
       const existingProduct = await getTechnologyProductWithStoreType(
         existingStore.id,
         productSlug,

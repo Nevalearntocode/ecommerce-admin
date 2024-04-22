@@ -144,8 +144,8 @@ const CategoryForm = ({ category, billboardNames }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-end md:justify-between">
-        <div className="hidden md:block">
+      <div className="flex items-center justify-between">
+        <div className="md:block">
           <Header
             title={
               category
@@ -187,7 +187,7 @@ const CategoryForm = ({ category, billboardNames }: Props) => {
           id="categoryForm"
         >
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="col-span-3 grid w-full grid-cols-3 gap-x-8">
+            <div className="col-span-3 grid w-full grid-cols-1 gap-8 gap-x-8 md:grid-cols-2 lg:grid-cols-3">
               <FormField
                 control={form.control}
                 name="name"
