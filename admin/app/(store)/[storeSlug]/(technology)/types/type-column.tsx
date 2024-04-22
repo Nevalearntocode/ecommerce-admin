@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import TypeCellAction from "./type-cell-action";
+import EntityCellAction from "@/components/clients/entity-cell-action";
 
 export type TypeColumn = {
   id: number;
@@ -30,6 +30,8 @@ export const columns: ColumnDef<TypeColumn>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <TypeCellAction formattedType={row.original} />,
+    cell: ({ row }) => (
+      <EntityCellAction endpoint="types" entity={row.original} type="general" />
+    ),
   },
 ];

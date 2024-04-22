@@ -1,8 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import ClothingProductCellAction from "./clothing-product-cell-action";
 import { SizeValue } from "@prisma/client";
+import EntityCellAction from "@/components/clients/entity-cell-action";
 
 export type ClothingProductColumn = {
   slug: string;
@@ -67,7 +67,11 @@ export const columns: ColumnDef<ClothingProductColumn>[] = [
   {
     id: "actions",
     cell: ({ row }) => (
-      <ClothingProductCellAction formattedClothingProduct={row.original} />
+      <EntityCellAction
+        endpoint="products"
+        entity={row.original}
+        type="product"
+      />
     ),
   },
 ];

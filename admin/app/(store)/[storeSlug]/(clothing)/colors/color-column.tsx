@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import ColorCellAction from "./color-cell-action";
+import EntityCellAction from "@/components/clients/entity-cell-action";
 
 export type ColorColumn = {
   id: number;
@@ -39,6 +39,12 @@ export const columns: ColumnDef<ColorColumn>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <ColorCellAction formattedColor={row.original} />,
+    cell: ({ row }) => (
+      <EntityCellAction
+        endpoint="colors"
+        entity={row.original}
+        type="general"
+      />
+    ),
   },
 ];

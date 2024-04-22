@@ -18,14 +18,12 @@ import { Input } from "@/components/ui/input";
 import { Model } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import APIAlert from "@/components/apis/api-alert";
-import { Button } from "@/components/ui/button";
-import Header from "@/components/header";
 import { useOrigin } from "@/hooks/use-origin";
-import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
 import { useParams, useRouter } from "next/navigation";
+import FormHeader from "@/components/forms/form-header";
 
 type Props = {
   model: Model | null;
@@ -114,37 +112,14 @@ const ModelForm = ({ model }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div>
-          <Header
-            title={model ? `Manage ${model.name} Model` : "Create new model"}
-            description="Create or manage your product models"
-          />
-        </div>
-        <div className="flex gap-x-4">
-          {model && (
-            <Button
-              className="md:h-10 md:w-32"
-              disabled={isLoading}
-              variant={`destructive`}
-              size={`sm`}
-              onClick={() => open("confirmDelete", { ...deletePackage })}
-            >
-              Delete
-              <Trash className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-          <Button
-            className="ml-auto flex md:h-10 md:w-32"
-            size={"sm"}
-            disabled={isLoading}
-            type="submit"
-            form="modelForm"
-          >
-            {model ? "Save changes" : "Save"}
-          </Button>
-        </div>
-      </div>
+      <FormHeader
+        title={model ? `Manage ${model.name} Model` : "Create new model"}
+        description="Create or manage your models"
+        isLoading={isLoading}
+        isEditing={!!model}
+        onDelete={() => open("confirmDelete", { ...deletePackage })}
+        onSubmit={form.handleSubmit(onSubmit)}
+      />
       <Separator />
       <Form {...form}>
         <form

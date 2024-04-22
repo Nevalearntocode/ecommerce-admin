@@ -27,6 +27,7 @@ import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
 import ImageUpload from "@/components/uploadthing/upload-image";
 import { useParams, useRouter } from "next/navigation";
+import FormHeader from "@/components/forms/form-header";
 
 type Props = {
   billboard: Billboard | null;
@@ -119,41 +120,18 @@ const BillboardForm = ({ billboard }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="md:block">
-          <Header
-            title={
-              billboard
-                ? `Manage ${billboard.name} Billboard`
-                : "Create new billboard"
-            }
-            description="Create or manage your billboard"
-          />
-        </div>
-        <div className="flex gap-x-4">
-          {billboard && (
-            <Button
-              className="md:h-10 md:w-32"
-              disabled={isLoading}
-              variant={`destructive`}
-              size={`sm`}
-              onClick={() => open("confirmDelete", { ...deletePackage })}
-            >
-              Delete
-              <Trash className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-          <Button
-            className="ml-auto flex md:h-10 md:w-32"
-            size={"sm"}
-            disabled={isLoading}
-            type="submit"
-            form="billboardForm"
-          >
-            {billboard ? "Save changes" : "Save"}
-          </Button>
-        </div>
-      </div>
+      <FormHeader
+        title={
+          billboard
+            ? `Manage ${billboard.name} Billboard`
+            : "Create new billboard"
+        }
+        description="Create or manage your billboards"
+        isLoading={isLoading}
+        isEditing={!!billboard}
+        onDelete={() => open("confirmDelete", { ...deletePackage })}
+        onSubmit={form.handleSubmit(onSubmit)}
+      />
       <Separator />
       <Form {...form}>
         <form

@@ -18,15 +18,12 @@ import { Input } from "@/components/ui/input";
 import { Color } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import APIAlert from "@/components/apis/api-alert";
-import { Button } from "@/components/ui/button";
-import Header from "@/components/header";
 import { useOrigin } from "@/hooks/use-origin";
-import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
 import { useParams, useRouter } from "next/navigation";
-import { BlockPicker } from "react-color";
+import FormHeader from "@/components/forms/form-header";
 
 type Props = {
   color: Color | null;
@@ -115,37 +112,14 @@ const ColorForm = ({ color }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="">
-          <Header
-            title={color ? `Manage ${color.name} Color` : "Create new color"}
-            description="Create or manage your color"
-          />
-        </div>
-        <div className="flex gap-x-4">
-          {color && (
-            <Button
-              className="md:h-10 md:w-32"
-              disabled={isLoading}
-              variant={`destructive`}
-              color={`sm`}
-              onClick={() => open("confirmDelete", { ...deletePackage })}
-            >
-              Delete
-              <Trash className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-          <Button
-            className="ml-auto flex md:h-10 md:w-32"
-            color={"sm"}
-            disabled={isLoading}
-            type="submit"
-            form="colorForm"
-          >
-            {color ? "Save changes" : "Save"}
-          </Button>
-        </div>
-      </div>
+      <FormHeader
+        title={color ? `Manage ${color.name} Color` : "Create new color"}
+        description="Create or manage your colors"
+        isLoading={isLoading}
+        isEditing={!!color}
+        onDelete={() => open("confirmDelete", { ...deletePackage })}
+        onSubmit={form.handleSubmit(onSubmit)}
+      />
       <Separator />
       <Form {...form}>
         <form

@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import {
   DropdownMenu,
@@ -14,29 +13,35 @@ import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
-import { ClothingProductColumn } from "./clothing-product-column";
 
 type Props = {
-  formattedClothingProduct: ClothingProductColumn;
+  entity: {
+    name: string;
+    id?: number;
+    slug?: string;
+  };
+  endpoint: string;
+  type: "general" | "product";
 };
 
-const ClothingProductCellAction = ({ formattedClothingProduct }: Props) => {
+const EntityCellAction = ({ entity, endpoint, type }: Props) => {
   const { open, close } = useModal();
   const router = useRouter();
   const params = useParams();
+
   const onCopy = () => {
-    navigator.clipboard.writeText(formattedClothingProduct.slug.toString());
-    toast.success("Product slug copied to clipboard.");
+    const valueToCopy = entity.id?.toString() || entity.slug;
+    if (valueToCopy) {
+      navigator.clipboard.writeText(valueToCopy);
+      toast.success(`${entity.id ? "ID" : "Slug"} copied to clipboard.`);
+    }
   };
 
   const onDelete = async () => {
     try {
-      console.log("Delete");
-      const res = await axios.delete(
-        `/api/store/${params.storeSlug}/products/${formattedClothingProduct?.slug}`,
-      );
+      const url = `/api/store/${params.storeSlug}/${endpoint}/${entity.id || entity.slug}`;
+      const res = await axios.delete(url);
       toast.success(res.data.success);
-      router.push(`/${params.storeSlug}/products`);
       router.refresh();
       close();
     } catch (error: any) {
@@ -45,12 +50,20 @@ const ClothingProductCellAction = ({ formattedClothingProduct }: Props) => {
     }
   };
 
+  const description =
+    type === "general"
+      ? `Deleting "${entity.name}" will permanently remove it and all its content. This is irreversible.`
+      : type === "product"
+        ? `"${entity.name}" Will permanently be removed. This is irreversible.`
+        : "";
+
   const deletePackage = {
     confirmDelete: onDelete,
-    headerDelete: " Delete product?",
-    descriptionDelete: `"${formattedClothingProduct?.name}" Will permanently be removed. This is irreversible.`,
+    headerDelete: `Delete ${entity.id ? "billboard" : "category"}?`,
+    descriptionDelete: description,
   };
 
+  const editUrl = `/${params.storeSlug}/${endpoint}/${entity.id || entity.slug}`;
 
   return (
     <DropdownMenu>
@@ -62,19 +75,13 @@ const ClothingProductCellAction = ({ formattedClothingProduct }: Props) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Action</DropdownMenuLabel>
-        <DropdownMenuItem
-          onClick={() =>
-            router.push(
-              `/${params.storeSlug}/products/${formattedClothingProduct.slug}`,
-            )
-          }
-        >
+        <DropdownMenuItem onClick={() => router.push(editUrl)}>
           <Edit className="mr-2 h-4 w-4" />
           Update
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onCopy}>
           <Copy className="mr-2 h-4 w-4" />
-          Copy Slug
+          Copy {entity.id ? "ID" : "Slug"}
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => open("confirmDelete", { ...deletePackage })}
@@ -87,4 +94,4 @@ const ClothingProductCellAction = ({ formattedClothingProduct }: Props) => {
   );
 };
 
-export default ClothingProductCellAction;
+export default EntityCellAction;

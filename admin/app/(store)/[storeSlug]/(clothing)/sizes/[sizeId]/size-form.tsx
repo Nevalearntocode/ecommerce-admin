@@ -18,10 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Size, SizeValue } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import APIAlert from "@/components/apis/api-alert";
-import { Button } from "@/components/ui/button";
-import Header from "@/components/header";
 import { useOrigin } from "@/hooks/use-origin";
-import { Trash } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
@@ -33,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import FormHeader from "@/components/forms/form-header";
 
 type Props = {
   size: Size | null;
@@ -119,37 +117,14 @@ const SizeForm = ({ size }: Props) => {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="block">
-          <Header
-            title={size ? `Manage ${size.name} Size` : "Create new size"}
-            description="Create or manage your size"
-          />
-        </div>
-        <div className="flex gap-x-4">
-          {size && (
-            <Button
-              className="md:h-10 md:w-32"
-              disabled={isLoading}
-              variant={`destructive`}
-              size={`sm`}
-              onClick={() => open("confirmDelete", { ...deletePackage })}
-            >
-              Delete
-              <Trash className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-          <Button
-            className="ml-auto flex md:h-10 md:w-32"
-            size={"sm"}
-            disabled={isLoading}
-            type="submit"
-            form="sizeForm"
-          >
-            {size ? "Save changes" : "Save"}
-          </Button>
-        </div>
-      </div>
+      <FormHeader
+        title={size ? `Manage ${size.name} Size` : "Create new size"}
+        description="Create or manage your sizes"
+        isLoading={isLoading}
+        isEditing={!!size}
+        onDelete={() => open("confirmDelete", { ...deletePackage })}
+        onSubmit={form.handleSubmit(onSubmit)}
+      />
       <Separator />
       <Form {...form}>
         <form

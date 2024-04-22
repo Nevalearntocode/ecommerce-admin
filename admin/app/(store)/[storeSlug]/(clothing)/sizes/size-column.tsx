@@ -1,8 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import SizeCellAction from "./size-cell-action";
 import { SizeValue } from "@prisma/client";
+import EntityCellAction from "@/components/clients/entity-cell-action";
 
 export type SizeColumn = {
   id: number;
@@ -32,7 +32,7 @@ export const columns: ColumnDef<SizeColumn>[] = [
   {
     id: "actions",
     cell: ({ row }) => (
-      <SizeCellAction formattedSize={row.original} />
+      <EntityCellAction endpoint="sizes" entity={row.original} type="general" />
     ),
   },
 ];
