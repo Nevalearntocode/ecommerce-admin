@@ -1,12 +1,9 @@
 "use client";
 
 import Header from "@/components/header";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Model } from "@prisma/client";
-import { Plus, Search } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Plus } from "lucide-react";
 import { ModelColumn, columns } from "./model-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
@@ -14,6 +11,8 @@ import APIList from "@/components/apis/api-list";
 import { useParams, useRouter } from "next/navigation";
 import useFilter from "@/hooks/use-filter";
 import HeaderWithActions from "@/components/clients/header-with-actions";
+import SearchInput from "@/components/clients/search";
+import { useMemo } from "react";
 
 type Props = {
   models: Model[];
@@ -28,13 +27,15 @@ const ModelClient = ({ models }: Props) => {
     "name",
   );
 
-  const formattedModels: ModelColumn[] = filteredModels.map((model) => ({
-    id: model.id,
-    name: model.name,
-    value: model.value,
-    createdAt: format(model.createdAt, "h:mm MMMM do, yyyy"),
-    updatedAt: format(model.updatedAt, "h:mm MMMM do, yyyy"),
-  }));
+  const formattedModels: ModelColumn[] = useMemo(() => {
+    return filteredModels.map((model) => ({
+      id: model.id,
+      name: model.name,
+      value: model.value,
+      createdAt: format(model.createdAt, "h:mm MMMM do, yyyy"),
+      updatedAt: format(model.updatedAt, "h:mm MMMM do, yyyy"),
+    }));
+  }, [filteredModels]);
 
   return (
     <>
@@ -56,19 +57,7 @@ const ModelClient = ({ models }: Props) => {
       <Separator />
       {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <div className="relative">
-          <Input
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search model by name..."
-          />
-          <Button
-            className="absolute right-0 top-0 rounded-full"
-            variant={`ghost`}
-            size={`icon`}
-          >
-            <Search className="h-4 w-4" />
-          </Button>
-        </div>
+        <SearchInput onChange={setSearchInput} component="model" />
       </div>
       <DataTable columns={columns} data={formattedModels} />
       <Header title="API" description="API calls for Models" />

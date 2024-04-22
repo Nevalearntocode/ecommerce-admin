@@ -1,13 +1,11 @@
 "use client";
 
 import Header from "@/components/header";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
 import CategoryCard from "./category-card";
-import { Input } from "@/components/ui/input";
 import { CategoryColumn, columns } from "./category-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
@@ -17,6 +15,7 @@ import useFilter from "@/hooks/use-filter";
 import Pagination from "@/components/clients/pagination";
 import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
+import SearchInput from "@/components/clients/search";
 
 type Props = {
   categories: CategoryWithBillboard[];
@@ -73,19 +72,7 @@ const CategoryClient = ({ categories }: Props) => {
       <Separator />
       {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <div className="relative">
-          <Input
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search category by name..."
-          />
-          <Button
-            className="absolute right-0 top-0 rounded-full"
-            variant={`ghost`}
-            size={`icon`}
-          >
-            <Search className="h-4 w-4" />
-          </Button>
-        </div>
+        <SearchInput onChange={setSearchInput} component="category" />
       </div>
       {viewState === "datatable" && (
         <DataTable columns={columns} data={formattedCategories} />

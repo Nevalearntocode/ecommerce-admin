@@ -1,14 +1,10 @@
 "use client";
 
 import Header from "@/components/header";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Image, Plus, Search, Table } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import ActionTooltip from "@/components/clients/action-tooltip";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
+import React, { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
 import APIList from "@/components/apis/api-list";
@@ -19,6 +15,7 @@ import useFilter from "@/hooks/use-filter";
 import Pagination from "@/components/clients/pagination";
 import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
+import SearchInput from "@/components/clients/search";
 
 type Props = {
   technologyProducts: TechnologyProduct[];
@@ -36,8 +33,8 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const formattedTechnologyProducts: TechnologyProductColumn[] =
-    filteredTechnologyProducts.map((technologyProduct) => ({
+  const formattedTechnologyProducts: TechnologyProductColumn[] = useMemo(() => {
+    return filteredTechnologyProducts.map((technologyProduct) => ({
       slug: technologyProduct.slug,
       name: technologyProduct.name,
       brand: technologyProduct.brand || "",
@@ -49,6 +46,7 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
       createdAt: format(technologyProduct.createdAt, "dd/M/yy"),
       updatedAt: format(technologyProduct.updatedAt, "dd/M/yy"),
     }));
+  }, [filteredTechnologyProducts]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -83,19 +81,7 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
       <Separator />
       {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <div className="relative">
-          <Input
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search product by name..."
-          />
-          <Button
-            className="absolute right-0 top-0 rounded-full"
-            variant={`ghost`}
-            size={`icon`}
-          >
-            <Search className="h-4 w-4" />
-          </Button>
-        </div>
+        <SearchInput onChange={setSearchInput} component="product" />
       </div>
       {viewState === "datatable" && (
         <DataTable columns={columns} data={formattedTechnologyProducts} />

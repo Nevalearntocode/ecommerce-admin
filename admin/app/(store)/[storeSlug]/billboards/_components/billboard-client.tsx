@@ -1,16 +1,12 @@
 "use client";
 
 import Header from "@/components/header";
-import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Billboard } from "@prisma/client";
-import { Image, Plus, Search, Table } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import BillboardCard from "./billboard-card";
-import ActionTooltip from "@/components/clients/action-tooltip";
-import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
 import { BillboardColumn, columns } from "./billboard-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
@@ -19,6 +15,7 @@ import useFilter from "@/hooks/use-filter";
 import Pagination from "@/components/clients/pagination";
 import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
+import SearchInput from "@/components/clients/search";
 
 type Props = {
   billboards: Billboard[];
@@ -36,14 +33,14 @@ const BillboardClient = ({ billboards }: Props) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
 
-  const formattedBillboards: BillboardColumn[] = filteredBillboards.map(
-    (billboard) => ({
-      id: billboard.id,
-      name: billboard.name,
-      createdAt: format(billboard.createdAt, "h:mm MMMM do, yyyy"),
-      updatedAt: format(billboard.updatedAt, "h:mm MMMM do, yyyy"),
-    }),
-  );
+const formattedBillboards: BillboardColumn[] = useMemo(() => {
+  return filteredBillboards.map((billboard) => ({
+    id: billboard.id,
+    name: billboard.name,
+    createdAt: format(billboard.createdAt, "h:mm MMMM do, yyyy"),
+    updatedAt: format(billboard.updatedAt, "h:mm MMMM do, yyyy"),
+  }));
+}, [filteredBillboards]);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -73,19 +70,7 @@ const BillboardClient = ({ billboards }: Props) => {
       <Separator />
       {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        <div className="relative">
-          <Input
-            onChange={(e) => setSearchInput(e.target.value)}
-            placeholder="Search billboard by name..."
-          />
-          <Button
-            className="absolute right-0 top-0 rounded-full"
-            variant={`ghost`}
-            size={`icon`}
-          >
-            <Search className="h-4 w-4" />
-          </Button>
-        </div>
+        <SearchInput onChange={setSearchInput} component="billboard" />
       </div>
       {viewState === "datatable" && (
         <DataTable columns={columns} data={formattedBillboards} />
