@@ -166,6 +166,9 @@ const ModelForm = ({ model }: Props) => {
                       placeholder="ASUS Zenbook Pro 14 Duo OLED (UX8402)"
                     />
                   </FormControl>
+                  <FormDescription className="text-xs italic">
+                    This name will be saved as lowercase for SEO purpose.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -187,10 +190,8 @@ const ModelForm = ({ model }: Props) => {
                           />
                         </div>
                       </FormControl>
-                      <FormDescription>
-                        Please enter key specifications separated by slashes,
-                        for example: Processor/Graphics Card/RAM/Storage (e.g.,
-                        i7-12700H/RTX3050Ti/16GB/1TB).
+                      <FormDescription className="text-xs italic">
+                        A brief description about this model.
                       </FormDescription>
                       <FormMessage />
                     </div>

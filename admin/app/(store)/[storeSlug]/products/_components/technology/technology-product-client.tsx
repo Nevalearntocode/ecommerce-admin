@@ -158,7 +158,7 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
         <>
           {filteredTechnologyProducts.length === 0 ? (
             <div>
-              <p>No technologyProducts found.</p>
+              <p>No products found.</p>{" "}
             </div>
           ) : (
             <>

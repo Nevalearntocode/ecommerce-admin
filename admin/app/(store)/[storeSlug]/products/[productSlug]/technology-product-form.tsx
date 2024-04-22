@@ -65,6 +65,7 @@ const formSchema = z.object({
   images: z.array(z.string()),
   brand: z.string().optional(),
   isFeatured: z.boolean().optional(),
+  isArchived: z.boolean().optional(),
   categoryName: z.string().min(1, "Category is required"),
   modelName: z.string().min(1, "Model is required"),
   typeName: z.string().min(1, "Type is required"),
@@ -94,6 +95,7 @@ const TechnologyProductForm = ({
       images: [],
       brand: "",
       isFeatured: false,
+      isArchived: false,
       categoryName: "",
       modelName: "",
       typeName: "",
@@ -109,6 +111,7 @@ const TechnologyProductForm = ({
       form.setValue("images", product.images || []);
       form.setValue("brand", product.brand || "");
       form.setValue("isFeatured", product.isFeatured || false);
+      form.setValue("isArchived", product.isArchived || false);
 
       // Access nested properties for category, model, and type
       form.setValue("categoryName", product.category.name || "");
@@ -151,7 +154,13 @@ const TechnologyProductForm = ({
             data,
           )
           .then((res) => {
-            form.reset();
+            form.resetField("name");
+            form.resetField("price");
+            form.resetField("stock");
+            form.resetField("brand");
+            form.resetField("description");
+            form.resetField("images");
+
             toast.success(res.data.success);
             router.push(
               `/${params.storeSlug}/products/${data.name.toLowerCase().trim().replace(/\s+/g, "-")}`,
@@ -162,7 +171,6 @@ const TechnologyProductForm = ({
         await axios
           .post(`/api/store/${params.storeSlug}/products`, data)
           .then((res) => {
-            form.reset();
             toast.success(res.data.success);
             router.refresh();
           });
@@ -203,29 +211,6 @@ const TechnologyProductForm = ({
             }
             description="Create or manage your product"
           />
-        </div>
-        <div className="flex gap-x-4">
-          {product && (
-            <Button
-              className="hidden md:h-10 md:w-32 lg:flex"
-              disabled={isLoading}
-              variant={`destructive`}
-              size={`sm`}
-              onClick={() => open("confirmDelete", { ...deletePackage })}
-            >
-              Delete
-              <Trash className="ml-2 h-4 w-4" />
-            </Button>
-          )}
-          <Button
-            className="ml-auto hidden md:h-10 md:w-32 lg:flex"
-            size={"sm"}
-            disabled={isLoading}
-            type="submit"
-            form="productForm"
-          >
-            {product ? "Save changes" : "Save"}
-          </Button>
         </div>
       </div>
       <Separator />
@@ -300,6 +285,9 @@ const TechnologyProductForm = ({
                   <FormControl>
                     <Input disabled={isLoading} {...field} />
                   </FormControl>
+                  <FormDescription className="text-xs italic">
+                    Brand will be saved as lowercase for SEO purpose.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -399,14 +387,40 @@ const TechnologyProductForm = ({
               name="isFeatured"
               render={({ field }) => (
                 <FormItem className="flex flex-col gap-y-3">
-                  <FormLabel>Is featured.</FormLabel>
-                  <div className="flex h-full items-start">
+                  <FormLabel>Featured</FormLabel>
+                  <div className="flex h-full items-start gap-x-2">
                     <FormControl>
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
+                    <p className="mt-[2px] text-sm font-light italic">
+                      This product will be appear on your store with higher
+                      priority.
+                    </p>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isArchived"
+              render={({ field }) => (
+                <FormItem className="flex flex-col gap-y-3">
+                  <FormLabel>Archive</FormLabel>
+                  <div className="flex h-full items-start gap-x-2">
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <p className="mt-[2px] text-sm font-light italic">
+                      If you are currently out of stock or don't want your
+                      product to be appeared anywhere.
+                    </p>
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -417,7 +431,7 @@ const TechnologyProductForm = ({
               name="description"
               render={({ field }) => (
                 <FormItem className="">
-                  <FormLabel>description</FormLabel>
+                  <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea className="" disabled={isLoading} {...field} />
                   </FormControl>

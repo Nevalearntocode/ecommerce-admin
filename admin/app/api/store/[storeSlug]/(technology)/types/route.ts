@@ -57,7 +57,7 @@ export async function POST(
 
     const newType = await db.type.create({
       data: {
-        name,
+        name: name.toLowerCase(),
         value,
         storeId: existingStore.id,
       },

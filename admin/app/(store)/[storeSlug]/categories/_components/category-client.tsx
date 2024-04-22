@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Image, Plus, Search, Table } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import CategoryCard from "./category-card";
 import ActionTooltip from "@/components/action-tooltip";
 import { cn } from "@/lib/utils";
@@ -61,16 +61,26 @@ const CategoryClient = ({ categories }: Props) => {
     }
   }, [categoryViewState]);
 
-  const formattedCategories: CategoryColumn[] = filteredCategories.map(
-    (category) => ({
-      slug: category.slug,
-      name: category.name,
-      billboardId: category.billboardId,
-      billboardName: category.billboard.name,
-      createdAt: format(category.createdAt, "h:mm MMMM do, yyyy"),
-      updatedAt: format(category.updatedAt, "h:mm MMMM do, yyyy"),
-    }),
-  );
+  const formattedCategories: CategoryColumn[] = useMemo(() => {
+    return filteredCategories.map(
+     (category) => ({
+       slug: category.slug,
+       name: category.name,
+       billboardId: category.billboardId,
+       billboardName: category.billboard.name,
+       createdAt: format(category.createdAt, "h:mm MMMM do, yyyy"),
+       updatedAt: format(category.updatedAt, "h:mm MMMM do, yyyy"),
+     }),
+   );
+  }, [filteredCategories])
+
+  const handleCardViewClick = useCallback(() => {
+    setCategoryViewState("card");
+  }, []);
+
+  const handleDatatableViewClick = useCallback(() => {
+    setCategoryViewState("datatable");
+  }, []);
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -90,7 +100,7 @@ const CategoryClient = ({ categories }: Props) => {
         <div className="flex gap-x-4">
           <ActionTooltip tooltip="Switch to image view">
             <Button
-              onClick={() => setCategoryViewState("card")}
+              onClick={handleCardViewClick}
               variant={`ghost`}
               size={`icon`}
               className={cn(
@@ -103,7 +113,7 @@ const CategoryClient = ({ categories }: Props) => {
           </ActionTooltip>
           <ActionTooltip tooltip="Switch to datatable view">
             <Button
-              onClick={() => setCategoryViewState("datatable")}
+              onClick={handleDatatableViewClick}
               variant={`ghost`}
               size={`icon`}
               className={cn(

@@ -163,6 +163,9 @@ const ColorForm = ({ color }: Props) => {
                   <FormControl>
                     <Input disabled={isLoading} {...field} />
                   </FormControl>
+                  <FormDescription className="text-xs italic">
+                    This name will be saved as lowercase for SEO purpose.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

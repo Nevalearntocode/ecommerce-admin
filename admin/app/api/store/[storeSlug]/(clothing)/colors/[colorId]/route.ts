@@ -53,7 +53,7 @@ export async function PATCH(
     }
 
     const updateData = {
-      name: name ? name : existingColor.name,
+      name: name ? name.toLowerCase() : existingColor.name,
       value: value ? value : existingColor.value,
     };
 

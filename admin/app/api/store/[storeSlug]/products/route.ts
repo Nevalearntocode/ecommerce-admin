@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
-import {
-  getStoreToCreateProduct,
-  getTechnologyAttributeIds,
-} from "@/lib/get-stores";
+import { getStoreToCreateProduct } from "@/lib/get-stores";
 import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import { getSizeIdByNameAndStoreId } from "@/lib/get-sizes";
 import { getColorIdByNameAndStoreId } from "@/lib/get-colors";
@@ -36,6 +33,7 @@ export async function POST(
       images,
       brand,
       isFeatured,
+      isArchived,
       categoryName,
       sizeName,
       colorName,
@@ -45,6 +43,7 @@ export async function POST(
       name?: string;
       price?: string;
       stock?: string;
+      isArchived?: boolean;
       isFeatured?: boolean;
       categoryName?: string;
       images: string[];
@@ -109,7 +108,8 @@ export async function POST(
     }
 
     if (
-      (!existingStore.staffs[0] || !canManageProduct(existingStore.staffs[0])) &&
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
       !isOwner(existingStore.staffs[0], existingStore.userId)
     ) {
       return new NextResponse(
@@ -122,8 +122,9 @@ export async function POST(
       price: parseFloat(price),
       stock: Number(stock),
       slug: name.toLowerCase().trim().replace(/\s+/g, "-"),
-      brand,
+      brand: brand?.toLowerCase(),
       isFeatured,
+      isArchived,
       description,
       categoryId: existingStore.categories[0].id,
       storeId: existingStore.id,
@@ -166,18 +167,8 @@ export async function POST(
       }
       const newClothingProduct = await db.product.create({
         data: {
-          name: updateData.name,
-          price: updateData.price,
-          slug: updateData.slug,
-          stock: updateData.stock,
-          brand: updateData.brand,
-          description: updateData.description,
-          categoryId: updateData.categoryId,
-          storeId: updateData.storeId,
+          ...updateData,
           images: [...images],
-          isFeatured: updateData.isFeatured,
-          sizeId: updateData.sizeId,
-          colorId: updateData.colorId,
         },
       });
 
@@ -221,18 +212,8 @@ export async function POST(
 
       const newTechnology = await db.product.create({
         data: {
-          name: updateData.name,
-          price: updateData.price,
-          slug: updateData.slug,
-          stock: updateData.stock,
-          brand: updateData.brand,
-          description: updateData.description,
-          categoryId: updateData.categoryId,
-          storeId: updateData.storeId,
+          ...updateData,
           images: [...images],
-          isFeatured: updateData.isFeatured,
-          modelId: updateData.modelId,
-          typeId: updateData.typeId,
         },
       });
 
@@ -245,6 +226,102 @@ export async function POST(
     return new NextResponse("Something went wrong.", { status: 500 });
   } catch (error) {
     console.log("[CREATE PRODUCT]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { storeSlug: string } },
+) {
+  try {
+    if (!params.storeSlug) {
+      return new NextResponse("Store slug is required.", { status: 400 });
+    }
+
+    const existingStore = await db.store.findUnique({
+      where: {
+        slug: params.storeSlug,
+      },
+    });
+
+    if (!existingStore) {
+      return new NextResponse("Store not found.", { status: 404 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const categorySlug = searchParams.get("category") || undefined;
+    const brand = searchParams.get("brand") || undefined;
+    const colorName = searchParams.get("color") || undefined;
+    const sizeName = searchParams.get("size") || undefined;
+    const modelName = searchParams.get("model") || undefined;
+    const typeName = searchParams.get("type") || undefined;
+    const isFeatured = searchParams.get("featured") || undefined;
+
+    console.log(searchParams.get("color"));
+
+    if (existingStore.storeType === "CLOTHING") {
+      const products = await db.product.findMany({
+        where: {
+          storeId: existingStore.id,
+          category: {
+            slug: categorySlug,
+          },
+          brand,
+          isFeatured: isFeatured ? true : undefined,
+          isArchived: false,
+          color: {
+            name: colorName,
+          },
+          size: {
+            name: sizeName,
+          },
+        },
+        include: {
+          category: true,
+          color: true,
+          size: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+      return NextResponse.json(products);
+    }
+
+    if (existingStore.storeType === "TECHNOLOGY") {
+      const products = await db.product.findMany({
+        where: {
+          storeId: existingStore.id,
+          category: {
+            slug: categorySlug,
+          },
+          brand,
+          isFeatured: isFeatured ? true : undefined,
+          isArchived: false,
+          model: {
+            name: modelName,
+          },
+          type: {
+            name: typeName,
+          },
+        },
+        include: {
+          category: true,
+          model: true,
+          type: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return NextResponse.json(products);
+    }
+
+    return new NextResponse("Something went wrong", { status: 500 });
+  } catch (error) {
+    console.log("[GET PRODUCTS]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

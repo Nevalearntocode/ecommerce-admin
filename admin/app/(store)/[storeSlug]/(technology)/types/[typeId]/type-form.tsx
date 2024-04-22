@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -165,6 +166,9 @@ const TypeForm = ({ type }: Props) => {
                       placeholder="Laptop"
                     />
                   </FormControl>
+                  <FormDescription className="text-xs italic">
+                    This name will be saved as lowercase for SEO purpose.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -186,6 +190,9 @@ const TypeForm = ({ type }: Props) => {
                           />
                         </div>
                       </FormControl>
+                      <FormDescription className="text-xs italic">
+                        A brief description about this type.
+                      </FormDescription>
                       <FormMessage />
                     </div>
                   </FormItem>

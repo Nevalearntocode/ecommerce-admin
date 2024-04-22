@@ -158,9 +158,6 @@ export async function DELETE(
       where: {
         id: existingStore.id,
       },
-      select: {
-        id: true,
-      },
     });
     return NextResponse.json({
       success: "Store deleted.",

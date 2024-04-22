@@ -59,7 +59,7 @@ export async function POST(
 
     const newSize = await db.size.create({
       data: {
-        name,
+        name: name.toLowerCase(),
         value,
         storeId: existingStore.id,
       },

@@ -53,7 +53,7 @@ export async function PATCH(
     }
 
     const updateData = {
-      name: name ? name : existingModel.name,
+      name: name ? name.toLowerCase() : existingModel.name,
       value: value ? value : existingModel.value,
     };
 

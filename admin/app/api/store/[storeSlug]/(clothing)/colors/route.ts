@@ -66,7 +66,7 @@ export async function POST(
 
     const newColor = await db.color.create({
       data: {
-        name,
+        name: name.toLowerCase(),
         value: updateData.value,
         storeId: existingStore.id,
       },

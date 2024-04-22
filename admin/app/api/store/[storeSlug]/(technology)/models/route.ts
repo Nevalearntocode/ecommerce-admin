@@ -57,7 +57,7 @@ export async function POST(
 
     const newModel = await db.model.create({
       data: {
-        name,
+        name: name.toLowerCase(),
         value,
         storeId: existingStore.id,
       },

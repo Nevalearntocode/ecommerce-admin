@@ -159,7 +159,7 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
         <>
           {filteredClothingProducts.length === 0 ? (
             <div>
-              <p>No clothingProducts found.</p>
+              <p>No products found.</p>
             </div>
           ) : (
             <>

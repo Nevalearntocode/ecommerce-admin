@@ -37,6 +37,7 @@ export async function PATCH(
       images,
       brand,
       isFeatured,
+      isArchived,
       categoryName,
       sizeName,
       colorName,
@@ -46,6 +47,7 @@ export async function PATCH(
       name?: string;
       price?: string;
       stock?: string;
+      isArchived?: boolean;
       isFeatured?: boolean;
       images: string[];
       brand?: string;
@@ -116,8 +118,9 @@ export async function PATCH(
         slug: name
           ? name.toLowerCase().trim().replace(/\s+/g, "-")
           : existingProduct.slug,
-        brand: brand ? brand : existingProduct.brand,
+        brand: brand ? brand.toLowerCase() : existingProduct.brand,
         isFeatured: isFeatured ?? existingProduct.isFeatured,
+        isArchived: isArchived ?? existingProduct.isArchived,
         description: description ? description : existingProduct.description,
         images: images.length > 0 ? images : existingProduct.images,
         categoryId: existingProduct.categoryId,
@@ -231,8 +234,9 @@ export async function PATCH(
         slug: name
           ? name.toLowerCase().trim().replace(/\s+/g, "-")
           : existingProduct.slug,
-        brand: brand ? brand : existingProduct.brand,
+        brand: brand ? brand.toLowerCase() : existingProduct.brand,
         isFeatured: isFeatured ?? existingProduct.isFeatured,
+        isArchived: isArchived ?? existingProduct.isArchived,
         description: description ? description : existingProduct.description,
         images: images.length > 0 ? images : existingProduct.images,
         categoryId: existingProduct.categoryId,
@@ -407,6 +411,44 @@ export async function DELETE(
     });
   } catch (error) {
     console.log("[PRODUCT DELETE]", error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+export async function GET(
+  req: Request,
+  { params }: { params: { storeSlug: string; productSlug: string } },
+) {
+  try {
+    if (!params.storeSlug) {
+      return new NextResponse("Store slug is required.", { status: 400 });
+    }
+    if (!params.productSlug) {
+      return new NextResponse("Product slug is required.", { status: 400 });
+    }
+
+    const existingStore = await db.store.findUnique({
+      where: {
+        slug: params.storeSlug,
+      },
+    });
+
+    if (!existingStore) {
+      return new NextResponse("Store not found.", { status: 404 });
+    }
+
+    const product = await db.product.findUnique({
+      where: {
+        slug_storeId: {
+          storeId: existingStore.id,
+          slug: params.productSlug,
+        },
+      },
+    });
+
+    return NextResponse.json(product);
+  } catch (error) {
+    console.log("[GET PRODUCT]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
