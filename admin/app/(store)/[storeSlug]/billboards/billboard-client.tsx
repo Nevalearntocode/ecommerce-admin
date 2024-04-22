@@ -6,7 +6,6 @@ import { Billboard } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
-import BillboardCard from "./billboard-card";
 import { BillboardColumn, columns } from "./billboard-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
@@ -16,6 +15,7 @@ import Pagination from "@/components/clients/pagination";
 import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
+import GeneralCard from "@/components/clients/general-card";
 
 type Props = {
   billboards: Billboard[];
@@ -85,7 +85,16 @@ const formattedBillboards: BillboardColumn[] = useMemo(() => {
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {currentBillboards.map((billboard) => (
-                  <BillboardCard billboard={billboard} key={billboard.id} />
+                  <GeneralCard
+                    title={billboard.name}
+                    imageUrl={billboard.image}
+                    onClick={() =>
+                      router.push(
+                        `/${params.storeSlug}/billboards/${billboard.id}`,
+                      )
+                    }
+                    editButtonPath={`/${params.storeSlug}/billboards/${billboard.id}/edit`}
+                  />
                 ))}
               </div>
               <Pagination

@@ -5,7 +5,6 @@ import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
-import CategoryCard from "./category-card";
 import { CategoryColumn, columns } from "./category-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
@@ -16,6 +15,7 @@ import Pagination from "@/components/clients/pagination";
 import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
+import GeneralCard from "@/components/clients/general-card";
 
 type Props = {
   categories: CategoryWithBillboard[];
@@ -87,7 +87,16 @@ const CategoryClient = ({ categories }: Props) => {
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {currentCategories.map((category) => (
-                  <CategoryCard category={category} key={category.id} />
+                  <GeneralCard
+                    title={category.name}
+                    imageUrl={category.billboard.image}
+                    onClick={() =>
+                      router.push(
+                        `/${params.storeSlug}/categories/${category.slug}`,
+                      )
+                    }
+                    editButtonPath={`/${params.storeSlug}/categories/${category.slug}/edit`}
+                  />
                 ))}
               </div>
               <Pagination

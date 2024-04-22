@@ -10,13 +10,13 @@ import { DataTable } from "@/components/clients/datatable";
 import APIList from "@/components/apis/api-list";
 import { ClothingProduct } from "@/types";
 import { ClothingProductColumn, columns } from "./clothing-product-column";
-import ClothingProductCard from "./clothing-product-card";
 import { SizeValue } from "@prisma/client";
 import useFilter from "@/hooks/use-filter";
 import Pagination from "@/components/clients/pagination";
 import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
+import EntityCard from "@/components/clients/product-card";
 
 type Props = {
   clothingProducts: ClothingProduct[];
@@ -98,10 +98,7 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {currentClothingProducts.map((clothingProduct) => (
-                  <ClothingProductCard
-                    clothingProduct={clothingProduct}
-                    key={clothingProduct.id}
-                  />
+                  <EntityCard entity={clothingProduct} type="clothingProduct" />
                 ))}
               </div>
               {/* Previous Button */}

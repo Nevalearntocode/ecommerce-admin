@@ -10,12 +10,12 @@ import { DataTable } from "@/components/clients/datatable";
 import APIList from "@/components/apis/api-list";
 import { TechnologyProduct } from "@/types";
 import { TechnologyProductColumn, columns } from "./technology-product-column";
-import TechnologyProductCard from "./technology-product-card";
 import useFilter from "@/hooks/use-filter";
 import Pagination from "@/components/clients/pagination";
 import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
+import EntityCard from "@/components/clients/product-card";
 
 type Props = {
   technologyProducts: TechnologyProduct[];
@@ -96,9 +96,9 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {currentTechnologyProducts.map((technologyProduct) => (
-                  <TechnologyProductCard
-                    technologyProduct={technologyProduct}
-                    key={technologyProduct.id}
+                  <EntityCard
+                    entity={technologyProduct}
+                    type="technologyProduct"
                   />
                 ))}
               </div>
