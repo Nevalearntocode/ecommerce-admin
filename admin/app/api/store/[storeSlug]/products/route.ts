@@ -2,11 +2,14 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import {
-  getClothingAttributeIds,
   getStoreToCreateProduct,
   getTechnologyAttributeIds,
 } from "@/lib/get-stores";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import { getSizeIdByNameAndStoreId } from "@/lib/get-sizes";
+import { getColorIdByNameAndStoreId } from "@/lib/get-colors";
+import { getModelIdByNameAndStoreId } from "@/lib/get-models";
+import { getTypeIdByNameAndStoreId } from "@/lib/get-types";
 
 export async function POST(
   req: Request,
@@ -106,8 +109,8 @@ export async function POST(
     }
 
     if (
-      !existingStore.staffs[0] ||
-      !canManageProduct(existingStore.staffs[0])
+      (!existingStore.staffs[0] || !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
     ) {
       return new NextResponse(
         "You do not have permisson to perform this action.",
@@ -124,39 +127,43 @@ export async function POST(
       description,
       categoryId: existingStore.categories[0].id,
       storeId: existingStore.id,
-      sizeId: 0,
-      colorId: 0,
-      modelId: 0,
-      typeId: 0,
+      sizeId: null as number | null,
+      colorId: null as number | null,
+      modelId: null as number | null,
+      typeId: null as number | null,
     };
 
     if (existingStore.storeType === "CLOTHING") {
-      if (!sizeName) {
-        return new NextResponse("Size is required.", { status: 400 });
-      }
-      if (!colorName) {
-        return new NextResponse("Color is required.", { status: 400 });
-      }
-      const clothingAttributeIds = await getClothingAttributeIds(
-        existingStore.id,
-        sizeName,
-        colorName,
-      );
-
-      if (
-        !clothingAttributeIds ||
-        !clothingAttributeIds.sizes ||
-        !clothingAttributeIds.colors
-      ) {
-        return new NextResponse(
-          "Your store doesn't have size or color named in your request.",
-          { status: 404 },
+      if (sizeName && sizeName !== "") {
+        const size = await getSizeIdByNameAndStoreId(
+          sizeName,
+          existingStore.id,
         );
+
+        if (!size) {
+          return new NextResponse(
+            "Your store doesn't have the size in your request.",
+            { status: 404 },
+          );
+        }
+
+        updateData.sizeId = size.id;
       }
+      if (colorName && colorName !== "") {
+        const color = await getColorIdByNameAndStoreId(
+          colorName,
+          existingStore.id,
+        );
 
-      updateData.sizeId = clothingAttributeIds.sizes[0].id;
-      updateData.colorId = clothingAttributeIds.colors[0].id;
+        if (!color) {
+          return new NextResponse(
+            "Your store doesn't have the color in your request.",
+            { status: 404 },
+          );
+        }
 
+        updateData.colorId = color.id;
+      }
       const newClothingProduct = await db.product.create({
         data: {
           name: updateData.name,
@@ -181,31 +188,36 @@ export async function POST(
     }
 
     if (existingStore.storeType === "TECHNOLOGY") {
-      if (!modelName) {
-        return new NextResponse("Model is required.", { status: 400 });
-      }
-      if (!typeName) {
-        return new NextResponse("Type is required.", { status: 400 });
-      }
-      const technologyAttributeIds = await getTechnologyAttributeIds(
-        existingStore.id,
-        modelName,
-        typeName,
-      );
-
-      if (
-        !technologyAttributeIds ||
-        !technologyAttributeIds.models ||
-        !technologyAttributeIds.types
-      ) {
-        return new NextResponse(
-          "Your store doesn't have model or type named in your request.",
-          { status: 404 },
+      if (modelName && modelName !== "") {
+        const model = await getModelIdByNameAndStoreId(
+          modelName,
+          existingStore.id,
         );
-      }
 
-      updateData.modelId = technologyAttributeIds.models[0].id;
-      updateData.typeId = technologyAttributeIds.types[0].id;
+        if (!model) {
+          return new NextResponse(
+            "Your store doesn't have the model in your request.",
+            { status: 404 },
+          );
+        }
+
+        updateData.modelId = model.id;
+      }
+      if (typeName && typeName !== "") {
+        const type = await getTypeIdByNameAndStoreId(
+          typeName,
+          existingStore.id,
+        );
+
+        if (!type) {
+          return new NextResponse(
+            "Your store doesn't have the type in your request.",
+            { status: 404 },
+          );
+        }
+
+        updateData.typeId = type.id;
+      }
 
       const newTechnology = await db.product.create({
         data: {

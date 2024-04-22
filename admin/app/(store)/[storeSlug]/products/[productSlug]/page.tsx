@@ -4,7 +4,7 @@ import {
   getTechnologyProductWithStoreType,
 } from "@/lib/get-products";
 import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import React from "react";
 import ClothingProductForm from "./clothing-product-form";
 import { ClothingProduct, TechnologyProduct } from "@/types";
@@ -28,7 +28,8 @@ const Product = async ({ params }: Props) => {
   if (!staff) {
     return null;
   }
-  const isAuthorized = canManageProduct(staff);
+  const isAuthorized =
+    canManageProduct(staff) || isOwner(staff, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

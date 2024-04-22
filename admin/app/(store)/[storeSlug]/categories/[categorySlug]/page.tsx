@@ -1,7 +1,7 @@
 import React from "react";
 import CategoryForm from "./category-form";
 import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageCategory } from "@/lib/permission-hierarchy";
+import { canManageCategory, isOwner } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 import { getCategoryByStoreSlugAndCategorySlug } from "@/lib/get-categories";
 import { db } from "@/lib/db";
@@ -19,7 +19,8 @@ const CategoryPage = async ({ params }: Props) => {
   if (!staff) {
     return null;
   }
-  const isAuthorized = canManageCategory(staff);
+  const isAuthorized =
+    canManageCategory(staff) || isOwner(staff, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

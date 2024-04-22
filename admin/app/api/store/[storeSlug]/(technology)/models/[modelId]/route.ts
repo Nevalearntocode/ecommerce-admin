@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { getModelById } from "@/lib/get-models";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -35,9 +35,11 @@ export async function PATCH(
       return new NextResponse("Store not found.", { status: 404 });
     }
 
-    const staff = existingStore.staffs[0];
-
-    if (!staff || !canManageProduct(staff)) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },
@@ -74,7 +76,7 @@ export async function PATCH(
       model: newModel,
     });
   } catch (error) {
-    console.log("[MODEL DELETE]", error);
+    console.log("[MODEL PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -103,10 +105,11 @@ export async function DELETE(
     if (!existingStore) {
       return new NextResponse("Store not found.", { status: 404 });
     }
-
-    const staff = existingStore.staffs[0];
-
-    if (!staff || !canManageProduct(staff)) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },
@@ -150,7 +153,7 @@ export async function GET(
 
     return NextResponse.json(model);
   } catch (error) {
-    console.log("[POST MODEL]", error);
+    console.log("[GET MODEL]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

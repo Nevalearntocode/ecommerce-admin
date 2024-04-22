@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { v4 as uuidv4 } from "uuid";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageStaff } from "@/lib/permission-hierarchy";
+import { canManageStaff, isOwner } from "@/lib/permission-hierarchy";
 
 export async function PATCH(
   req: Request,
@@ -32,7 +32,7 @@ export async function PATCH(
     const staff = existingStore.staffs[0];
 
     const isAuthorized =
-      canManageStaff(staff) || user.id === existingStore.userId;
+      canManageStaff(staff) || isOwner(staff, existingStore.userId);
 
     if (!isAuthorized) {
       return new NextResponse(

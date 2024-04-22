@@ -101,7 +101,7 @@ const TechnologyProductForm = ({
   });
 
   useEffect(() => {
-    if (product && product.model && product.type) {
+    if (product) {
       form.setValue("name", product.name || "");
       form.setValue("description", product.description || "");
       form.setValue("price", product.price.toString() || ""); // Assuming price is a number, convert to string
@@ -112,8 +112,8 @@ const TechnologyProductForm = ({
 
       // Access nested properties for category, model, and type
       form.setValue("categoryName", product.category.name || "");
-      form.setValue("modelName", product.model.name || "");
-      form.setValue("typeName", product.type.name || "");
+      form.setValue("modelName", product.model?.name || "");
+      form.setValue("typeName", product.type?.name || "");
     }
   }, [product]);
 

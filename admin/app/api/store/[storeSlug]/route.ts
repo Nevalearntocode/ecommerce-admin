@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
+import { canManageStore, isOwner } from "@/lib/permission-hierarchy";
 
 export async function PATCH(
   req: Request,
@@ -46,9 +47,10 @@ export async function PATCH(
       return new NextResponse("Store not found", { status: 404 });
     }
 
-    const { canManageStore, isAdmin } = existingStore.staffs[0];
-
-    if (!canManageStore && !isAdmin && user.id !== existingStore.userId) {
+    if (
+      (!existingStore.staffs[0] || !canManageStore(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },
@@ -145,7 +147,7 @@ export async function DELETE(
 
     const staff = existingStore.staffs[0];
 
-    if (existingStore.userId !== user.id) {
+    if (!staff || !isOwner(staff, existingStore.userId)) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },

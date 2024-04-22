@@ -1,7 +1,7 @@
 import NotPermitted from "@/components/not-permitted";
 import { getClothingProductsWithStoreType, getTechnologyProductsWithStoreType } from "@/lib/get-products";
 import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import React from "react";
 import ClothingProductClient from "./_components/clothing/clothing-product-client";
 import TechnologyProductClient from "./_components/technology/technology-product-client";
@@ -18,7 +18,8 @@ const Products = async ({ params }: Props) => {
   if (!staff) {
     return null;
   }
-  const isAuthorized = canManageProduct(staff);
+  const isAuthorized =
+    canManageProduct(staff) || isOwner(staff, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

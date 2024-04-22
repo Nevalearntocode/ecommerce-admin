@@ -2,6 +2,8 @@ import { getTypeById } from "@/lib/get-types";
 import React from "react";
 import TypeForm from "./type-form";
 import { getCurrentStaff } from "@/lib/get-staffs";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import NotPermitted from "@/components/not-permitted";
 
 type Props = {
   params: {
@@ -17,7 +19,12 @@ const TypePage = async ({ params }: Props) => {
   if (!staff) {
     return null;
   }
+  const isAuthorized =
+    canManageProduct(staff) || isOwner(staff, staff.store.userId);
 
+  if (!isAuthorized) {
+    return <NotPermitted />;
+  }
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">

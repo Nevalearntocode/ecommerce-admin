@@ -16,7 +16,7 @@ export async function getSizeById(sizeId: string) {
   return size;
 }
 
-export async function getSizeByNameAndStoreId(name: string, storeId: number) {
+export async function getSizeIdByNameAndStoreId(name: string, storeId: number) {
   const size = await db.size.findUnique({
     where: {
       name_storeId: {
@@ -24,6 +24,9 @@ export async function getSizeByNameAndStoreId(name: string, storeId: number) {
         storeId,
       },
     },
+    select: {
+      id: true
+    }
   });
 
   return size;

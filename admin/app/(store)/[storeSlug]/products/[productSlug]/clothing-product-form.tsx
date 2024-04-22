@@ -67,8 +67,8 @@ const formSchema = z.object({
   brand: z.string().optional(),
   isFeatured: z.boolean().optional(),
   categoryName: z.string().min(1, "Category is required"),
-  sizeName: z.string().min(1, "Size is required"),
-  colorName: z.string().min(1, "Color is required"),
+  sizeName: z.string(),
+  colorName: z.string(),
 });
 
 type FormType = z.infer<typeof formSchema>;
@@ -96,7 +96,7 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
   });
 
   useEffect(() => {
-    if (product && product.size && product.color) {
+    if (product) {
       form.setValue("name", product.name || "");
       form.setValue("description", product.description || "");
       form.setValue("price", product.price.toString() || ""); // Assuming price is a number, convert to string
@@ -107,8 +107,8 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
 
       // Access nested properties for category, size, and color
       form.setValue("categoryName", product.category.name || "");
-      form.setValue("sizeName", product.size.name || "");
-      form.setValue("colorName", product.color.name || "");
+      form.setValue("sizeName", product.size?.name || "");
+      form.setValue("colorName", product.color?.name || "");
     }
   }, [product]);
 

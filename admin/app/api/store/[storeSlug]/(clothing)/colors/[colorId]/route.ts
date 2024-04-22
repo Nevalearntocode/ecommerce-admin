@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { getColorById } from "@/lib/get-colors";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import { NextResponse } from "next/server";
 import { expandHexCode } from "@/lib/convert-hex-code";
 
@@ -35,9 +35,11 @@ export async function PATCH(
       return new NextResponse("Store not found.", { status: 404 });
     }
 
-    const staff = existingStore.staffs[0];
-
-    if (!staff || !canManageProduct(staff)) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },
@@ -108,9 +110,11 @@ export async function DELETE(
       return new NextResponse("Store not found.", { status: 404 });
     }
 
-    const staff = existingStore.staffs[0];
-
-    if (!staff || !canManageProduct(staff)) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },

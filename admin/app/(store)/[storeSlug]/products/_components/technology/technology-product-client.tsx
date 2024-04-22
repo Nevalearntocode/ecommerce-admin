@@ -15,7 +15,6 @@ import APIList from "@/components/api-list";
 import { TechnologyProduct } from "@/types";
 import { TechnologyProductColumn, columns } from "./technology-product-column";
 import TechnologyProductCard from "./technology-product-card";
-import { SizeValue } from "@prisma/client";
 
 type Props = {
   technologyProducts: TechnologyProduct[];
@@ -128,9 +127,7 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
             </Button>
           </ActionTooltip>
           <Button
-            onClick={() =>
-              router.push(`/${params.storeSlug}/technologyProducts/new`)
-            }
+            onClick={() => router.push(`/${params.storeSlug}/products/new`)}
           >
             <Plus className="mr-2 h-4 w-4" />
             Add new

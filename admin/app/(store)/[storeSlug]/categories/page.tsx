@@ -1,6 +1,6 @@
 import React from "react";
 import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageCategory } from "@/lib/permission-hierarchy";
+import { canManageCategory, isOwner } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 import { db } from "@/lib/db";
 import CategoryClient from "./_components/category-client";
@@ -30,7 +30,8 @@ const Categories = async ({ params }: Props) => {
     },
   });
 
-  const isAuthorized = canManageCategory(staff);
+  const isAuthorized =
+    canManageCategory(staff) || isOwner(staff, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

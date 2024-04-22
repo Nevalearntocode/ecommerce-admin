@@ -3,7 +3,7 @@ import ModelClient from "./model-client";
 import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 
 type Props = {
@@ -18,7 +18,8 @@ const Models = async ({ params }: Props) => {
   if (!staff) {
     return null;
   }
-  const isAuthorized = canManageProduct(staff);
+  const isAuthorized =
+    canManageProduct(staff) || isOwner(staff, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

@@ -15,6 +15,13 @@ export async function getCurrentStaff(storeSlug: string) {
         slug: storeSlug,
       },
     },
+    include: {
+      store: {
+        select: {
+          userId: true,
+        },
+      },
+    },
   });
 
   return staff;
@@ -38,6 +45,7 @@ export async function getCurrentStaffAndStoreType(storeSlug: string) {
       store: {
         select: {
           storeType: true,
+          userId: true
         },
       },
     },

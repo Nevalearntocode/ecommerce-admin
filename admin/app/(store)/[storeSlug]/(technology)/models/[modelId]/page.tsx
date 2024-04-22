@@ -2,7 +2,7 @@ import { getModelById } from "@/lib/get-models";
 import React from "react";
 import ModelForm from "./model-form";
 import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 
 type Props = {
@@ -19,11 +19,12 @@ const ModelPage = async ({ params }: Props) => {
   if (!staff) {
     return null;
   }
-    const isAuthorized = canManageProduct(staff);
+  const isAuthorized =
+    canManageProduct(staff) || isOwner(staff, staff.store.userId);
 
-    if (!isAuthorized) {
-      return <NotPermitted />;
-    }
+  if (!isAuthorized) {
+    return <NotPermitted />;
+  }
 
   return (
     <div className="flex-col">

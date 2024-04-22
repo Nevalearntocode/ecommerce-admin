@@ -5,6 +5,7 @@ import SettingsForm from "./settings-form";
 import getCurrentUser from "@/lib/get-current-user";
 import { redirect } from "next/navigation";
 import NotPermitted from "@/components/not-permitted";
+import { canManageStore } from "@/lib/permission-hierarchy";
 
 type Props = {
   params: {
@@ -28,7 +29,7 @@ const Settings = async ({ params }: Props) => {
   const staff = store.staffs[0];
   const isOwner = store.userId === user.id;
 
-  if (!staff.canManageStore && !staff.isAdmin && store.userId !== user.id) {
+  if (!canManageStore(staff) && !isOwner) {
     return <NotPermitted />;
   }
 

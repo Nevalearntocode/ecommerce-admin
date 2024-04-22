@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import { expandHexCode } from "@/lib/convert-hex-code";
 
 export async function POST(
@@ -53,9 +53,11 @@ export async function POST(
       );
     }
 
-    const staff = existingStore.staffs[0];
-
-    if (!staff || !canManageProduct(staff)) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },

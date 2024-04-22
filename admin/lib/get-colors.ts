@@ -16,7 +16,7 @@ export async function getColorById(colorId: string) {
   return color;
 }
 
-export async function getColorByNameAndStoreId(name: string, storeId: number) {
+export async function getColorIdByNameAndStoreId(name: string, storeId: number) {
   const color = await db.color.findUnique({
     where: {
       name_storeId: {
@@ -24,6 +24,9 @@ export async function getColorByNameAndStoreId(name: string, storeId: number) {
         storeId,
       },
     },
+    select: {
+      id: true
+    }
   });
 
   return color;

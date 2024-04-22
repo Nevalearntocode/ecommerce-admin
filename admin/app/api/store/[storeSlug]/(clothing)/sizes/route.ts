@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { SizeValue } from "@prisma/client";
 import { getStoreWithCurrentStaff, getUserStoreBySlug } from "@/lib/get-stores";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 
 export async function POST(
   req: Request,
@@ -46,9 +46,11 @@ export async function POST(
       );
     }
 
-    const staff = existingStore.staffs[0];
-
-    if (!staff || !canManageProduct(staff)) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },

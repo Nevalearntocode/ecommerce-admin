@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { getTypeById } from "@/lib/get-types";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageProduct } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 import { NextResponse } from "next/server";
 
 export async function PATCH(
@@ -12,8 +12,7 @@ export async function PATCH(
   try {
     const user = await getCurrentUser();
 
-    const { value, name }: { value?: string; name?: string } =
-      await req.json();
+    const { value, name }: { value?: string; name?: string } = await req.json();
 
     const { storeSlug, typeId } = params;
 
@@ -35,9 +34,11 @@ export async function PATCH(
       return new NextResponse("Store not found.", { status: 404 });
     }
 
-    const staff = existingStore.staffs[0];
-
-    if (!staff || !canManageProduct(staff)) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },
@@ -74,7 +75,7 @@ export async function PATCH(
       type: newType,
     });
   } catch (error) {
-    console.log("[TYPE DELETE]", error);
+    console.log("[TYPE PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -106,7 +107,11 @@ export async function DELETE(
 
     const staff = existingStore.staffs[0];
 
-    if (!staff || !canManageProduct(staff)) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageProduct(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },
@@ -150,7 +155,7 @@ export async function GET(
 
     return NextResponse.json(type);
   } catch (error) {
-    console.log("[POST TYPE]", error);
+    console.log("[GET TYPE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

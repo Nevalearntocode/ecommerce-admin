@@ -11,6 +11,7 @@ import MobileNav from "./mobile-nav";
 
 type Props = {
   stores: StoreWithStaffs[];
+  userId: string;
 };
 
 export type RouteType = {
@@ -27,7 +28,7 @@ export type StaffPermissionName =
   | "canManageBillboard"
   | "canManageProduct";
 
-const MainNav = ({ stores }: Props) => {
+const MainNav = ({ stores, userId }: Props) => {
   const params = useParams();
   const pathname = usePathname();
 
@@ -39,7 +40,7 @@ const MainNav = ({ stores }: Props) => {
 
   const staff = existingStore.staffs[0];
 
-  const { isAdmin } = staff;
+  const isAdmin = staff.isAdmin || existingStore.userId === userId;
 
   // Define the hierarchy of permissions from highest to lowest access level
   const permissionHierarchy = [

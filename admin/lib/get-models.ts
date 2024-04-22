@@ -16,13 +16,19 @@ export async function getModelById(modelId: string) {
   return model;
 }
 
-export async function getModelByNameAndStoreId(name: string, storeId: number) {
+export async function getModelIdByNameAndStoreId(
+  name: string,
+  storeId: number,
+) {
   const model = await db.model.findUnique({
     where: {
       name_storeId: {
         name,
         storeId,
       },
+    },
+    select: {
+      id: true,
     },
   });
 

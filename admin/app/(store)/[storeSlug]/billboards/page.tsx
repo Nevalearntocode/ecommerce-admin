@@ -1,7 +1,7 @@
 import React from "react";
 import BillboardClient from "./_components/billboard-client";
 import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageBillboard } from "@/lib/permission-hierarchy";
+import { canManageBillboard, isOwner } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 import { db } from "@/lib/db";
 
@@ -16,7 +16,7 @@ const Billboards = async ({ params }: Props) => {
   if (!staff) {
     return null;
   }
-  const isAuthorized = canManageBillboard(staff);
+  const isAuthorized = canManageBillboard(staff) || isOwner(staff, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

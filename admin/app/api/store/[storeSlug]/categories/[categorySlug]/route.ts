@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageCategory, canManageStore } from "@/lib/permission-hierarchy";
+import {
+  canManageBillboard,
+  canManageCategory,
+  canManageStore,
+  isOwner,
+} from "@/lib/permission-hierarchy";
 import { getBillboardByNameAndStoreId } from "@/lib/get-billboards";
 
 export async function PATCH(
@@ -42,9 +47,11 @@ export async function PATCH(
       return new NextResponse("Store not found.", { status: 404 });
     }
 
-    const isAuthorized = canManageCategory(existingStore.staffs[0]);
-
-    if (!isAuthorized) {
+    if (
+      (!existingStore.staffs[0] ||
+        !canManageCategory(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You don't have permission to perform this action.",
         { status: 403 },
@@ -181,11 +188,10 @@ export async function DELETE(
       return new NextResponse("Store not found.", { status: 404 });
     }
 
-    const staff = existingStore.staffs[0];
-
-    const isAuthorized = canManageStore(staff);
-
-    if (!isAuthorized) {
+    if (
+      (!existingStore.staffs[0] || !canManageStore(existingStore.staffs[0])) &&
+      !isOwner(existingStore.staffs[0], existingStore.userId)
+    ) {
       return new NextResponse(
         "You don't have permission to perform this action.",
         { status: 403 },

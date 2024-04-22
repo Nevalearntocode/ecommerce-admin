@@ -2,7 +2,7 @@ import { getBillboardById } from "@/lib/get-billboards";
 import React from "react";
 import BillboardForm from "./billboard-form";
 import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageBillboard } from "@/lib/permission-hierarchy";
+import { canManageBillboard, isOwner } from "@/lib/permission-hierarchy";
 import NotPermitted from "@/components/not-permitted";
 
 type Props = {
@@ -20,7 +20,8 @@ const BillboardPage = async ({ params }: Props) => {
     return null;
   }
 
-  const isAuthorized = canManageBillboard(staff);
+  const isAuthorized =
+    canManageBillboard(staff) || isOwner(staff, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;
