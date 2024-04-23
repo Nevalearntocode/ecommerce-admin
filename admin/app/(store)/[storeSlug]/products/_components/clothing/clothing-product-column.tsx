@@ -8,6 +8,8 @@ export type ClothingProductColumn = {
   slug: string;
   name: string;
   category: string;
+  isFeatured: boolean;
+  isArchived: boolean;
   brand: string;
   size: SizeValue;
   color: string;
@@ -21,6 +23,10 @@ export const columns: ColumnDef<ClothingProductColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "isFeatured",
+    header: "Featured",
   },
   {
     accessorKey: "category",
@@ -54,6 +60,10 @@ export const columns: ColumnDef<ClothingProductColumn>[] = [
   {
     accessorKey: "stock",
     header: "Stock",
+  },
+  {
+    accessorKey: "isArchived",
+    header: "Archived",
   },
   {
     accessorKey: "createdAt",

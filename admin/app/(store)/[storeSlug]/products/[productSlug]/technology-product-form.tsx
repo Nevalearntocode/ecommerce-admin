@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ClothingProduct, TechnologyProduct } from "@/types";
+import { TechnologyProduct } from "@/types";
 import { useParams, useRouter } from "next/navigation";
 import Header from "@/components/header";
 import { Button } from "@/components/ui/button";

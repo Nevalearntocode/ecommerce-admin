@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { SizeValue } from "@prisma/client";
-import { getStoreWithCurrentStaff, getUserStoreBySlug } from "@/lib/get-stores";
+import { getStoreWithCurrentStaff } from "@/lib/get-stores";
 import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
 
 export async function POST(
@@ -49,7 +49,7 @@ export async function POST(
     if (
       (!existingStore.staffs[0] ||
         !canManageProduct(existingStore.staffs[0])) &&
-      !isOwner(existingStore.staffs[0], existingStore.userId)
+      !isOwner(user.id, existingStore.userId)
     ) {
       return new NextResponse(
         "You do not have permission to perform this action.",

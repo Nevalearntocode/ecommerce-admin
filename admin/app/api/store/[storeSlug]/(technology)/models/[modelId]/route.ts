@@ -12,8 +12,7 @@ export async function PATCH(
   try {
     const user = await getCurrentUser();
 
-    const { value, name }: { value?: string; name?: string } =
-      await req.json();
+    const { value, name }: { value?: string; name?: string } = await req.json();
 
     const { storeSlug, modelId } = params;
 
@@ -38,7 +37,7 @@ export async function PATCH(
     if (
       (!existingStore.staffs[0] ||
         !canManageProduct(existingStore.staffs[0])) &&
-      !isOwner(existingStore.staffs[0], existingStore.userId)
+      !isOwner(user.id, existingStore.userId)
     ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
@@ -108,7 +107,7 @@ export async function DELETE(
     if (
       (!existingStore.staffs[0] ||
         !canManageProduct(existingStore.staffs[0])) &&
-      !isOwner(existingStore.staffs[0], existingStore.userId)
+      !isOwner(user.id, existingStore.userId)
     ) {
       return new NextResponse(
         "You do not have permission to perform this action.",

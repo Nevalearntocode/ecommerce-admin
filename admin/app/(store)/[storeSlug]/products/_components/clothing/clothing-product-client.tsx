@@ -41,6 +41,8 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
       slug: clothingProduct.slug,
       name: clothingProduct.name,
       brand: clothingProduct.brand || "",
+      isFeatured: clothingProduct.isFeatured,
+      isArchived: clothingProduct.isArchived,
       category: clothingProduct.category.name,
       size: clothingProduct.size?.value || SizeValue.M,
       color: clothingProduct.color?.value || "#ffffff",

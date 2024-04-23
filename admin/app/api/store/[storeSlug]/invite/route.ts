@@ -32,7 +32,7 @@ export async function PATCH(
     const staff = existingStore.staffs[0];
 
     const isAuthorized =
-      canManageStaff(staff) || isOwner(staff, existingStore.userId);
+      canManageStaff(staff) || isOwner(user.id, existingStore.userId);
 
     if (!isAuthorized) {
       return new NextResponse(

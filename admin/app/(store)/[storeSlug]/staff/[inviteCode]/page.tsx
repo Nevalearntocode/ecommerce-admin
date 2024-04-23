@@ -1,8 +1,6 @@
-import Empty from "@/components/mainpages/empty";
 import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { redirect } from "next/navigation";
-import { v4 as uuidv4 } from "uuid";
 import InvalidLink from "./invalid-link";
 
 type Props = {

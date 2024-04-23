@@ -1,7 +1,7 @@
 import { Staff } from "@prisma/client";
 
-export function isOwner(staff: Staff, storeUserId: string) {
-  return staff.userId === storeUserId;
+export function isOwner(userId: string, storeUserId: string) {
+  return userId === storeUserId;
 }
 
 export function canManageStaff(staff: Staff) {

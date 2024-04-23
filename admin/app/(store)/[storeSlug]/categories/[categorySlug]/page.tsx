@@ -20,7 +20,7 @@ const CategoryPage = async ({ params }: Props) => {
     return null;
   }
   const isAuthorized =
-    canManageCategory(staff) || isOwner(staff, staff.store.userId);
+    canManageCategory(staff) || isOwner(staff.userId, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

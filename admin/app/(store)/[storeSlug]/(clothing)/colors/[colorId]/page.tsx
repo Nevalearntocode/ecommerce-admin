@@ -20,7 +20,7 @@ const ColorPage = async ({ params }: Props) => {
     return null;
   }
   const isAuthorized =
-    canManageProduct(staff) || isOwner(staff, staff.store.userId);
+    canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

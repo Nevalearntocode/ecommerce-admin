@@ -10,25 +10,15 @@ export async function PATCH(
   try {
     const user = await getCurrentUser();
 
-    const { name, slug }: { name: string; slug: string } = await req.json();
+    const { name, slug }: { name?: string; slug?: string } = await req.json();
 
     if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!name) {
-      return new NextResponse("name is required.", { status: 400 });
-    }
-
     if (!params.storeSlug) {
       return new NextResponse("Store slug is required.", { status: 400 });
     }
-
-    const defaultSlug = name.toLowerCase().trim().replace(/\s+/g, "-");
-
-    const updateData = {
-      slug: slug === "" ? defaultSlug : slug,
-    };
 
     const existingStore = await db.store.findUnique({
       where: {
@@ -49,7 +39,7 @@ export async function PATCH(
 
     if (
       (!existingStore.staffs[0] || !canManageStore(existingStore.staffs[0])) &&
-      !isOwner(existingStore.staffs[0], existingStore.userId)
+      !isOwner(user.id, existingStore.userId)
     ) {
       return new NextResponse(
         "You do not have permission to perform this action.",
@@ -57,19 +47,36 @@ export async function PATCH(
       );
     }
 
+    console.log("mark");
+
+    const updateData = {
+      name: name ? name : existingStore.name,
+      slug: slug ? slug : "",
+    };
+
+    if (!slug) {
+      updateData.slug = existingStore.slug;
+    }
+
+    if (slug === "") {
+      updateData.slug = updateData.name
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-");
+    }
+
     const existedStoreWithGivenName = await db.store.findUnique({
       where: {
-        name,
-      },
-      select: {
-        id: true,
+        name: updateData.name,
+        NOT: [
+          {
+            id: existingStore.id,
+          },
+        ],
       },
     });
 
-    if (
-      existedStoreWithGivenName &&
-      existedStoreWithGivenName.id !== existingStore.id
-    ) {
+    if (existedStoreWithGivenName) {
       return new NextResponse(`Store with name: ${name} already exists`, {
         status: 400,
       });
@@ -78,16 +85,15 @@ export async function PATCH(
     const existedStoreWithGivenSlug = await db.store.findUnique({
       where: {
         slug: updateData.slug,
-      },
-      select: {
-        id: true,
+        NOT: [
+          {
+            id: existingStore.id,
+          },
+        ],
       },
     });
 
-    if (
-      existedStoreWithGivenSlug &&
-      existedStoreWithGivenSlug.id !== existingStore.id
-    ) {
+    if (existedStoreWithGivenSlug) {
       return new NextResponse(`Store with slug: ${slug} already exists`, {
         status: 400,
       });
@@ -147,7 +153,7 @@ export async function DELETE(
 
     const staff = existingStore.staffs[0];
 
-    if (!staff || !isOwner(staff, existingStore.userId)) {
+    if (!staff || !isOwner(user.id, existingStore.userId)) {
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },

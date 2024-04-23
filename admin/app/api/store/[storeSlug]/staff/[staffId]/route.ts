@@ -72,7 +72,7 @@ export async function PATCH(
 
     if (
       (!existingStore.staffs[0] || !canManageStaff(existingStore.staffs[0])) &&
-      !isOwner(existingStore.staffs[0], existingStore.userId)
+      !isOwner(user.id, existingStore.userId)
     ) {
       return new NextResponse(
         "You do not have permission to perform this action.",

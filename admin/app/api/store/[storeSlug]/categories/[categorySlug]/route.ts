@@ -3,7 +3,6 @@ import { db } from "@/lib/db";
 import getCurrentUser from "@/lib/get-current-user";
 import { getStoreWithCurrentStaff } from "@/lib/get-stores";
 import {
-  canManageBillboard,
   canManageCategory,
   canManageStore,
   isOwner,
@@ -50,7 +49,7 @@ export async function PATCH(
     if (
       (!existingStore.staffs[0] ||
         !canManageCategory(existingStore.staffs[0])) &&
-      !isOwner(existingStore.staffs[0], existingStore.userId)
+      !isOwner(user.id, existingStore.userId)
     ) {
       return new NextResponse(
         "You don't have permission to perform this action.",
@@ -190,7 +189,7 @@ export async function DELETE(
 
     if (
       (!existingStore.staffs[0] || !canManageStore(existingStore.staffs[0])) &&
-      !isOwner(existingStore.staffs[0], existingStore.userId)
+      !isOwner(user.id, existingStore.userId)
     ) {
       return new NextResponse(
         "You don't have permission to perform this action.",

@@ -38,6 +38,8 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
       slug: technologyProduct.slug,
       name: technologyProduct.name,
       brand: technologyProduct.brand || "",
+      isFeatured: technologyProduct.isFeatured,
+      isArchived: technologyProduct.isArchived,
       category: technologyProduct.category.name,
       model: technologyProduct.model?.value || "",
       type: technologyProduct.type?.value || "",

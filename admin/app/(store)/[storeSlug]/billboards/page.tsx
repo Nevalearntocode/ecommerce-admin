@@ -17,7 +17,7 @@ const Billboards = async ({ params }: Props) => {
     return null;
   }
   const isAuthorized =
-    canManageBillboard(staff) || isOwner(staff, staff.store.userId);
+    canManageBillboard(staff) || isOwner(staff.userId, staff.store.userId);
 
   if (!isAuthorized) {
     return <NotPermitted />;

@@ -44,7 +44,7 @@ export async function POST(
     if (
       (!existingStore.staffs[0] ||
         !canManageCategory(existingStore.staffs[0])) &&
-      !isOwner(existingStore.staffs[0], existingStore.userId)
+      !isOwner(user.id, existingStore.userId)
     ) {
       return new NextResponse(
         "You don't have permission to perform this action.",

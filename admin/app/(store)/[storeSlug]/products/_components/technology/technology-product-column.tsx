@@ -7,6 +7,8 @@ export type TechnologyProductColumn = {
   slug: string;
   name: string;
   category: string;
+  isFeatured: boolean;
+  isArchived: boolean;
   brand: string;
   model: string;
   type: string;
@@ -20,6 +22,10 @@ export const columns: ColumnDef<TechnologyProductColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+  },
+  {
+    accessorKey: "isFeatured",
+    header: "Featured",
   },
   {
     accessorKey: "category",
@@ -44,6 +50,10 @@ export const columns: ColumnDef<TechnologyProductColumn>[] = [
   {
     accessorKey: "stock",
     header: "Stock",
+  },
+  {
+    accessorKey: "isArchived",
+    header: "Archived",
   },
   {
     accessorKey: "createdAt",
