@@ -10,8 +10,10 @@ export async function POST(req: Request) {
     const {
       name,
       type,
+      image,
       slug,
-    }: { name: string; type: StoreType; slug: string } = await req.json();
+    }: { name: string; type: StoreType; slug: string; image: string } =
+      await req.json();
 
     if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -60,6 +62,7 @@ export async function POST(req: Request) {
       data: {
         name,
         slug: slug === "" ? defaultSlug : slug,
+        image,
         storeType: type,
         userId: user.id,
         staffs: {

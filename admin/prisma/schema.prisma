@@ -39,6 +39,7 @@ model Store {
   id         Int         @id @default(autoincrement())
   slug       String      @unique
   name       String      @unique
+  image      String?
   storeType  StoreType   @default(CLOTHING)
   inviteCode String      @unique @default(uuid())
   staffs     Staff[]
@@ -80,7 +81,7 @@ model Category {
   store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId     Int
   billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Restrict)
-  billboardId Int       
+  billboardId Int
   products    Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
