@@ -16,8 +16,7 @@ import useModal from "@/hooks/use-modal-store";
 
 type Props = {
   entity: {
-    name?: string;
-    phone?: string;
+    name: string;
     id?: number;
     slug?: string;
   };
@@ -56,7 +55,7 @@ const EntityCellAction = ({ entity, endpoint, type }: Props) => {
       ? `Deleting "${entity.name}" will permanently remove it and all its content. This is irreversible.`
       : type === "product"
         ? `"${entity.name}" Will permanently be removed. This is irreversible.`
-        : `Order "${entity.id}" will be permanently deleted. Make sure all transactions are being done.`;
+        : "";
 
   const deletePackage = {
     confirmDelete: onDelete,

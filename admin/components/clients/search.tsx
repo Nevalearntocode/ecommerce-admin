@@ -1,19 +1,20 @@
-import React from 'react'
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Search } from 'lucide-react';
+import React from "react";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import { Search } from "lucide-react";
 
 type Props = {
-    onChange: (value: string) => void
-    component: string
-}
+  onChange: (value: string) => void;
+  component: string;
+  noName?: boolean;
+};
 
-const SearchInput = ({onChange, component}: Props) => {
+const SearchInput = ({ onChange, component, noName }: Props) => {
   return (
     <div className="relative">
       <Input
         onChange={(e) => onChange(e.target.value)}
-        placeholder={`Search ${component} by name...`}
+        placeholder={`Search ${component} by ${noName ? "phone number" : "name"}...`}
       />
       <Button
         className="absolute right-0 top-0 rounded-full"
@@ -24,6 +25,6 @@ const SearchInput = ({onChange, component}: Props) => {
       </Button>
     </div>
   );
-}
+};
 
-export default SearchInput
+export default SearchInput;

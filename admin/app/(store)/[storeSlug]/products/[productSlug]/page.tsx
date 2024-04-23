@@ -7,8 +7,6 @@ import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
 import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import React from "react";
 import ClothingProductForm from "./clothing-product-form";
-import { ClothingProduct, TechnologyProduct } from "@/types";
-import { db } from "@/lib/db";
 import {
   getCategoryAndClothingFieldsInStore,
   getCategoryAndTechnologyFieldsInStore,

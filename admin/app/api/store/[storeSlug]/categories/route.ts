@@ -134,6 +134,9 @@ export async function GET(
       },
       include: {
         categories: {
+          include: {
+            billboard: true
+          },
           orderBy: {
             createdAt: "desc",
           },
@@ -145,7 +148,7 @@ export async function GET(
       return new NextResponse("Store not found.", { status: 404 });
     }
 
-    return NextResponse.json({ categories: existingStore.categories });
+    return NextResponse.json(existingStore.categories);
   } catch (error: any) {
     console.log("[GET CATEGORIES]", error);
     return new NextResponse("Internal Error", { status: 500 });

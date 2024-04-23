@@ -8,7 +8,7 @@ import Navbar from "./(root)/_components/navbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard",
+  title: "Unified E-commerce",
 };
 
 export default function RootLayout({

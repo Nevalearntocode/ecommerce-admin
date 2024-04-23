@@ -135,6 +135,7 @@ model Product {
 
 model Order {
   id         Int         @id @default(autoincrement())
+  customer   String
   store      Store       @relation(fields: [storeId], references: [id])
   storeId    Int
   orderItems OrderItem[]

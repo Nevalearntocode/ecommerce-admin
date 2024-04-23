@@ -84,3 +84,23 @@ export async function POST(req: Request) {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
+
+export async function GET(req: Request) {
+  try {
+    const stores = await db.store.findMany({
+      include: {
+        categories: {
+          select: {
+            slug: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(stores);
+  } catch (error) {
+    console.log("[GET STORES]", error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}
