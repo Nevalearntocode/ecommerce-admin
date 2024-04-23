@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
 import APIList from "@/components/apis/api-list";
@@ -17,24 +17,24 @@ import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import EntityCard from "@/components/clients/product-card";
+import usePagination from "@/hooks/use-pagination";
+import NoResults from "@/components/clients/no-results";
 
 type Props = {
   clothingProducts: ClothingProduct[];
 };
 
 const ClothingProductClient = ({ clothingProducts }: Props) => {
+  const router = useRouter();
+  const params = useParams();
   const { viewState, handleCardViewClick, handleDatatableViewClick } =
     useDefaultView("clothingProductView", "card");
-
   const { filteredItems: filteredClothingProducts, setSearchInput } = useFilter(
     clothingProducts,
     "name",
   );
-
-  const router = useRouter();
-  const params = useParams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const { currentItems, currentPage, handlePageChange, totalPages } =
+    usePagination(filteredClothingProducts);
 
   const formattedClothingProducts: ClothingProductColumn[] = useMemo(() => {
     return filteredClothingProducts.map((clothingProduct) => ({
@@ -43,22 +43,13 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
       brand: clothingProduct.brand || "",
       category: clothingProduct.category.name,
       size: clothingProduct.size?.value || SizeValue.M,
-      color: clothingProduct.color?.value || "",
+      color: clothingProduct.color?.value || "#ffffff",
       price: clothingProduct.price,
       stock: clothingProduct.stock,
       createdAt: format(clothingProduct.createdAt, "mm/dd/yy"),
       updatedAt: format(clothingProduct.updatedAt, "mm/dd/yy"),
     }));
   }, [filteredClothingProducts]);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentClothingProducts = filteredClothingProducts.slice(
-    startIndex,
-    endIndex,
-  );
-
-  const totalPages = Math.ceil(filteredClothingProducts.length / itemsPerPage);
 
   return (
     <>
@@ -91,21 +82,19 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
       {viewState === "card" && (
         <>
           {filteredClothingProducts.length === 0 ? (
-            <div>
-              <p>No products found.</p>
-            </div>
+            <NoResults label="products" />
           ) : (
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {currentClothingProducts.map((clothingProduct) => (
-                  <EntityCard entity={clothingProduct} type="clothingProduct" />
+                {currentItems.map((clothingProduct) => (
+                  <EntityCard key={clothingProduct.id} entity={clothingProduct} type="clothingProduct" />
                 ))}
               </div>
               {/* Previous Button */}
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                onPageChange={handlePageChange}
               />
             </>
           )}

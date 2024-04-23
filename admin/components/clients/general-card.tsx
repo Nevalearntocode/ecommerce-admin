@@ -9,17 +9,16 @@ import React from "react";
 type Props = {
   title: string;
   imageUrl: string;
-  onClick: () => void;
-  editButtonPath?: string;
+  path: string
 };
 
-function GeneralCard({ title, imageUrl, onClick, editButtonPath }: Props) {
+function GeneralCard({ title, imageUrl, path }: Props) {
   const router = useRouter();
 
   return (
     <Card>
       <CardHeader className="font-bold">{title}</CardHeader>
-      <CardContent className="h-2/3" onClick={onClick}>
+      <CardContent className="h-2/3" onClick={() => router.push(path)}>
         <div className="h-full">
           <Image
             priority={true}
@@ -31,14 +30,12 @@ function GeneralCard({ title, imageUrl, onClick, editButtonPath }: Props) {
           />
         </div>
         <div className="mt-4 flex items-center justify-between pb-8">
-          {editButtonPath && (
             <Button
-              onClick={() => router.push(editButtonPath)}
+              onClick={() => router.push(path)}
               className="ml-auto w-1/3"
             >
               Edit
             </Button>
-          )}
         </div>
       </CardContent>
     </Card>

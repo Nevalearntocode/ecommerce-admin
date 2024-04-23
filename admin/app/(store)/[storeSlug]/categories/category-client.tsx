@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { CategoryColumn, columns } from "./category-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
@@ -16,22 +16,24 @@ import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import GeneralCard from "@/components/clients/general-card";
+import usePagination from "@/hooks/use-pagination";
+import NoResults from "@/components/clients/no-results";
 
 type Props = {
   categories: CategoryWithBillboard[];
 };
 
 const CategoryClient = ({ categories }: Props) => {
-  const router = useRouter();
-  const params = useParams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
   const { viewState, handleCardViewClick, handleDatatableViewClick } =
     useDefaultView("categoryView", "card");
   const { setSearchInput, filteredItems: filteredCategories } = useFilter(
     categories,
     "name",
   );
+  const { currentItems, currentPage, handlePageChange, totalPages } =
+    usePagination(filteredCategories);
+  const router = useRouter();
+  const params = useParams();
 
   const formattedCategories: CategoryColumn[] = useMemo(() => {
     return filteredCategories.map((category) => ({
@@ -43,11 +45,6 @@ const CategoryClient = ({ categories }: Props) => {
       updatedAt: format(category.updatedAt, "h:mm MMMM do, yyyy"),
     }));
   }, [filteredCategories]);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentCategories = filteredCategories.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
 
   return (
     <>
@@ -80,29 +77,23 @@ const CategoryClient = ({ categories }: Props) => {
       {viewState === "card" && (
         <>
           {filteredCategories.length === 0 ? (
-            <div>
-              <p>No categories found.</p>
-            </div>
+            <NoResults label="categories" />
           ) : (
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {currentCategories.map((category) => (
+                {currentItems.map((category) => (
                   <GeneralCard
+                    key={category.id}
                     title={category.name}
                     imageUrl={category.billboard.image}
-                    onClick={() =>
-                      router.push(
-                        `/${params.storeSlug}/categories/${category.slug}`,
-                      )
-                    }
-                    editButtonPath={`/${params.storeSlug}/categories/${category.slug}/edit`}
+                    path={`/${params.storeSlug}/categories/${category.slug}`}
                   />
                 ))}
               </div>
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                onPageChange={handlePageChange}
               />
             </>
           )}

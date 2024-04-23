@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
 import APIList from "@/components/apis/api-list";
@@ -16,22 +16,22 @@ import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import EntityCard from "@/components/clients/product-card";
+import usePagination from "@/hooks/use-pagination";
+import NoResults from "@/components/clients/no-results";
 
 type Props = {
   technologyProducts: TechnologyProduct[];
 };
 
 const TechnologyProductClient = ({ technologyProducts }: Props) => {
-  const { handleCardViewClick, handleDatatableViewClick, viewState } =
-    useDefaultView("technologyProductView", "card");
-
-  const { filteredItems: filteredTechnologyProducts, setSearchInput } =
-    useFilter(technologyProducts, "name");
-
   const router = useRouter();
   const params = useParams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const { handleCardViewClick, handleDatatableViewClick, viewState } =
+    useDefaultView("technologyProductView", "card");
+  const { filteredItems: filteredTechnologyProducts, setSearchInput } =
+    useFilter(technologyProducts, "name");
+  const { currentItems, currentPage, handlePageChange, totalPages } =
+    usePagination(filteredTechnologyProducts);
 
   const formattedTechnologyProducts: TechnologyProductColumn[] = useMemo(() => {
     return filteredTechnologyProducts.map((technologyProduct) => ({
@@ -47,16 +47,6 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
       updatedAt: format(technologyProduct.updatedAt, "dd/M/yy"),
     }));
   }, [filteredTechnologyProducts]);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentTechnologyProducts = filteredTechnologyProducts.slice(
-    startIndex,
-    endIndex,
-  );
-  const totalPages = Math.ceil(
-    filteredTechnologyProducts.length / itemsPerPage,
-  );
 
   return (
     <>
@@ -89,14 +79,13 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
       {viewState === "card" && (
         <>
           {filteredTechnologyProducts.length === 0 ? (
-            <div>
-              <p>No products found.</p>{" "}
-            </div>
+            <NoResults label="products" />
           ) : (
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {currentTechnologyProducts.map((technologyProduct) => (
+                {currentItems.map((technologyProduct) => (
                   <EntityCard
+                    key={technologyProduct.id}
                     entity={technologyProduct}
                     type="technologyProduct"
                   />
@@ -106,7 +95,7 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                onPageChange={handlePageChange}
               />
             </>
           )}

@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { Billboard } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { BillboardColumn, columns } from "./billboard-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
@@ -16,6 +16,8 @@ import useDefaultView from "@/hooks/use-default-view";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import GeneralCard from "@/components/clients/general-card";
+import usePagination from "@/hooks/use-pagination";
+import NoResults from "@/components/clients/no-results";
 
 type Props = {
   billboards: Billboard[];
@@ -28,24 +30,20 @@ const BillboardClient = ({ billboards }: Props) => {
     billboards,
     "name",
   );
+  const { currentItems, currentPage, handlePageChange, totalPages } =
+    usePagination(filteredBillboards);
+
   const router = useRouter();
   const params = useParams();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
 
-const formattedBillboards: BillboardColumn[] = useMemo(() => {
-  return filteredBillboards.map((billboard) => ({
-    id: billboard.id,
-    name: billboard.name,
-    createdAt: format(billboard.createdAt, "h:mm MMMM do, yyyy"),
-    updatedAt: format(billboard.updatedAt, "h:mm MMMM do, yyyy"),
-  }));
-}, [filteredBillboards]);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentBillboards = filteredBillboards.slice(startIndex, endIndex);
-  const totalPages = Math.ceil(filteredBillboards.length / itemsPerPage);
+  const formattedBillboards: BillboardColumn[] = useMemo(() => {
+    return filteredBillboards.map((billboard) => ({
+      id: billboard.id,
+      name: billboard.name,
+      createdAt: format(billboard.createdAt, "h:mm MMMM do, yyyy"),
+      updatedAt: format(billboard.updatedAt, "h:mm MMMM do, yyyy"),
+    }));
+  }, [filteredBillboards]);
 
   return (
     <>
@@ -78,28 +76,22 @@ const formattedBillboards: BillboardColumn[] = useMemo(() => {
       {viewState === "card" && (
         <>
           {filteredBillboards.length === 0 ? (
-            <div>
-              <p>No billboards found.</p>
-            </div>
+            <NoResults label="billboards" />
           ) : (
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {currentBillboards.map((billboard) => (
+                {currentItems.map((billboard) => (
                   <GeneralCard
+                    key={billboard.id}
                     title={billboard.name}
                     imageUrl={billboard.image}
-                    onClick={() =>
-                      router.push(
-                        `/${params.storeSlug}/billboards/${billboard.id}`,
-                      )
-                    }
-                    editButtonPath={`/${params.storeSlug}/billboards/${billboard.id}/edit`}
+                    path={`/${params.storeSlug}/billboards/${billboard.id}`}
                   />
                 ))}
               </div>
               <Pagination
                 currentPage={currentPage}
-                onPageChange={setCurrentPage}
+                onPageChange={handlePageChange}
                 totalPages={totalPages}
               />
             </>

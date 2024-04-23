@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 type Entity = {
   name: string;
@@ -15,7 +15,7 @@ type Entity = {
 
 type Props = {
   entity: Entity;
-  type: "technologyProduct" | "clothingProduct" | "category" | "billboard";
+  type: "technologyProduct" | "clothingProduct";
 };
 
 function EntityCard({ entity, type }: Props) {
@@ -23,19 +23,15 @@ function EntityCard({ entity, type }: Props) {
   const router = useRouter();
   const params = useParams();
 
-  const handleButtonClick = (index: number) => {
+  const handleButtonClick = useCallback((index: number) => {
     setMainImageIndex(index);
-  };
+  }, []);
 
   const getEditPath = () => {
     switch (type) {
       case "technologyProduct":
       case "clothingProduct":
         return `/${params.storeSlug}/products/${entity.slug}`;
-      case "category":
-        return `/${params.storeSlug}/categories/${entity.slug}`;
-      case "billboard":
-        return `/${params.storeSlug}/billboards/${entity.id}`;
       default:
         return "";
     }
@@ -67,6 +63,7 @@ function EntityCard({ entity, type }: Props) {
                     onClick={() => handleButtonClick(index)}
                   >
                     <Image
+                      priority={true}
                       src={image}
                       alt="Small image"
                       height={720}
