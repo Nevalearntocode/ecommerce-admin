@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
-import { getStoreToCreateProduct } from "@/lib/get-stores";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
-import { getSizeIdByNameAndStoreId } from "@/lib/get-sizes";
-import { getColorIdByNameAndStoreId } from "@/lib/get-colors";
-import { getModelIdByNameAndStoreId } from "@/lib/get-models";
-import { getTypeIdByNameAndStoreId } from "@/lib/get-types";
+import getCurrentUser from "@/data/get-current-user";
+import { getStoreToCreateProduct } from "@/data/get-stores";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
+import { getSizeIdByNameAndStoreId } from "@/data/get-sizes";
+import { getColorIdByNameAndStoreId } from "@/data/get-colors";
+import { getModelIdByNameAndStoreId } from "@/data/get-models";
+import { getTypeIdByNameAndStoreId } from "@/data/get-types";
 
 export async function POST(
   req: Request,

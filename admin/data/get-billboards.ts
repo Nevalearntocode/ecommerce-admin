@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "../lib/db";
 
 export async function getBillboardById(id: string) {
   const billboardId = Number(id);

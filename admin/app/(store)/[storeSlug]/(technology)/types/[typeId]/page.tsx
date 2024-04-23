@@ -1,8 +1,8 @@
-import { getTypeById } from "@/lib/get-types";
+import { getTypeById } from "@/data/get-types";
 import React from "react";
 import TypeForm from "./type-form";
-import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import { getCurrentStaff } from "@/data/get-staffs";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 
 type Props = {

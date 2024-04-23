@@ -56,7 +56,7 @@ const ColorForm = ({ color }: Props) => {
       form.setValue("name", color.name);
       form.setValue("value", color.value);
     }
-  }, [color]);
+  }, [color, form]);
 
   const isLoading = form.formState.isSubmitting;
 
@@ -157,7 +157,7 @@ const ColorForm = ({ color }: Props) => {
                           <Input
                             disabled={isLoading}
                             {...field}
-                            placeholder={"#1F1F1F"}
+                            placeholder={`#1F1F1F`}
                           />
                           <div
                             className="rounded-full border bg-[#1f1f1f] p-4"

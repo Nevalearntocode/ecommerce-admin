@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
-import { getStoreWithCurrentStaff } from "@/lib/get-stores";
+import getCurrentUser from "@/data/get-current-user";
+import { getStoreWithCurrentStaff } from "@/data/get-stores";
 import {
   canManageCategory,
   canManageStore,
   isOwner,
-} from "@/lib/permission-hierarchy";
-import { getBillboardByNameAndStoreId } from "@/lib/get-billboards";
+} from "@/permissions/permission-hierarchy";
+import { getBillboardByNameAndStoreId } from "@/data/get-billboards";
 
 export async function PATCH(
   req: Request,

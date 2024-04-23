@@ -42,9 +42,10 @@ model Store {
   storeType  StoreType   @default(CLOTHING)
   inviteCode String      @unique @default(uuid())
   staffs     Staff[]
-  products   Product[]
   categories Category[]
   billboards Billboard[]
+  products   Product[]
+  orders     Order[]
   sizes      Size[]
   colors     Color[]
   models     Model[]
@@ -79,8 +80,8 @@ model Category {
   store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId     Int
   billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Restrict)
-  billboardId Int       @unique
-  products     Product[]
+  billboardId Int       
+  products    Product[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
@@ -102,7 +103,7 @@ model Billboard {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   slug        String
   price       Float
@@ -110,25 +111,48 @@ model Product {
   images      String[]
   description String?
   brand       String?
-  isFeatured  Boolean  @default(false)
-  isArchived  Boolean  @default(false)
-  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  isFeatured  Boolean     @default(false)
+  isArchived  Boolean     @default(false)
+  store       Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId     Int
-  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId  Int
-  size        Size?    @relation(fields: [sizeId], references: [id], onDelete: Restrict)
+  size        Size?       @relation(fields: [sizeId], references: [id], onDelete: Restrict)
   sizeId      Int?
-  color       Color?   @relation(fields: [colorId], references: [id], onDelete: Restrict)
+  color       Color?      @relation(fields: [colorId], references: [id], onDelete: Restrict)
   colorId     Int?
-  model       Model?   @relation(fields: [modelId], references: [id], onDelete: Restrict)
+  model       Model?      @relation(fields: [modelId], references: [id], onDelete: Restrict)
   modelId     Int?
-  type        Type?    @relation(fields: [typeId], references: [id], onDelete: Restrict)
+  type        Type?       @relation(fields: [typeId], references: [id], onDelete: Restrict)
   typeId      Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
 
   @@unique([slug, storeId])
   @@unique([name, storeId])
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  store      Store       @relation(fields: [storeId], references: [id])
+  storeId    Int
+  orderItems OrderItem[]
+  isPaid     Boolean     @default(false)
+  phone      String      @default("")
+  address    String      @default("")
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  product   Product  @relation(fields: [productId], references: [id])
+  productId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Size {
@@ -139,7 +163,7 @@ model Size {
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  products   Product[]
+  products  Product[]
 
   @@unique([name, storeId])
 }
@@ -152,7 +176,7 @@ model Color {
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  products   Product[]
+  products  Product[]
 
   @@unique([name, storeId])
 }
@@ -165,7 +189,7 @@ model Model {
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  products   Product[]
+  products  Product[]
 
   @@unique([name, storeId])
 }
@@ -178,7 +202,7 @@ model Type {
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  products   Product[]
+  products  Product[]
 
   @@unique([name, storeId])
 }

@@ -1,4 +1,4 @@
-import { getUserStoreBySlug } from "@/lib/get-stores";
+import { getUserStoreBySlug } from "@/data/get-stores";
 import React from "react";
 import Empty from "../../../components/mainpages/empty";
 import ManageMemberForm from "./manage-member-form";

@@ -113,7 +113,7 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
       form.setValue("sizeName", product.size?.name || "");
       form.setValue("colorName", product.color?.name || "");
     }
-  }, [product]);
+  }, [product, form]);
 
   const onChange = (value: string, state: "upload" | "remove") => {
     const currentImages = form.getValues("images") || []; // Get current images array

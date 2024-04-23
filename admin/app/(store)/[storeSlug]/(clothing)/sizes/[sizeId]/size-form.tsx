@@ -61,7 +61,7 @@ const SizeForm = ({ size }: Props) => {
       form.setValue("name", size.name);
       form.setValue("value", size.value);
     }
-  }, [size]);
+  }, [size, form]);
 
   const isLoading = form.formState.isSubmitting;
 

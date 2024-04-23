@@ -55,7 +55,7 @@ const ProfileModal = (props: Props) => {
       form.setValue("name", data.user.name);
       form.setValue("image", data.user.image);
     }
-  }, [data?.user]);
+  }, [data, form]);
 
   const isLoading = form.formState.isSubmitting;
 

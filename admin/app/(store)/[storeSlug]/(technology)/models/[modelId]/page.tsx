@@ -1,8 +1,8 @@
-import { getModelById } from "@/lib/get-models";
+import { getModelById } from "@/data/get-models";
 import React from "react";
 import ModelForm from "./model-form";
-import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import { getCurrentStaff } from "@/data/get-staffs";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 
 type Props = {

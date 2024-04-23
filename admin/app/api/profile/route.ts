@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import getCurrentUser from "@/lib/get-current-user";
+import getCurrentUser from "@/data/get-current-user";
 import { db } from "@/lib/db";
 
 export async function PATCH(req: Request) {

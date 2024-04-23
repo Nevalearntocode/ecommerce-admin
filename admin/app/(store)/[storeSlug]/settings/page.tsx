@@ -1,11 +1,11 @@
 import Empty from "@/components/mainpages/empty";
-import { getStoreWithCurrentStaff } from "@/lib/get-stores";
+import { getStoreWithCurrentStaff } from "@/data/get-stores";
 import React from "react";
 import SettingsForm from "./settings-form";
-import getCurrentUser from "@/lib/get-current-user";
+import getCurrentUser from "@/data/get-current-user";
 import { redirect } from "next/navigation";
 import NotPermitted from "@/components/mainpages/not-permitted";
-import { canManageStore } from "@/lib/permission-hierarchy";
+import { canManageStore } from "@/permissions/permission-hierarchy";
 
 type Props = {
   params: {

@@ -50,7 +50,6 @@ const CreateStoreModal = (props: Props) => {
   const { isOpen, close, type } = useModal();
   const isModalOpen = type === "createStore" && isOpen;
   const router = useRouter();
-  // const refetchStores = useStore((state) => state.refetchStores);
 
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),

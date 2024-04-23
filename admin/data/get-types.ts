@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "../lib/db";
 
 export async function getTypeById(typeId: string) {
   const id = Number(typeId);
@@ -25,8 +25,8 @@ export async function getTypeIdByNameAndStoreId(name: string, storeId: number) {
       },
     },
     select: {
-      id: true
-    }
+      id: true,
+    },
   });
 
   return type;

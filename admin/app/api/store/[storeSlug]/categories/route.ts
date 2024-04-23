@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
-import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageCategory, isOwner } from "@/lib/permission-hierarchy";
-import { getBillboardByNameAndStoreId } from "@/lib/get-billboards";
+import getCurrentUser from "@/data/get-current-user";
+import { getStoreWithCurrentStaff } from "@/data/get-stores";
+import { canManageCategory, isOwner } from "@/permissions/permission-hierarchy";
+import { getBillboardByNameAndStoreId } from "@/data/get-billboards";
 
 export async function POST(
   req: Request,
@@ -32,7 +32,7 @@ export async function POST(
     }
 
     if (!billboardName) {
-      return new NextResponse("Category is required.", { status: 400 });
+      return new NextResponse("Billboard is required.", { status: 400 });
     }
 
     const existingStore = await getStoreWithCurrentStaff(storeSlug, user.id);

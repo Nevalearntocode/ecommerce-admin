@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "../lib/db";
 
 export async function getColorById(colorId: string) {
   const id = Number(colorId);
@@ -16,7 +16,10 @@ export async function getColorById(colorId: string) {
   return color;
 }
 
-export async function getColorIdByNameAndStoreId(name: string, storeId: number) {
+export async function getColorIdByNameAndStoreId(
+  name: string,
+  storeId: number,
+) {
   const color = await db.color.findUnique({
     where: {
       name_storeId: {
@@ -25,8 +28,8 @@ export async function getColorIdByNameAndStoreId(name: string, storeId: number) 
       },
     },
     select: {
-      id: true
-    }
+      id: true,
+    },
   });
 
   return color;

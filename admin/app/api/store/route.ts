@@ -1,4 +1,4 @@
-import getCurrentUser from "@/lib/get-current-user";
+import getCurrentUser from "@/data/get-current-user";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { StoreType } from "@prisma/client";
@@ -84,5 +84,3 @@ export async function POST(req: Request) {
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
-
-

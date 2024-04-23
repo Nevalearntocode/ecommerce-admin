@@ -1,9 +1,9 @@
 import React from "react";
 import ModelClient from "./model-client";
-import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
+import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 
 type Props = {

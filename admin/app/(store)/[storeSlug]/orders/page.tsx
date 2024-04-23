@@ -1,10 +1,9 @@
-import React from "react";
-import SizeClient from "./size-client";
-import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
-import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
-import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
+import { getStoreOrder } from "@/data/get-orders";
+import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
+import React from "react";
+import OrderClient from "./order-client";
 
 type Props = {
   params: {
@@ -12,8 +11,9 @@ type Props = {
   };
 };
 
-const Sizes = async ({ params }: Props) => {
+const Orders = async ({ params }: Props) => {
   const staff = await getCurrentStaffAndStoreType(params.storeSlug);
+
   if (!staff) {
     return null;
   }
@@ -24,28 +24,15 @@ const Sizes = async ({ params }: Props) => {
     return <NotPermitted />;
   }
 
-  if (staff.store.storeType !== "CLOTHING") {
-    return redirect(`/${params.storeSlug}`);
-  }
-
-  const sizes = await db.size.findMany({
-    where: {
-      store: {
-        slug: params.storeSlug,
-      },
-    },
-    orderBy: {
-      value: "asc",
-    },
-  });
+  const orders = await getStoreOrder(staff.storeId)
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SizeClient sizes={sizes} />
+        <OrderClient orders={orders} />
       </div>
     </div>
   );
 };
 
-export default Sizes;
+export default Orders;

@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "../lib/db";
 import getCurrentUser from "./get-current-user";
 
 export async function getCurrentStaff(storeSlug: string) {
@@ -45,7 +45,7 @@ export async function getCurrentStaffAndStoreType(storeSlug: string) {
       store: {
         select: {
           storeType: true,
-          userId: true
+          userId: true,
         },
       },
     },

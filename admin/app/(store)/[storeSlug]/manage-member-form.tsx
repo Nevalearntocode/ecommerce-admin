@@ -52,7 +52,7 @@ const ManageMemberForm = ({ staff, storeUserId }: Props) => {
     form.setValue("canManageCategory", staff.canManageCategory);
     form.setValue("canManageBillboard", staff.canManageBillboard || false);
     form.setValue("canManageProduct", staff.canManageProduct);
-  }, [staff]);
+  }, [staff, form]);
 
   const onSubmit = async (data: FormType) => {
     try {

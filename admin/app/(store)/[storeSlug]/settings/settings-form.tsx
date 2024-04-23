@@ -56,7 +56,7 @@ const SettingsForm = ({ store, isOwner }: Props) => {
   useEffect(() => {
     form.setValue("name", store.name);
     form.setValue("slug", store.slug);
-  }, [store]);
+  }, [store, form]);
 
   const isLoading = form.formState.isSubmitting;
 

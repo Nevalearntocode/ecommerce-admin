@@ -1,8 +1,11 @@
-import { getBillboardById } from "@/lib/get-billboards";
+import { getBillboardById } from "@/data/get-billboards";
 import React from "react";
 import BillboardForm from "./billboard-form";
-import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageBillboard, isOwner } from "@/lib/permission-hierarchy";
+import { getCurrentStaff } from "@/data/get-staffs";
+import {
+  canManageBillboard,
+  isOwner,
+} from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 
 type Props = {

@@ -1,4 +1,4 @@
-import { getStoreById } from "@/lib/get-stores";
+import { getStoreById } from "@/data/get-stores";
 import { NextResponse } from "next/server";
 
 export async function GET(

@@ -56,7 +56,7 @@ const TypeForm = ({ type }: Props) => {
       form.setValue("name", type.name);
       form.setValue("value", type.value);
     }
-  }, [type]);
+  }, [type, form]);
 
   const isLoading = form.formState.isSubmitting;
 

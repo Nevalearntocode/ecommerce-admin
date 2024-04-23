@@ -118,7 +118,7 @@ const TechnologyProductForm = ({
       form.setValue("modelName", product.model?.name || "");
       form.setValue("typeName", product.type?.name || "");
     }
-  }, [product]);
+  }, [product, form]);
 
   const onChange = (value: string, state: "upload" | "remove") => {
     const currentImages = form.getValues("images") || []; // Get current images array

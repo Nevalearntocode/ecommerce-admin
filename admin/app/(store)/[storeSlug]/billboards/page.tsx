@@ -1,7 +1,10 @@
 import React from "react";
 import BillboardClient from "./billboard-client";
-import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageBillboard, isOwner } from "@/lib/permission-hierarchy";
+import { getCurrentStaff } from "@/data/get-staffs";
+import {
+  canManageBillboard,
+  isOwner,
+} from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 import { db } from "@/lib/db";
 

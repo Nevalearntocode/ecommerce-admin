@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "../lib/db";
 
 export async function getSizeById(sizeId: string) {
   const id = Number(sizeId);
@@ -25,8 +25,8 @@ export async function getSizeIdByNameAndStoreId(name: string, storeId: number) {
       },
     },
     select: {
-      id: true
-    }
+      id: true,
+    },
   });
 
   return size;

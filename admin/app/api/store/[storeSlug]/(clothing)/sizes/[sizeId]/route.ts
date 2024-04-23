@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
-import { getSizeById } from "@/lib/get-sizes";
-import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import getCurrentUser from "@/data/get-current-user";
+import { getSizeById } from "@/data/get-sizes";
+import { getStoreWithCurrentStaff } from "@/data/get-stores";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import { SizeValue } from "@prisma/client";
 import { NextResponse } from "next/server";
 

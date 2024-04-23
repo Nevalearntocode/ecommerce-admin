@@ -1,4 +1,4 @@
-import { getBillboardById } from "@/lib/get-billboards";
+import { getBillboardById } from "@/data/get-billboards";
 import { NextResponse } from "next/server";
 
 export async function GET(

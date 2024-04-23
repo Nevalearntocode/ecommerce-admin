@@ -1,9 +1,9 @@
 import React from "react";
 import CategoryForm from "./category-form";
-import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageCategory, isOwner } from "@/lib/permission-hierarchy";
+import { getCurrentStaff } from "@/data/get-staffs";
+import { canManageCategory, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
-import { getCategoryByStoreSlugAndCategorySlug } from "@/lib/get-categories";
+import { getCategoryByStoreSlugAndCategorySlug } from "@/data/get-categories";
 import { db } from "@/lib/db";
 
 type Props = {

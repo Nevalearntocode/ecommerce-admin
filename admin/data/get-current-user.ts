@@ -1,5 +1,5 @@
 import { auth } from "@/app/api/auth/[...nextauth]/options";
-import { db } from "./db";
+import { db } from "../lib/db";
 
 export default async function getCurrentUser() {
   const session = await auth();

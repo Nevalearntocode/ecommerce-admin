@@ -2,8 +2,8 @@ import React from "react";
 import MainNav from "./main-nav";
 import UserButton from "@/app/(root)/_components/user-button";
 import StoreSwitcher from "./store-switcher";
-import getCurrentUser from "@/lib/get-current-user";
-import getUserStoresById from "@/lib/get-stores";
+import getCurrentUser from "@/data/get-current-user";
+import getUserStoresById from "@/data/get-stores";
 import AddStaff from "./add-staff";
 
 type Props = {};

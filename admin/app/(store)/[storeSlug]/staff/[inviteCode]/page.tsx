@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
+import getCurrentUser from "@/data/get-current-user";
 import { redirect } from "next/navigation";
 import InvalidLink from "./invalid-link";
 

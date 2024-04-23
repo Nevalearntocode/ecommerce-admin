@@ -2,9 +2,9 @@ import NotPermitted from "@/components/mainpages/not-permitted";
 import {
   getClothingProductWithStoreType,
   getTechnologyProductWithStoreType,
-} from "@/lib/get-products";
-import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+} from "@/data/get-products";
+import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import React from "react";
 import ClothingProductForm from "./clothing-product-form";
 import { ClothingProduct, TechnologyProduct } from "@/types";
@@ -12,7 +12,7 @@ import { db } from "@/lib/db";
 import {
   getCategoryAndClothingFieldsInStore,
   getCategoryAndTechnologyFieldsInStore,
-} from "@/lib/get-stores";
+} from "@/data/get-stores";
 import TechnologyProductForm from "./technology-product-form";
 
 type Props = {

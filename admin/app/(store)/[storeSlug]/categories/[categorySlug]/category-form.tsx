@@ -76,7 +76,7 @@ const CategoryForm = ({ category, billboardNames }: Props) => {
       form.setValue("slug", category.slug);
       form.setValue("billboardName", category.billboard.name);
     }
-  }, [category]);
+  }, [category, form]);
 
   const isLoading = form.formState.isSubmitting;
 

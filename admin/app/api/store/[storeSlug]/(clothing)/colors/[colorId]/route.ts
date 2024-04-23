@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
-import { getColorById } from "@/lib/get-colors";
-import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import getCurrentUser from "@/data/get-current-user";
+import { getColorById } from "@/data/get-colors";
+import { getStoreWithCurrentStaff } from "@/data/get-stores";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import { NextResponse } from "next/server";
 import { expandHexCode } from "@/lib/convert-hex-code";
 

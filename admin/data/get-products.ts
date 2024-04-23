@@ -1,5 +1,5 @@
 import { StoreType } from "@prisma/client";
-import { db } from "./db";
+import { db } from "../lib/db";
 import { ClothingProduct, TechnologyProduct } from "@/types";
 
 export async function getTechnologyProductsWithStoreType(storeId: number) {
@@ -69,11 +69,9 @@ export async function getClothingProductWithStoreType(
   return product as ClothingProduct | null;
 }
 
-export async function getProductUsingStoreType<T extends ClothingProduct | TechnologyProduct>(
-  storeId: number,
-  slug: string,
-  storeType: StoreType,
-) {
+export async function getProductUsingStoreType<
+  T extends ClothingProduct | TechnologyProduct,
+>(storeId: number, slug: string, storeType: StoreType) {
   if (storeType == "CLOTHING") {
     const product = await getClothingProductWithStoreType(storeId, slug);
 

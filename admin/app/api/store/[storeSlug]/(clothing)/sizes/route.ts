@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
+import getCurrentUser from "@/data/get-current-user";
 import { SizeValue } from "@prisma/client";
-import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import { getStoreWithCurrentStaff } from "@/data/get-stores";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 
 export async function POST(
   req: Request,

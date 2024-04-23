@@ -52,7 +52,11 @@ const MainNav = ({ stores, userId }: Props) => {
 
   // Array of routes that are common to all store types
   const DEFAULT_ROUTES: RouteType[] = [
-    { href: `/${params.storeSlug}`, label: "Home", active: pathname === `/${params.storeSlug}` },
+    {
+      href: `/${params.storeSlug}`,
+      label: "Home",
+      active: pathname === `/${params.storeSlug}`,
+    },
     {
       href: `/${params.storeSlug}/settings`,
       label: "Settings",
@@ -71,11 +75,20 @@ const MainNav = ({ stores, userId }: Props) => {
       active: pathname === `/${params.storeSlug}/categories`,
       requireAdminOrPermission: "canManageCategory",
     },
+  ];
+
+  const AdditionalRoutes = [
     {
       href: `/${params.storeSlug}/products`,
       label: "Products",
       active: pathname === `/${params.storeSlug}/products`,
       requireAdminOrPermission: "canManageProduct",
+    },
+    {
+      href: `/${params.storeSlug}/orders`,
+      label: "Orders",
+      active: pathname === `/${params.storeSlug}/orders`,
+      requireAdminOrPermission: "canManageOrder",
     },
   ];
 
@@ -118,6 +131,8 @@ const MainNav = ({ stores, userId }: Props) => {
   } else if (existingStore.storeType === "TECHNOLOGY") {
     routes.push(...TECHNOLOGY_ROUTES);
   }
+
+  routes.push(...AdditionalRoutes);
 
   return (
     <>

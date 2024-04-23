@@ -2,9 +2,9 @@ import NotPermitted from "@/components/mainpages/not-permitted";
 import {
   getClothingProductsWithStoreType,
   getTechnologyProductsWithStoreType,
-} from "@/lib/get-products";
-import { getCurrentStaffAndStoreType } from "@/lib/get-staffs";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+} from "@/data/get-products";
+import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import React from "react";
 import ClothingProductClient from "./_components/clothing/clothing-product-client";
 import TechnologyProductClient from "./_components/technology/technology-product-client";

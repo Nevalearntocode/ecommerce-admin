@@ -55,7 +55,7 @@ const BillboardForm = ({ billboard }: Props) => {
       form.setValue("name", billboard.name);
       form.setValue("image", billboard.image);
     }
-  }, [billboard]);
+  }, [billboard, form]);
 
   const isLoading = form.formState.isSubmitting;
 

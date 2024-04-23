@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
 import { cn } from "@/lib/utils";
 import ActionTooltip from "./action-tooltip";
-import { Image, Table } from "lucide-react";
+import { Image as ImageIcon, Table } from "lucide-react";
 
 interface HeaderWithActionsProps {
   title: string;
@@ -47,7 +47,7 @@ const HeaderWithActions = ({
                 )}
               >
                 {/* Replace with your Image icon component */}
-                <Image className="h-1/2 w-1/2" />
+                <ImageIcon className="h-1/2 w-1/2" />
               </Button>
             </ActionTooltip>
             <ActionTooltip tooltip="Switch to datatable view">

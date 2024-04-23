@@ -1,8 +1,8 @@
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
-import { getTypeById } from "@/lib/get-types";
-import { getStoreWithCurrentStaff } from "@/lib/get-stores";
-import { canManageProduct, isOwner } from "@/lib/permission-hierarchy";
+import getCurrentUser from "@/data/get-current-user";
+import { getTypeById } from "@/data/get-types";
+import { getStoreWithCurrentStaff } from "@/data/get-stores";
+import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import { NextResponse } from "next/server";
 
 export async function PATCH(

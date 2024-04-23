@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "../lib/db";
 import getCurrentUser from "./get-current-user";
 
 export default async function getUserStoresById(userId: string) {
@@ -235,7 +235,7 @@ export async function getCategoryAndClothingFieldsInStore(id: number) {
       colors: {
         select: {
           name: true,
-          value: true
+          value: true,
         },
       },
     },

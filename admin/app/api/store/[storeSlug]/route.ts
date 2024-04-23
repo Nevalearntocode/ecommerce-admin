@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import getCurrentUser from "@/lib/get-current-user";
-import { canManageStore, isOwner } from "@/lib/permission-hierarchy";
+import getCurrentUser from "@/data/get-current-user";
+import { canManageStore, isOwner } from "@/permissions/permission-hierarchy";
 
 export async function PATCH(
   req: Request,

@@ -56,7 +56,7 @@ const ModelForm = ({ model }: Props) => {
       form.setValue("name", model.name);
       form.setValue("value", model.value);
     }
-  }, [model]);
+  }, [model, form]);
 
   const isLoading = form.formState.isSubmitting;
 

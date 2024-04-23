@@ -1,6 +1,6 @@
 import React from "react";
-import { getCurrentStaff } from "@/lib/get-staffs";
-import { canManageCategory, isOwner } from "@/lib/permission-hierarchy";
+import { getCurrentStaff } from "@/data/get-staffs";
+import { canManageCategory, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 import { db } from "@/lib/db";
 import CategoryClient from "./category-client";
