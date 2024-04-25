@@ -39,7 +39,7 @@ model Store {
   id         Int         @id @default(autoincrement())
   slug       String      @unique
   name       String      @unique
-  image      String?
+  image      String
   storeType  StoreType   @default(CLOTHING)
   inviteCode String      @unique @default(uuid())
   staffs     Staff[]

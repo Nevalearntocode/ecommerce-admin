@@ -27,6 +27,7 @@ import useModal from "@/hooks/use-modal-store";
 import { generateSlug } from "@/constant";
 import APIAlert from "@/components/apis/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
+import ImageUpload from "@/components/uploadthing/upload-image";
 
 type Props = {
   store: Store;
@@ -36,6 +37,7 @@ type Props = {
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long").trim(),
   slug: z.string().transform((value) => value.trim().replace(/\s+/g, "-")),
+  image: z.string().min(1, "Store image can't be empty."),
 });
 
 type FormType = z.infer<typeof formSchema>;
@@ -50,18 +52,24 @@ const SettingsForm = ({ store, isOwner }: Props) => {
     defaultValues: {
       name: "",
       slug: "",
+      image: "",
     },
   });
 
   useEffect(() => {
     form.setValue("name", store.name);
     form.setValue("slug", store.slug);
+    form.setValue("image", store.image);
   }, [store, form]);
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    if (data.name === store.name && data.slug === store.slug) {
+    if (
+      data.name === store.name &&
+      data.slug === store.slug &&
+      data.image === store.image
+    ) {
       toast.info("Store has not changed.");
       return;
     }
@@ -177,6 +185,34 @@ const SettingsForm = ({ store, isOwner }: Props) => {
                 </FormItem>
               )}
             />
+          </div>
+          <div className="col-span-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="">
+              <FormField
+                control={form.control}
+                name="image"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Store Image</FormLabel>
+                    {!field.value && (
+                      <FormDescription className="text-xs italic">
+                        We'll show you a preview of your image after upload.
+                        Make sure it fills the preview area for an optimal view.
+                      </FormDescription>
+                    )}
+                    <FormControl>
+                      <ImageUpload
+                        endpoint="billboardImage"
+                        type="billboard"
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
         </form>
       </Form>

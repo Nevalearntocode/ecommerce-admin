@@ -13,7 +13,7 @@ export type ClothingProductColumn = {
   brand: string;
   size: SizeValue;
   color: string;
-  price: number;
+  price: string;
   stock: number;
   createdAt: string;
   updatedAt: string;

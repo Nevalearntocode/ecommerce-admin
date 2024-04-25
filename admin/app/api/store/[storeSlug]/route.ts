@@ -10,7 +10,11 @@ export async function PATCH(
   try {
     const user = await getCurrentUser();
 
-    const { name, slug }: { name?: string; slug?: string } = await req.json();
+    const {
+      name,
+      slug,
+      image,
+    }: { name?: string; slug?: string; image?: string } = await req.json();
 
     if (!user) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -47,11 +51,10 @@ export async function PATCH(
       );
     }
 
-    console.log("mark");
-
     const updateData = {
       name: name ? name : existingStore.name,
       slug: slug ? slug : "",
+      image: image ? image : "",
     };
 
     if (!slug) {
@@ -63,6 +66,10 @@ export async function PATCH(
         .toLowerCase()
         .trim()
         .replace(/\s+/g, "-");
+    }
+
+    if (!image || image === "") {
+      updateData.image = existingStore.image;
     }
 
     const existedStoreWithGivenName = await db.store.findUnique({
@@ -103,10 +110,7 @@ export async function PATCH(
       where: {
         id: existingStore.id,
       },
-      data: {
-        name,
-        slug: updateData.slug,
-      },
+      data: { ...updateData },
     });
 
     return NextResponse.json({

@@ -12,7 +12,7 @@ export type TechnologyProductColumn = {
   brand: string;
   model: string;
   type: string;
-  price: number;
+  price: string;
   stock: number;
   createdAt: string;
   updatedAt: string;

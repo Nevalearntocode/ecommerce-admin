@@ -250,15 +250,16 @@ export async function GET(
     }
 
     const { searchParams } = new URL(req.url);
-    const categorySlug = searchParams.get("category") || undefined;
-    const brand = searchParams.get("brand") || undefined;
-    const colorName = searchParams.get("color") || undefined;
-    const sizeName = searchParams.get("size") || undefined;
-    const modelName = searchParams.get("model") || undefined;
-    const typeName = searchParams.get("type") || undefined;
-    const isFeatured = searchParams.get("featured") || undefined;
+    const categorySlug =
+      searchParams.get("category")?.toLowerCase() || undefined;
+    const brand = searchParams.get("brand")?.toLowerCase() || undefined;
+    const colorName = searchParams.get("color")?.toLowerCase() || undefined;
+    const sizeName = searchParams.get("size")?.toLowerCase() || undefined;
+    const modelName = searchParams.get("model")?.toLowerCase() || undefined;
+    const typeName = searchParams.get("type")?.toLowerCase() || undefined;
+    const isFeatured = searchParams.get("featured")?.toLowerCase() || undefined;
 
-    console.log(searchParams.get("color"));
+    const featured = isFeatured === "true";
 
     if (existingStore.storeType === "CLOTHING") {
       const products = await db.product.findMany({
@@ -268,7 +269,7 @@ export async function GET(
             slug: categorySlug,
           },
           brand,
-          isFeatured: isFeatured ? true : undefined,
+          isFeatured: featured ? true : undefined,
           isArchived: false,
           color: {
             name: colorName,

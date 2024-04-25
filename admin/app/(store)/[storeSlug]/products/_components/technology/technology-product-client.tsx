@@ -18,6 +18,7 @@ import SearchInput from "@/components/clients/search";
 import EntityCard from "@/components/clients/product-card";
 import usePagination from "@/hooks/use-pagination";
 import NoResults from "@/components/clients/no-results";
+import { formatter } from "@/lib/utils";
 
 type Props = {
   technologyProducts: TechnologyProduct[];
@@ -43,7 +44,7 @@ const TechnologyProductClient = ({ technologyProducts }: Props) => {
       category: technologyProduct.category.name,
       model: technologyProduct.model?.value || "",
       type: technologyProduct.type?.value || "",
-      price: technologyProduct.price,
+      price: formatter.format(technologyProduct.price),
       stock: technologyProduct.stock,
       createdAt: format(technologyProduct.createdAt, "dd/M/yy"),
       updatedAt: format(technologyProduct.updatedAt, "dd/M/yy"),

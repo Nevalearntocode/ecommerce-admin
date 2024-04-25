@@ -19,6 +19,7 @@ import SearchInput from "@/components/clients/search";
 import EntityCard from "@/components/clients/product-card";
 import usePagination from "@/hooks/use-pagination";
 import NoResults from "@/components/clients/no-results";
+import { formatter } from "@/lib/utils";
 
 type Props = {
   clothingProducts: ClothingProduct[];
@@ -46,10 +47,10 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
       category: clothingProduct.category.name,
       size: clothingProduct.size?.value || SizeValue.M,
       color: clothingProduct.color?.value || "#ffffff",
-      price: clothingProduct.price,
+      price: formatter.format(clothingProduct.price),
       stock: clothingProduct.stock,
-      createdAt: format(clothingProduct.createdAt, "mm/dd/yy"),
-      updatedAt: format(clothingProduct.updatedAt, "mm/dd/yy"),
+      createdAt: format(clothingProduct.createdAt, "MM/dd/yy"),
+      updatedAt: format(clothingProduct.updatedAt, "MM/dd/yy"),
     }));
   }, [filteredClothingProducts]);
 
@@ -89,7 +90,11 @@ const ClothingProductClient = ({ clothingProducts }: Props) => {
             <>
               <div className="grid min-h-72 grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {currentItems.map((clothingProduct) => (
-                  <EntityCard key={clothingProduct.id} entity={clothingProduct} type="clothingProduct" />
+                  <EntityCard
+                    key={clothingProduct.id}
+                    entity={clothingProduct}
+                    type="clothingProduct"
+                  />
                 ))}
               </div>
               {/* Previous Button */}

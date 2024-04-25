@@ -93,10 +93,12 @@ export async function GET(req: Request) {
     const stores = await db.store.findMany({
       include: {
         categories: {
-          select: {
-            slug: true,
-            name: true,
+          include: {
+            billboard: true,
           },
+          orderBy: {
+            updatedAt: "desc"
+          }
         },
       },
     });

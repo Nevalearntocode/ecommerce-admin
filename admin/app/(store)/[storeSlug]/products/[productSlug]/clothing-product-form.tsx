@@ -149,12 +149,6 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
             data,
           )
           .then((res) => {
-            form.resetField("name");
-            form.resetField("price");
-            form.resetField("stock");
-            form.resetField("brand");
-            form.resetField("description");
-            form.resetField("images");
             toast.success(res.data.success);
             router.push(
               `/${params.storeSlug}/products/${data.name.toLowerCase().trim().replace(/\s+/g, "-")}`,
@@ -165,6 +159,12 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
         await axios
           .post(`/api/store/${params.storeSlug}/products`, data)
           .then((res) => {
+            form.resetField("name");
+            form.resetField("price");
+            form.resetField("stock");
+            form.resetField("brand");
+            form.resetField("description");
+            form.resetField("images");
             toast.success(res.data.success);
             router.refresh();
           });
