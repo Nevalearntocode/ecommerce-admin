@@ -105,9 +105,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({
-      models: existingStore.models,
-    });
+    return NextResponse.json(existingStore.models);
   } catch (error) {
     console.log("[GET MODELS]", error);
     return new NextResponse("Internal Error", { status: 500 });

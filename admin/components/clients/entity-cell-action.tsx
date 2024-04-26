@@ -21,7 +21,7 @@ type Props = {
     slug?: string;
   };
   endpoint: string;
-  type?: "general" | "product";
+  type?: "general" | "product"
 };
 
 const EntityCellAction = ({ entity, endpoint, type }: Props) => {

@@ -1,11 +1,14 @@
 "use client";
 
+import EntityCellAction from "@/components/clients/entity-cell-action";
 import { ColumnDef } from "@tanstack/react-table";
+import OrderCellAction from "./order-cell-action";
 
 export type OrderColumn = {
   id: number;
   name: string;
   phone: string;
+  email: string
   address: string;
   isPaid: boolean;
   totalPrice: string;
@@ -27,6 +30,10 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "Phone number",
   },
   {
+    accessorKey: "email",
+    header: "Email",
+  },
+  {
     accessorKey: "address",
     header: "Address",
   },
@@ -41,5 +48,14 @@ export const columns: ColumnDef<OrderColumn>[] = [
   {
     accessorKey: "createdAt",
     header: "Date",
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <OrderCellAction
+        endpoint="orders"
+        entity={row.original}
+      />
+    ),
   },
 ];

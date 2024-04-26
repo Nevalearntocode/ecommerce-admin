@@ -80,7 +80,7 @@ model Category {
   slug        String
   store       Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId     Int
-  billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Restrict)
+  billboard   Billboard @relation(fields: [billboardId], references: [id], onDelete: Cascade)
   billboardId Int
   products    Product[]
   createdAt   DateTime  @default(now())
@@ -118,13 +118,13 @@ model Product {
   storeId     Int
   category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   categoryId  Int
-  size        Size?       @relation(fields: [sizeId], references: [id], onDelete: Restrict)
+  size        Size?       @relation(fields: [sizeId], references: [id], onDelete: Cascade)
   sizeId      Int?
-  color       Color?      @relation(fields: [colorId], references: [id], onDelete: Restrict)
+  color       Color?      @relation(fields: [colorId], references: [id], onDelete: Cascade)
   colorId     Int?
-  model       Model?      @relation(fields: [modelId], references: [id], onDelete: Restrict)
+  model       Model?      @relation(fields: [modelId], references: [id], onDelete: Cascade)
   modelId     Int?
-  type        Type?       @relation(fields: [typeId], references: [id], onDelete: Restrict)
+  type        Type?       @relation(fields: [typeId], references: [id], onDelete: Cascade)
   typeId      Int?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -137,11 +137,12 @@ model Product {
 model Order {
   id         Int         @id @default(autoincrement())
   customer   String
-  store      Store       @relation(fields: [storeId], references: [id])
+  store      Store       @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId    Int
   orderItems OrderItem[]
   isPaid     Boolean     @default(false)
   phone      String      @default("")
+  email      String
   address    String      @default("")
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
@@ -149,9 +150,10 @@ model Order {
 
 model OrderItem {
   id        Int      @id @default(autoincrement())
-  order     Order    @relation(fields: [orderId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  quantity  Int      @default(1)
   orderId   Int
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -161,7 +163,7 @@ model Size {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   value     SizeValue
-  store     Store     @relation(fields: [storeId], references: [id])
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -174,7 +176,7 @@ model Color {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   value     String
-  store     Store     @relation(fields: [storeId], references: [id])
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -187,7 +189,7 @@ model Model {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   value     String
-  store     Store     @relation(fields: [storeId], references: [id])
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -200,7 +202,7 @@ model Type {
   id        Int       @id @default(autoincrement())
   name      String    @unique
   value     String
-  store     Store     @relation(fields: [storeId], references: [id])
+  store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId   Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

@@ -255,6 +255,9 @@ export async function GET(
           slug: categorySlug,
         },
       },
+      include: {
+        billboard: true
+      }
     });
 
     return NextResponse.json(category);

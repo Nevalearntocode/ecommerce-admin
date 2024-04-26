@@ -105,9 +105,8 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({
-      types: existingStore.types,
-    });
+    return NextResponse.json(existingStore.types);
+
   } catch (error) {
     console.log("[GET TYPES]", error);
     return new NextResponse("Internal Error", { status: 500 });

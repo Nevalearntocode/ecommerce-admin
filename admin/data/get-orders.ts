@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 
-export async function getStoreOrder(storeId: number) {
+export async function getStoreOrders(storeId: number) {
   const orders = await db.order.findMany({
     where: {
       storeId,
@@ -13,7 +13,7 @@ export async function getStoreOrder(storeId: number) {
       },
     },
     orderBy: {
-      createdAt: "desc",
+      isPaid: "asc",
     },
   });
 

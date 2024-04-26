@@ -10,7 +10,6 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from "next";
-import { DefaultUser } from "next-auth";
 
 
 export const authOptions: NextAuthOptions = {
@@ -71,6 +70,7 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  
 };
 
 export function auth(

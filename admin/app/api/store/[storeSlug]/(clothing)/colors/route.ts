@@ -114,9 +114,9 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({
-      colors: existingStore.colors,
-    });
+    return NextResponse.json(
+      existingStore.colors,
+    );
   } catch (error) {
     console.log("[POST COLOR]", error);
     return new NextResponse("Internal Error", { status: 500 });

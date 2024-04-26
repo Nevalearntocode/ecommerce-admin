@@ -24,7 +24,7 @@ type Props = {
 const OrderClient = ({ orders }: Props) => {
   const { setSearchInput, filteredItems: filteredOrders } = useFilter(
     orders,
-    "phone",
+    "customer",
   );
 
   const router = useRouter();
@@ -34,6 +34,7 @@ const OrderClient = ({ orders }: Props) => {
     return filteredOrders.map((order) => ({
       id: order.id,
       name: order.customer,
+      email: order.email,
       phone: order.phone,
       address: order.address,
       totalPrice: formatter.format(
@@ -42,7 +43,9 @@ const OrderClient = ({ orders }: Props) => {
         }, 0),
       ),
       isPaid: order.isPaid,
-      products: order.orderItems.map((item) => item.product.name).join(", "),
+      products: order.orderItems
+        .map((item) => `${item.quantity} ${item.product.name}`)
+        .join(", "),
       createdAt: format(order.createdAt, "h:mm MMMM do, yyyy"),
     }));
   }, [filteredOrders]);
@@ -56,13 +59,6 @@ const OrderClient = ({ orders }: Props) => {
             : `Orders (${orders.length})`
         }
         description="Manage your orders for your store"
-        actions={[
-          {
-            label: "Add new",
-            icon: <Plus className="mr-2 h-4 w-4" />,
-            onClick: () => router.push(`/${params.storeSlug}/orders/new`),
-          },
-        ]}
       />
       <Separator />
       {/* Search */}
@@ -70,7 +66,7 @@ const OrderClient = ({ orders }: Props) => {
         <SearchInput
           onChange={setSearchInput}
           component="order"
-          noName={true}
+          noName={false}
         />
       </div>
       <DataTable columns={columns} data={formattedOrders} />

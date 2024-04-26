@@ -1,5 +1,5 @@
 import NotPermitted from "@/components/mainpages/not-permitted";
-import { getStoreOrder } from "@/data/get-orders";
+import { getStoreOrders } from "@/data/get-orders";
 import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
 import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import React from "react";
@@ -24,7 +24,7 @@ const Orders = async ({ params }: Props) => {
     return <NotPermitted />;
   }
 
-  const orders = await getStoreOrder(staff.storeId)
+  const orders = await getStoreOrders(staff.storeId)
 
   return (
     <div className="flex-col">
