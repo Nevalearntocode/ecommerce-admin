@@ -23,13 +23,6 @@ export type StoreWithStaffs = Store & {
   staffs: Staff[];
 };
 
-export type StaffWithProfile = Staff & {
-  user: {
-    email: string;
-    name: string;
-  };
-};
-
 export type CategoryWithBillboard = Category & {
   billboard: Billboard;
 };
@@ -44,4 +37,16 @@ export type TechnologyProduct = Product & {
   model: Model | null;
   type: Type | null;
   category: Category;
+};
+
+export type StaffWithUser = Staff & {
+  user: {
+    name: string;
+    email: string;
+    image: string;
+  };
+};
+
+export type StaffWithStore = Staff & {
+  store: Store;
 };

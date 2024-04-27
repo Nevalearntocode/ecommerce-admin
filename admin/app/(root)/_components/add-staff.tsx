@@ -8,37 +8,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import useModal from "@/hooks/use-modal-store";
 import { useOrigin } from "@/hooks/use-origin";
-import { StoreWithStaffs } from "@/types";
+import { Staff, Store } from "@prisma/client";
 import axios from "axios";
 import { Check, Copy, RefreshCcw } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
 type Props = {
-  stores: StoreWithStaffs[];
-  userId: string;
+  currentStaff: Staff;
+  store: Store;
 };
 
-const AddStaff = ({ stores, userId }: Props) => {
+const AddStaff = ({ currentStaff, store }: Props) => {
+  const { open } = useModal();
   const [isCopy, setIsCopy] = useState<boolean>();
   const [dropDownMenuOpen, setdropDownMenuOpen] = useState(false);
   const router = useRouter();
-  const params = useParams();
   const origin = useOrigin();
-
-  if (!params.storeSlug) {
-    return null;
-  }
-
-  const store = stores.find((store) => store.slug === params.storeSlug);
 
   if (!store) {
     return null;
   }
-
-  const { staffs } = store;
 
   const onRefresh = async () => {
     try {
@@ -52,7 +45,18 @@ const AddStaff = ({ stores, userId }: Props) => {
     }
   };
 
-  const inviteSlug = `${origin}/${store?.slug}/staff/${store?.inviteCode}`;
+  const onLeaveStore = async () => {
+    try {
+      const res = await axios.delete(`/api/store/${store.slug}/staffs`);
+      toast.success(res.data.success);
+      router.push("/");
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.response.data);
+    }
+  };
+
+  const inviteSlug = `${origin}/${store?.slug}/staffs/${store?.inviteCode}`;
   const onCopy = () => {
     navigator.clipboard.writeText(inviteSlug);
     toast.success("Invite link copied.");
@@ -62,70 +66,83 @@ const AddStaff = ({ stores, userId }: Props) => {
     }, 10000);
   };
 
+  const deletePackage = {
+    confirmDelete: onLeaveStore,
+    headerDelete: "Leave store",
+    descriptionDelete: "Are you sure you want to leave this store?",
+  };
+
   return (
     <>
-      {store.userId !== userId && (
-        <Button variant={`destructive`}>Leave store</Button>
-      )}
-      {(staffs[0].isAdmin || store.userId === userId) && (
-        <DropdownMenu
-          open={dropDownMenuOpen}
-          onOpenChange={setdropDownMenuOpen}
-        >
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant={`outline`}
-              className="rounded-xl"
-              onClick={() => setdropDownMenuOpen(true)}
-            >
-              Add staff
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="">
-            <DropdownMenuLabel className="text-xs italic">
-              Send this link to your employee
-            </DropdownMenuLabel>
-            <div className="flex">
-              <Input
-                value={inviteSlug}
-                className="border-none focus-visible:ring-0 focus-visible:ring-offset-0"
-                readOnly={true}
-              />
-              {isCopy ? (
-                <Button
-                  size={`icon`}
-                  variant={`outline`}
-                  className="m-0 rounded-full border-none p-0"
-                  onClick={() => {
-                    toast.info(
-                      "Invite url is already copied into your clipboard.",
-                    );
-                  }}
-                >
-                  <Check className="h-4 w-4 text-emerald-500" />
-                </Button>
-              ) : (
-                <Button
-                  size={`icon`}
-                  variant={`outline`}
-                  className="m-0 rounded-full border-none p-0"
-                  onClick={onCopy}
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-              )}
+      <div className="flex gap-x-4">
+        {store.userId !== currentStaff.userId && (
+          <Button
+            variant={`destructive`}
+            className="h-10 md:h-12 md:w-28"
+            onClick={() => open("confirmDelete", { ...deletePackage })}
+          >
+            Leave store
+          </Button>
+        )}
+        {(currentStaff.isAdmin || store.userId === currentStaff.userId) && (
+          <DropdownMenu
+            open={dropDownMenuOpen}
+            onOpenChange={setdropDownMenuOpen}
+          >
+            <DropdownMenuTrigger asChild>
               <Button
-                size={`icon`}
-                variant={`outline`}
-                className="m-0 border-none p-0"
-                onClick={onRefresh}
+                className="h-10 rounded-xl md:h-12 md:w-28"
+                onClick={() => setdropDownMenuOpen(true)}
               >
-                <RefreshCcw className="h-4 w-4" />
+                Add staff
               </Button>
-            </div>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="">
+              <DropdownMenuLabel className="text-xs italic">
+                Send this link to your employee
+              </DropdownMenuLabel>
+              <div className="flex">
+                <Input
+                  value={inviteSlug}
+                  className="border-none focus-visible:ring-0 focus-visible:ring-offset-0"
+                  readOnly={true}
+                />
+                {isCopy ? (
+                  <Button
+                    size={`icon`}
+                    variant={`outline`}
+                    className="m-0 rounded-full border-none p-0"
+                    onClick={() => {
+                      toast.info(
+                        "Invite url is already copied into your clipboard.",
+                      );
+                    }}
+                  >
+                    <Check className="h-4 w-4 text-emerald-500" />
+                  </Button>
+                ) : (
+                  <Button
+                    size={`icon`}
+                    variant={`outline`}
+                    className="m-0 rounded-full border-none p-0"
+                    onClick={onCopy}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                )}
+                <Button
+                  size={`icon`}
+                  variant={`outline`}
+                  className="m-0 border-none p-0"
+                  onClick={onRefresh}
+                >
+                  <RefreshCcw className="h-4 w-4" />
+                </Button>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
     </>
   );
 };

@@ -1,6 +1,7 @@
+import { StaffWithStore, StaffWithUser } from "@/types";
 import { create } from "zustand";
 
-type ModalType = "profile" | "createStore" | "confirmDelete";
+type ModalType = "profile" | "createStore" | "confirmDelete" | "updateRole";
 
 type ModalData = {
   user?: {
@@ -9,8 +10,10 @@ type ModalData = {
     image: string;
   };
   confirmDelete?: () => void;
-  headerDelete?: string,
-  descriptionDelete?: string,
+  headerDelete?: string;
+  descriptionDelete?: string;
+  staff?: StaffWithUser;
+  currentStaff?: StaffWithStore;
 };
 
 type ModalStore = {

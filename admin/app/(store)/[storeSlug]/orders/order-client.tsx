@@ -27,9 +27,6 @@ const OrderClient = ({ orders }: Props) => {
     "customer",
   );
 
-  const router = useRouter();
-  const params = useParams();
-
   const formattedOrders: OrderColumn[] = useMemo(() => {
     return filteredOrders.map((order) => ({
       id: order.id,
@@ -39,7 +36,7 @@ const OrderClient = ({ orders }: Props) => {
       address: order.address,
       totalPrice: formatter.format(
         order.orderItems.reduce((total, item) => {
-          return (total = Number(item.product.price));
+          return (total += Number(item.product.price) * item.quantity);
         }, 0),
       ),
       isPaid: order.isPaid,

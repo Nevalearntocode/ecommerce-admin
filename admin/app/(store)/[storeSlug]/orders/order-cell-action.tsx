@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Check, MoreHorizontal, X } from "lucide-react";
 import { toast } from "sonner";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
 
@@ -26,11 +26,10 @@ type Props = {
 const OrderCellAction = ({ entity, endpoint }: Props) => {
   const { open, close } = useModal();
   const router = useRouter();
-  const params = useParams();
 
   const onPaid = async () => {
     try {
-      const url = `/api/store/${params.storeSlug}/${endpoint}/${entity.id}`;
+      const url = `/api/store/${endpoint}/${entity.id}`;
       const res = await axios.patch(url, {});
       toast.success(res.data.success);
       router.refresh();
@@ -43,7 +42,7 @@ const OrderCellAction = ({ entity, endpoint }: Props) => {
 
   const onDelete = async () => {
     try {
-      const url = `/api/store/${params.storeSlug}/${endpoint}/${entity.id}`;
+      const url = `/api/store/${endpoint}/${entity.id}`;
       const res = await axios.delete(url);
       toast.success(res.data.success);
       router.refresh();
@@ -87,9 +86,9 @@ const OrderCellAction = ({ entity, endpoint }: Props) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Action</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => toast.info("This transaction is already paid")}
+            onClick={() => toast.info("This transaction is already done.")}
           >
-            This transaction is already paid
+            This transaction is already done.
           </DropdownMenuItem>
         </DropdownMenuContent>
       )}

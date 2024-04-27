@@ -23,6 +23,7 @@ export type RouteType = {
 
 // Defines the possible permission names for staff members come from schema
 export type StaffPermissionName =
+  | "isAdmin"
   | "canManageStore"
   | "canManageCategory"
   | "canManageBillboard"
@@ -40,10 +41,17 @@ const MainNav = ({ stores, userId }: Props) => {
 
   const staff = existingStore.staffs[0];
 
+  if (!staff) {
+    return null;
+  }
+
+  const isOwner = existingStore.userId === userId;
+
   const isAdmin = staff.isAdmin || existingStore.userId === userId;
 
   // Define the hierarchy of permissions from highest to lowest access level
   const permissionHierarchy = [
+    "isAdmin",
     "canManageStore",
     "canManageCategory",
     "canManageBillboard",
@@ -62,6 +70,12 @@ const MainNav = ({ stores, userId }: Props) => {
       label: "Settings",
       active: pathname === `/${params.storeSlug}/settings`,
       requireAdminOrPermission: "canManageStore",
+    },
+    {
+      href: `/${params.storeSlug}/staffs`,
+      label: "Staffs",
+      active: pathname === `/${params.storeSlug}/staffs`,
+      requireAdminOrPermission: "canManageProduct",
     },
     {
       href: `/${params.storeSlug}/billboards`,
@@ -150,7 +164,7 @@ const MainNav = ({ stores, userId }: Props) => {
         {routes.map((route) => {
           // Check if the user is not an admin and the route requires a specific permission
           if (
-            !isAdmin &&
+            !isOwner &&
             route.requireAdminOrPermission &&
             // Check if the staff member doesn't have the required permission or any higher permission
             !permissionHierarchy

@@ -40,6 +40,7 @@ const Invite = async ({ params }: Props) => {
       staffs: {
         create: {
           userId: user.id,
+          canManageProduct: true,
         },
       },
     },
