@@ -21,7 +21,8 @@ type Props = {
 };
 
 const roleIconMap = {
-  Admin: "👑",
+  Owner: "👑",
+  Admin: "🔒",
   Manager: "👔",
   "Category Manager": "📦",
   "Billboard Manager": "📸",
@@ -30,7 +31,6 @@ const roleIconMap = {
 };
 
 const StaffCard = ({ staff, currentStaff }: Props) => {
-
   return (
     <Card className="flex flex-col justify-between">
       <CardHeader>
@@ -51,21 +51,40 @@ const StaffCard = ({ staff, currentStaff }: Props) => {
         <CardTitle>
           {staff.user.name === "" ? staff.user.email : staff.user.name}
         </CardTitle>
-        {staff.user.name !== "" && (
-          <CardDescription>{staff.user.email}</CardDescription>
+        {(isOwner(currentStaff.userId, currentStaff.store.userId) ||
+          canManageStaff(currentStaff)) && (
+          <div>
+            {staff.user.name !== "" && (
+              <CardDescription>{staff.user.email}</CardDescription>
+            )}
+          </div>
         )}
       </CardHeader>
       <CardContent className="flex justify-between">
         <div className="flex flex-col">
           <p className="text-zinc-400">
-            Role {roleIconMap[getHighestRole(staff)]}
+            Role{" "}
+            {
+              roleIconMap[
+                isOwner(staff.userId, currentStaff.store.userId)
+                  ? "Owner"
+                  : getHighestRole(staff)
+              ]
+            }
           </p>
-          <p className="">{getHighestRole(staff)}</p>
+          <p className="">
+            {isOwner(staff.userId, currentStaff.store.userId)
+              ? "Owner"
+              : getHighestRole(staff)}
+          </p>
         </div>
-        <div className="flex flex-col">
-          <p className="text-zinc-400">Hire date</p>
-          <p className="">{format(staff.createdAt, "dd/MM/yy")}</p>
-        </div>
+        {(isOwner(currentStaff.userId, currentStaff.store.userId) ||
+          canManageStaff(currentStaff)) && (
+          <div className="flex flex-col">
+            <p className="text-zinc-400">Hire date</p>
+            <p className="">{format(staff.createdAt, "dd/MM/yy")}</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

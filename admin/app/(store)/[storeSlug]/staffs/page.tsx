@@ -25,7 +25,10 @@ const Staffs = async ({ params }: Props) => {
     );
   }
 
-  if (!canManageProduct(currentStaff)) {
+  if (
+    !canManageProduct(currentStaff) &&
+    !isOwner(currentStaff.userId, currentStaff.store.userId)
+  ) {
     return <NotPermitted />;
   }
 

@@ -22,9 +22,5 @@ export default async function getCurrentUser() {
     },
   });
 
-  if (!user) {
-    return null;
-  }
-
   return user;
 }

@@ -47,7 +47,7 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json({ message: "Staff role removed" });
+    return NextResponse.json({ success: "You have left the store." });
 
   } catch (error) {
     console.log("[STAFF ROLES]", error);

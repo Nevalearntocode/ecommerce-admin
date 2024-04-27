@@ -23,7 +23,7 @@ type Props = {
 };
 
 const AddStaff = ({ currentStaff, store }: Props) => {
-  const { open } = useModal();
+  const { open, close } = useModal();
   const [isCopy, setIsCopy] = useState<boolean>();
   const [dropDownMenuOpen, setdropDownMenuOpen] = useState(false);
   const router = useRouter();
@@ -49,7 +49,9 @@ const AddStaff = ({ currentStaff, store }: Props) => {
     try {
       const res = await axios.delete(`/api/store/${store.slug}/staffs`);
       toast.success(res.data.success);
+      close();
       router.push("/");
+      router.refresh();
     } catch (error: any) {
       console.log(error);
       toast.error(error.response.data);

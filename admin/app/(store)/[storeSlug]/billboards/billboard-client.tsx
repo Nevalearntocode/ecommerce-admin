@@ -18,12 +18,16 @@ import SearchInput from "@/components/clients/search";
 import GeneralCard from "@/components/clients/general-card";
 import usePagination from "@/hooks/use-pagination";
 import NoResults from "@/components/clients/no-results";
+import useStore from "@/hooks/use-store";
 
 type Props = {
   billboards: Billboard[];
 };
 
 const BillboardClient = ({ billboards }: Props) => {
+  const user = useStore((state) => state.user);
+  console.log(user)
+
   const { viewState, handleCardViewClick, handleDatatableViewClick } =
     useDefaultView("billboardView", "card");
   const { setSearchInput, filteredItems: filteredBillboards } = useFilter(
