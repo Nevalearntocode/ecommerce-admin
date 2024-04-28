@@ -11,7 +11,6 @@ import {
   NextApiResponse,
 } from "next";
 
-
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(db) as Adapter,
   session: {
@@ -59,7 +58,7 @@ export const authOptions: NextAuthOptions = {
 
         const isCorrectPassword = await bcrypt.compare(
           password,
-          user.hashedPassword
+          user.hashedPassword,
         );
 
         if (!isCorrectPassword) {
@@ -70,7 +69,9 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  
+  pages: {
+    signIn: "/login",
+  },
 };
 
 export function auth(
