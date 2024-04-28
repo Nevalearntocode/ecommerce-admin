@@ -44,13 +44,13 @@ const UpdateRoleModal = (props: Props) => {
   });
   useEffect(() => {
     if (data && data.staff) {
-      form.setValue("isAdmin", staff.isAdmin);
-      form.setValue("canManageStore", staff.canManageStore);
-      form.setValue("canManageCategory", staff.canManageCategory);
-      form.setValue("canManageBillboard", staff.canManageBillboard || false);
-      form.setValue("canManageProduct", staff.canManageProduct);
+      form.setValue("isAdmin", data.staff.isAdmin);
+      form.setValue("canManageStore", data.staff.canManageStore);
+      form.setValue("canManageCategory", data.staff.canManageCategory);
+      form.setValue("canManageBillboard", data.staff.canManageBillboard || false);
+      form.setValue("canManageProduct", data.staff.canManageProduct);
     }
-  }, [data?.staff, form]);
+  }, [data, form]);
 
   if (!data || !data.staff || !data.currentStaff) {
     return null;
@@ -211,7 +211,7 @@ const UpdateRoleModal = (props: Props) => {
               </div>
             </div>
             <div className="flex w-full">
-              <Button type="submit" className="ml-auto flex">
+              <Button type="submit" className="ml-auto flex" disabled={isLoading}>
                 Confirm
               </Button>
             </div>
