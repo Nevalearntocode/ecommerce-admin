@@ -50,11 +50,8 @@ export async function POST(req: Request) {
         image: true,
         createdAt: true,
         updatedAt: true,
-        
       },
     });
-
-    console.log(newUser);
 
     return NextResponse.json({
       success: "Account created",

@@ -59,7 +59,7 @@ const CreateStoreModal = (props: Props) => {
   const isModalOpen = type === "createStore" && isOpen;
   const router = useRouter();
 
-  const [step, setStep] = useState<STEPS>(STEPS.IMAGE);
+  const [step, setStep] = useState<STEPS>(STEPS.INFO);
 
   const onBack = () => {
     setStep(STEPS.INFO);
@@ -189,7 +189,7 @@ const CreateStoreModal = (props: Props) => {
               </>
             )}
             {step === STEPS.IMAGE && (
-              <div className="h-auto min-h-[400px]">
+              <div className="">
                 <FormField
                   control={form.control}
                   name="image"

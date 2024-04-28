@@ -1,10 +1,18 @@
 import React from "react";
 import Image from "next/image";
 import LoginForm from "./login-form";
+import getCurrentUser from "@/data/get-current-user";
+import { redirect } from "next/navigation";
 
 type Props = {};
 
-const Login = (props: Props) => {
+const Login = async (props: Props) => {
+  const user = await getCurrentUser();
+
+  if (user) {
+    return redirect(`/`);
+  }
+
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="flex w-[380px] flex-col gap-y-8 pb-8 pt-8 lg:w-[540px] lg:px-20 xl:mr-auto xl:h-full xl:w-[30%] xl:justify-center xl:border-2">
