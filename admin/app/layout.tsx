@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ModalProvider from "@/components/providers/modal-provider";
 import Navbar from "./(root)/_components/navbar";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar />
-        <Toaster />
-        <ModalProvider />
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="light">
+          <Navbar />
+          <Toaster />
+          <ModalProvider />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

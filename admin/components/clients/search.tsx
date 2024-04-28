@@ -14,7 +14,7 @@ const SearchInput = ({ onChange, component, noName }: Props) => {
     <div className="relative">
       <Input
         onChange={(e) => onChange(e.target.value)}
-        placeholder={`Search ${component} by ${noName ? "phone number" : "name"}...`}
+        placeholder={`Search ${component} by ${noName ? "role" : "name"}...`}
       />
       <Button
         className="absolute right-0 top-0 rounded-full"

@@ -43,10 +43,9 @@ const HeaderWithActions = ({
                 size={`icon`}
                 className={cn(
                   "flex items-center justify-center",
-                  viewState === "card" && "bg-black/15",
+                  viewState === "card" && "bg-black/15 dark:bg-white/15",
                 )}
               >
-                {/* Replace with your Image icon component */}
                 <ImageIcon className="h-1/2 w-1/2" />
               </Button>
             </ActionTooltip>
@@ -57,10 +56,9 @@ const HeaderWithActions = ({
                 size={`icon`}
                 className={cn(
                   "flex items-center justify-center",
-                  viewState === "datatable" && "bg-black/15",
+                  viewState === "datatable" && "bg-black/15 dark:bg-white/15",
                 )}
               >
-                {/* Replace with your Table icon component */}
                 <Table className="h-1/2 w-1/2" />
               </Button>
             </ActionTooltip>

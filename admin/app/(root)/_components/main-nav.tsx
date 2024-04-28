@@ -6,7 +6,6 @@ import { StoreWithStaffs } from "@/types";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import React from "react";
 import MobileNav from "./mobile-nav";
 
 type Props = {

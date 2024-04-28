@@ -20,7 +20,7 @@ type Props = {
   currentStaff: StaffWithStore;
 };
 
-const roleIconMap = {
+export const roleIconMap = {
   Owner: "👑",
   Admin: "🔒",
   Manager: "👔",

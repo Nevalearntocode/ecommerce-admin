@@ -93,7 +93,7 @@ const UpdateRoleModal = (props: Props) => {
                   control={form.control}
                   name="canManageProduct"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-2">
                       <div className="space-y-0.5">
                         <FormLabel className="text-base">
                           Manage Products
@@ -115,7 +115,7 @@ const UpdateRoleModal = (props: Props) => {
                   control={form.control}
                   name="canManageBillboard"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-2">
                       <div className="space-y-0.5">
                         <FormLabel className="text-base">
                           Manage Billboards
@@ -137,7 +137,7 @@ const UpdateRoleModal = (props: Props) => {
                   control={form.control}
                   name="canManageCategory"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-2">
                       <div className="space-y-0.5">
                         <FormLabel className="text-base">
                           Manage Categories
@@ -160,18 +160,16 @@ const UpdateRoleModal = (props: Props) => {
                   control={form.control}
                   name="canManageStore"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-red-100 p-4 text-red-700">
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-red-100 p-2 text-red-700">
                       <div className="space-y-0.5">
                         <FormLabel className="text-base">
                           Manage stores (Caution!)
                         </FormLabel>
                         <FormDescription>
-                          Edit stores and grant all access to categories,
-                          billboards, products.
+                          Edit stores and grant all access from previous roles.
                         </FormDescription>
                         <FormDescription>
-                          **Use with caution:** Allows permanent deletion of
-                          categories.
+                          !! Allows permanent deletion of categories.
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -188,15 +186,16 @@ const UpdateRoleModal = (props: Props) => {
                     control={form.control}
                     name="isAdmin"
                     render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-red-100 p-4 text-red-700">
+                      <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-red-100 p-2 text-red-700">
                         <div className="space-y-0.5">
                           <FormLabel className="text-base">
                             Admin (Caution!)
                           </FormLabel>
-                          <FormDescription>Grant full access</FormDescription>
                           <FormDescription>
-                            **Use with caution:** Allows permanent deletion of
-                            categories.
+                            Grant full access + manage staffs
+                          </FormDescription>
+                          <FormDescription>
+                            !! Allows permanent deletion of categories.
                           </FormDescription>
                         </div>
                         <FormControl>
@@ -212,17 +211,6 @@ const UpdateRoleModal = (props: Props) => {
               </div>
             </div>
             <div className="flex w-full">
-              <Button
-                type="submit"
-                className="mr-auto flex"
-                variant={`destructive`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  console.log("delete");
-                }}
-              >
-                Remove staff
-              </Button>
               <Button type="submit" className="ml-auto flex">
                 Confirm
               </Button>

@@ -10,6 +10,7 @@ export const getStockCount = async (storeId: number) => {
       isArchived: false,
     },
     select: {
+      slug: true,
       name: true,
       stock: true,
     },
