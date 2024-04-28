@@ -26,6 +26,7 @@ export default withAuth(
     },
     pages: {
       signIn: "/login",
+      newUser: "/",
     },
   },
 );
