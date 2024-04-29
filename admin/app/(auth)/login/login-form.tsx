@@ -46,7 +46,7 @@ const LoginForm = (props: Props) => {
     signIn("credentials", { ...data, redirect: false }).then((callback) => {
       if (callback?.ok) {
         toast.success("Welcome back!");
-        router.refresh();
+        router.push(`/`);
       }
 
       if (callback?.error) {

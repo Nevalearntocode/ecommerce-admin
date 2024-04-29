@@ -1,19 +1,31 @@
 import { withAuth } from "next-auth/middleware";
 
-export default withAuth(function middleware(req) {}, {
-  secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    authorized({ req, token }) {
-      if (req.nextUrl.pathname.startsWith(`/api/uploadthing`)) return true;
-      if (token) return true;
-      return false;
-    },
-  },
+export default withAuth({
   pages: {
     signIn: "/login",
   },
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    "/",
+    "/:path",
+    "/:path/settings",
+    "/:path/staffs",
+    "/:path/billboards",
+    "/:path/billboards/:path",
+    "/:path/categories",
+    "/:path/categories/:path",
+    "/:path/products",
+    "/:path/products/:path",
+    "/:path/orders",
+    "/:path/sizes",
+    "/:path/sizes/:path",
+    "/:path/colors",
+    "/:path/colors/:path",
+    "/:path/models",
+    "/:path/models/:path",
+    "/:path/types",
+    "/:path/types/:path",
+  ],
 };

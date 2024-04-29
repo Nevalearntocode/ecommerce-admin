@@ -69,7 +69,7 @@ const RegisterForm = (props: Props) => {
           email: data.email,
           password: data.password,
           redirect: false,
-        }).then(() => router.refresh());
+        }).then(() => router.push(`/`));
       }
       toast.success("Welcome!");
     } catch (error: any) {
