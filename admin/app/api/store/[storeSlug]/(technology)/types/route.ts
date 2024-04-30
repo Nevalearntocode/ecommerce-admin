@@ -65,7 +65,6 @@ export async function POST(
 
     return NextResponse.json({ success: "Type created.", newType });
   } catch (error) {
-    console.log("[POST TYPE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -106,9 +105,7 @@ export async function GET(
     }
 
     return NextResponse.json(existingStore.types);
-
   } catch (error) {
-    console.log("[GET TYPES]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -34,34 +34,52 @@ export async function POST(req: Request) {
 
     // Check if products is an array
     if (!Array.isArray(products) || products.length === 0) {
-      return new NextResponse("Invalid request. Products must be a non-empty array.", { status: 400 });
+      return new NextResponse(
+        "Invalid request. Products must be a non-empty array.",
+        { status: 400 },
+      );
     }
 
     // Check if storeId is a valid number
     if (isNaN(Number(storeId))) {
-      return new NextResponse("Invalid request. Store ID must be a valid number.", { status: 400 });
+      return new NextResponse(
+        "Invalid request. Store ID must be a valid number.",
+        { status: 400 },
+      );
     }
 
     // Check if name is a non-empty string
     if (typeof name !== "string" || name.trim() === "") {
-      return new NextResponse("Invalid request. Name must be a non-empty string.", { status: 400 });
+      return new NextResponse(
+        "Invalid request. Name must be a non-empty string.",
+        { status: 400 },
+      );
     }
 
     // Check if email is a valid email address
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      return new NextResponse("Invalid request. Email must be a valid email address.", { status: 400 });
+      return new NextResponse(
+        "Invalid request. Email must be a valid email address.",
+        { status: 400 },
+      );
     }
 
     // Check if phone is a valid phone number
     const phoneRegex = /^\d{10}$/;
     if (!phoneRegex.test(phone)) {
-      return new NextResponse("Invalid request. Phone must be a 10-digit number.", { status: 400 });
+      return new NextResponse(
+        "Invalid request. Phone must be a 10-digit number.",
+        { status: 400 },
+      );
     }
 
     // Check if address is a non-empty string
     if (typeof address !== "string" || address.trim() === "") {
-      return new NextResponse("Invalid request. Address must be a non-empty string.", { status: 400 });
+      return new NextResponse(
+        "Invalid request. Address must be a non-empty string.",
+        { status: 400 },
+      );
     }
 
     const order = await db.order.create({
@@ -89,7 +107,6 @@ export async function POST(req: Request) {
       { headers: corsHeaders },
     );
   } catch (error) {
-    console.log("[POST ORDERS]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

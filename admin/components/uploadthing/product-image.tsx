@@ -49,7 +49,6 @@ const ProductImage = ({ onUpload, value, endpoint, onRemove }: Props) => {
       <UploadDropzone
         endpoint={endpoint}
         onClientUploadComplete={(res) => onUpload(res?.[0].url, "upload")}
-        // add toast later
         onUploadError={(error: Error) => console.log(error)}
         className="group mb-4 mt-0 w-full cursor-pointer pt-0"
       />

@@ -97,7 +97,6 @@ export async function PATCH(
       billboard: newBillboard,
     });
   } catch (error) {
-    console.log("[BILLBOARD PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -159,7 +158,6 @@ export async function DELETE(
 
     return NextResponse.json({ success: "Billboard deleted." });
   } catch (error) {
-    console.log("[BILLBOARD DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -183,7 +181,6 @@ export async function GET(
 
     return NextResponse.json(billboard);
   } catch (error: any) {
-    console.log("[GET BILLBOARD BY ID]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

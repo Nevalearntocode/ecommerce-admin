@@ -118,7 +118,6 @@ export async function PATCH(
       newStore,
     });
   } catch (error) {
-    console.log("[STORE_PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -173,7 +172,6 @@ export async function DELETE(
       success: "Store deleted.",
     });
   } catch (error) {
-    console.log("[STORE_DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -199,7 +197,6 @@ export async function GET(
 
     return NextResponse.json(store);
   } catch (error: any) {
-    console.log("[GET STORE]", error);
     return new NextResponse("Internal Eror", { status: 500 });
   }
 }

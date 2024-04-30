@@ -35,7 +35,9 @@ export async function DELETE(
     }
 
     if (!existingStore.staffs.length) {
-      return new NextResponse("You are not a staff of this store", { status: 403 });
+      return new NextResponse("You are not a staff of this store", {
+        status: 403,
+      });
     }
 
     const staff = existingStore.staffs[0];
@@ -48,9 +50,7 @@ export async function DELETE(
     });
 
     return NextResponse.json({ success: "You have left the store." });
-
   } catch (error) {
-    console.log("[STAFF ROLES]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

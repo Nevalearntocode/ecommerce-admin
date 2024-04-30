@@ -20,7 +20,6 @@ export async function GET(
 
     return NextResponse.json(store);
   } catch (error: any) {
-    console.log("[GET STORE BY ID]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

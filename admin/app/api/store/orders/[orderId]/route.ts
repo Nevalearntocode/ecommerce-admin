@@ -103,12 +103,10 @@ export async function PATCH(
       order: updatedOrder,
     });
   } catch (error: any) {
-    console.log("[ORDER PATCH]", error);
     return new NextResponse(error.message, { status: 500 });
   }
 }
 
-// write a DELETE request to cancel an order
 export async function DELETE(
   req: Request,
   { params }: { params: { orderId: string } },
@@ -177,7 +175,6 @@ export async function DELETE(
       success: "Order has been canceled.",
     });
   } catch (error) {
-    console.log("[ORDER DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

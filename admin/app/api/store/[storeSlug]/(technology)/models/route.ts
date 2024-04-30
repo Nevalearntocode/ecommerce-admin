@@ -65,7 +65,6 @@ export async function POST(
 
     return NextResponse.json({ success: "Model created.", newModel });
   } catch (error) {
-    console.log("[POST MODEL]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -107,7 +106,6 @@ export async function GET(
 
     return NextResponse.json(existingStore.models);
   } catch (error) {
-    console.log("[GET MODELS]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

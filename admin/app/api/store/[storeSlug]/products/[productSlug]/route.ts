@@ -337,7 +337,6 @@ export async function PATCH(
 
     return new NextResponse("Something went wrong.", { status: 500 });
   } catch (error) {
-    console.log("[UPDATE PRODUCT]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -410,7 +409,6 @@ export async function DELETE(
       success: "Product deleted.",
     });
   } catch (error) {
-    console.log("[PRODUCT DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -475,7 +473,6 @@ export async function GET(
 
     return new NextResponse("Something went wrong", { status: 500 });
   } catch (error) {
-    console.log("[GET PRODUCT]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

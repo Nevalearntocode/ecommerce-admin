@@ -58,7 +58,6 @@ export async function POST(req: Request) {
       newUser,
     });
   } catch (error) {
-    console.log("[REGISTER]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

@@ -54,7 +54,6 @@ export async function PATCH(
       success: "New invite link generated.",
     });
   } catch (error) {
-    console.log("[NEW INVITE CODE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

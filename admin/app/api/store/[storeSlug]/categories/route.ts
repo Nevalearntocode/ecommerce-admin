@@ -112,7 +112,6 @@ export async function POST(
       category,
     });
   } catch (error) {
-    console.log("[CREATE CATEGORY]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -135,7 +134,7 @@ export async function GET(
       include: {
         categories: {
           include: {
-            billboard: true
+            billboard: true,
           },
           orderBy: {
             createdAt: "desc",
@@ -150,7 +149,6 @@ export async function GET(
 
     return NextResponse.json(existingStore.categories);
   } catch (error: any) {
-    console.log("[GET CATEGORIES]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

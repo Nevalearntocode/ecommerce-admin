@@ -74,7 +74,6 @@ export async function POST(
 
     return NextResponse.json({ success: "Color created.", newColor });
   } catch (error) {
-    console.log("[POST COLOR]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -114,11 +113,8 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(
-      existingStore.colors,
-    );
+    return NextResponse.json(existingStore.colors);
   } catch (error) {
-    console.log("[POST COLOR]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

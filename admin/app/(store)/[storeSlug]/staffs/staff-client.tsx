@@ -36,7 +36,6 @@ const StaffClient = ({ staffs, currentStaff }: Props) => {
     }
 
     if (role && !name) {
-      console.log(role);
       return isOwner(staff.userId, currentStaff.store.userId)
         ? "Owner"
         : getHighestRole(staff).toLowerCase() === role.toLowerCase();

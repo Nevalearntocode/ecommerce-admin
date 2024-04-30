@@ -75,7 +75,6 @@ export async function PATCH(
       type: newType,
     });
   } catch (error) {
-    console.log("[TYPE PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -134,7 +133,6 @@ export async function DELETE(
       success: "Type deleted.",
     });
   } catch (error) {
-    console.log("[TYPE DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -155,7 +153,6 @@ export async function GET(
 
     return NextResponse.json(type);
   } catch (error) {
-    console.log("[GET TYPE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

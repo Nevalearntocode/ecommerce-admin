@@ -23,7 +23,6 @@ const ProductStock = ({ children, products }: Props) => {
   const router = useRouter();
 
   const onClick = (slug: string) => {
-    console.log(slug);
     router.push(`/${params.storeSlug}/products/${slug}`);
   };
 

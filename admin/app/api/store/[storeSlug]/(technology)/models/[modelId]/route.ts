@@ -75,7 +75,6 @@ export async function PATCH(
       model: newModel,
     });
   } catch (error) {
-    console.log("[MODEL PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -131,7 +130,6 @@ export async function DELETE(
       success: "Model deleted.",
     });
   } catch (error) {
-    console.log("[MODEL DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -152,7 +150,6 @@ export async function GET(
 
     return NextResponse.json(model);
   } catch (error) {
-    console.log("[GET MODEL]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

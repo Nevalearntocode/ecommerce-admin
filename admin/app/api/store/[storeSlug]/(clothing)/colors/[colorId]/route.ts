@@ -80,7 +80,6 @@ export async function PATCH(
       color: newColor,
     });
   } catch (error) {
-    console.log("[COLOR PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -137,7 +136,6 @@ export async function DELETE(
       success: "Color deleted.",
     });
   } catch (error) {
-    console.log("[COLOR DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -158,7 +156,6 @@ export async function GET(
 
     return NextResponse.json(color);
   } catch (error) {
-    console.log("[POST COLOR]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

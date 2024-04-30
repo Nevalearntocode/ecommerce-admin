@@ -225,7 +225,6 @@ export async function POST(
 
     return new NextResponse("Something went wrong.", { status: 500 });
   } catch (error) {
-    console.log("[CREATE PRODUCT]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -322,7 +321,6 @@ export async function GET(
 
     return new NextResponse("Something went wrong", { status: 500 });
   } catch (error) {
-    console.log("[GET PRODUCTS]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

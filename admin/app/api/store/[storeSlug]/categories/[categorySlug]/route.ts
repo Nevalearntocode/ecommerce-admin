@@ -155,7 +155,6 @@ export async function PATCH(
       category,
     });
   } catch (error) {
-    console.log("[UPDATE CATEGORY]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -218,7 +217,6 @@ export async function DELETE(
 
     return NextResponse.json({ success: "Category deleted." });
   } catch (error) {
-    console.log("[DELETE CATEGORY]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -256,13 +254,12 @@ export async function GET(
         },
       },
       include: {
-        billboard: true
-      }
+        billboard: true,
+      },
     });
 
     return NextResponse.json(category);
   } catch (error) {
-    console.log("[GET CATEGORY]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

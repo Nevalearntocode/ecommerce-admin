@@ -58,7 +58,6 @@ const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
         <UploadDropzone
           endpoint={endpoint}
           onClientUploadComplete={(res) => onChange(res?.[0].url)}
-          // add toast later
           onUploadError={(error: Error) => console.log(error)}
           className="group mb-4 mt-0 w-full cursor-pointer pt-0"
         />
@@ -67,7 +66,6 @@ const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
         <UploadButton
           endpoint={endpoint}
           onClientUploadComplete={(res) => onChange(res?.[0].url)}
-          // add toast later
           onUploadError={(error: Error) => console.log(error)}
           className="group mb-4 h-[70%] cursor-pointer"
         />

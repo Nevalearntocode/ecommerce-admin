@@ -31,7 +31,6 @@ export async function PATCH(req: Request) {
       updatedUser,
     });
   } catch (error) {
-    console.log("[PATCH_PROFILE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

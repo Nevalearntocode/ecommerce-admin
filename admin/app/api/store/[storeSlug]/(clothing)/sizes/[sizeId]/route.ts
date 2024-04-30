@@ -77,7 +77,6 @@ export async function PATCH(
       size: newSize,
     });
   } catch (error) {
-    console.log("[SIZE PATCH]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -134,7 +133,6 @@ export async function DELETE(
       success: "Size deleted.",
     });
   } catch (error) {
-    console.log("[SIZE DELETE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -155,7 +153,6 @@ export async function GET(
 
     return NextResponse.json(size);
   } catch (error) {
-    console.log("[GET SIZE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

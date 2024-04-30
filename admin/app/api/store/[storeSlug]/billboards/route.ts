@@ -80,7 +80,6 @@ export async function POST(
       billboard: billboard,
     });
   } catch (error) {
-    console.log("[CREATE BILLBOARD]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -115,7 +114,6 @@ export async function GET(
 
     return NextResponse.json({ billboards: existingStore.billboards });
   } catch (error: any) {
-    console.log("[GET BILLBOARDS]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

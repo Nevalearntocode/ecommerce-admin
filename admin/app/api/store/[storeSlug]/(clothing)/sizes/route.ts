@@ -67,7 +67,6 @@ export async function POST(
 
     return NextResponse.json({ success: "Size created.", newSize });
   } catch (error) {
-    console.log("[POST SIZE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }
@@ -109,7 +108,6 @@ export async function GET(
 
     return NextResponse.json(existingStore.sizes);
   } catch (error) {
-    console.log("[POST SIZE]", error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 }

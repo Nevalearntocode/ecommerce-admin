@@ -83,8 +83,7 @@ export async function POST(req: Request) {
       newStore,
     });
   } catch (error) {
-    console.log("[CREATE_STORE]", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    new NextResponse("Internal Error", { status: 500 });
   }
 }
 
@@ -97,15 +96,14 @@ export async function GET(req: Request) {
             billboard: true,
           },
           orderBy: {
-            updatedAt: "desc"
-          }
+            updatedAt: "desc",
+          },
         },
       },
     });
 
     return NextResponse.json(stores);
   } catch (error) {
-    console.log("[GET STORES]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
