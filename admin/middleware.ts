@@ -21,13 +21,13 @@ export default auth((req) => {
 
   if (isAuthRoute) {
     if (isLoggedin) {
-      return Response.redirect(new URL(`/`, nextUrl));
+      return Response.redirect(new URL(`/`, req.url));
     }
     return;
   }
 
   if (!isLoggedin && !isUploadthingRoute) {
-    return Response.redirect(new URL(`/login`, nextUrl));
+    return Response.redirect(new URL(`/login`, req.url));
   }
 
   return;
