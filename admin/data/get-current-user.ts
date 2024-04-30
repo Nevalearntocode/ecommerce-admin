@@ -1,4 +1,4 @@
-import { auth } from "@/app/api/auth/[...nextauth]/options";
+import { auth } from "@/auth";
 import { db } from "../lib/db";
 
 export default async function getCurrentUser() {

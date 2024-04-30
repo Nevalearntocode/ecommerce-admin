@@ -21,7 +21,7 @@ type Props = {
     slug?: string;
   };
   endpoint: string;
-  type?: "general" | "product"
+  type?: "general" | "product";
 };
 
 const EntityCellAction = ({ entity, endpoint, type }: Props) => {
@@ -45,7 +45,6 @@ const EntityCellAction = ({ entity, endpoint, type }: Props) => {
       router.refresh();
       close();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };

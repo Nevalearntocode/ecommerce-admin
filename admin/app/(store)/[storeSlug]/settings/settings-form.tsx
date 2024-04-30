@@ -79,7 +79,6 @@ const SettingsForm = ({ store, isOwner }: Props) => {
       router.push(`/${generateSlug({ ...data })}/settings`);
       router.refresh();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };
@@ -92,7 +91,6 @@ const SettingsForm = ({ store, isOwner }: Props) => {
       router.refresh();
       close();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };

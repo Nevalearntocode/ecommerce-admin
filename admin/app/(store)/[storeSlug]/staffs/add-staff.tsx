@@ -53,7 +53,6 @@ const AddStaff = ({ currentStaff, store }: Props) => {
       router.push("/");
       router.refresh();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };

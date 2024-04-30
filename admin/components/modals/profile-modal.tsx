@@ -65,7 +65,6 @@ const ProfileModal = (props: Props) => {
       toast.success(res.data.success);
       router.refresh();
     } catch (error: any) {
-      console.log(error);
       toast.error("something went wrong");
     }
   };

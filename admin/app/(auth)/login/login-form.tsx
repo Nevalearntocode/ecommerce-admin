@@ -14,9 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 type Props = {};
 
@@ -50,7 +50,7 @@ const LoginForm = (props: Props) => {
       }
 
       if (callback?.error) {
-        toast.error(callback.error);
+        toast.error("Invalid email or password.");
       }
     });
   };
@@ -68,7 +68,11 @@ const LoginForm = (props: Props) => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="johndoe@email.com" {...field} />
+                <Input
+                  disabled={isLoading}
+                  placeholder="johndoe@email.com"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -81,7 +85,12 @@ const LoginForm = (props: Props) => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="password" {...field} />
+                <Input
+                  disabled={isLoading}
+                  placeholder="******"
+                  type="password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -90,6 +99,7 @@ const LoginForm = (props: Props) => {
         <div className="mt-4 flex w-full flex-col gap-y-6">
           <Button className="w-full">Login</Button>
           <Button
+            disabled={isLoading}
             className="w-full"
             variant={`outline`}
             onClick={(e) => {

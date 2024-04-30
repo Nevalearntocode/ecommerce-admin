@@ -21,18 +21,19 @@ type Props = {
 
 const StaffCardAction = ({ currentStaff, staff }: Props) => {
   const { open } = useModal();
-  const router = useRouter()
+  const router = useRouter();
 
   const onDelete = async () => {
     try {
-      const res = await axios.delete(`/api/store/${currentStaff.store.slug}/staffs/${staff.id}`);
+      const res = await axios.delete(
+        `/api/store/${currentStaff.store.slug}/staffs/${staff.id}`,
+      );
       toast.success(res.data.success);
       router.refresh();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
-  }
+  };
 
   const deletePackage = {
     confirmDelete: onDelete,
@@ -55,7 +56,9 @@ const StaffCardAction = ({ currentStaff, staff }: Props) => {
           <Edit className="mr-2 h-4 w-4" />
           Update
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => open("confirmDelete", {...deletePackage})}>
+        <DropdownMenuItem
+          onClick={() => open("confirmDelete", { ...deletePackage })}
+        >
           <Trash className="mr-2 h-4 w-4 text-rose-500" />
           Remove
         </DropdownMenuItem>

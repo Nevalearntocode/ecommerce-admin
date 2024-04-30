@@ -61,7 +61,6 @@ const TypeForm = ({ type }: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    console.log(data);
     if (type && type.name === data.name && type.value === data.value) {
       toast.info("Type has not changed.");
       return;
@@ -99,7 +98,6 @@ const TypeForm = ({ type }: Props) => {
       router.refresh();
       close();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };

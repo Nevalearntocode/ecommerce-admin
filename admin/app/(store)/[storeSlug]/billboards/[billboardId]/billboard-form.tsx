@@ -104,7 +104,6 @@ const BillboardForm = ({ billboard }: Props) => {
       router.refresh();
       close();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };

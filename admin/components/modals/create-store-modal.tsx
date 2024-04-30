@@ -91,7 +91,6 @@ const CreateStoreModal = (props: Props) => {
       close();
       toast.success(res.data.success);
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };

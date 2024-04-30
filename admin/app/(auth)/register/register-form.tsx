@@ -69,11 +69,12 @@ const RegisterForm = (props: Props) => {
           email: data.email,
           password: data.password,
           redirect: false,
-        }).then(() => router.push(`/`));
+        }).then(() => {
+          router.push(`/`);
+        });
       }
       toast.success("Welcome!");
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };
@@ -104,7 +105,12 @@ const RegisterForm = (props: Props) => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="password" {...field} />
+                <Input
+                  disabled={isLoading}
+                  placeholder="******"
+                  type="password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -117,15 +123,23 @@ const RegisterForm = (props: Props) => {
             <FormItem>
               <FormLabel>Confirm Your Password</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="password" {...field} />
+                <Input
+                  disabled={isLoading}
+                  placeholder="******"
+                  type="password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <div className="mt-4 flex w-full flex-col gap-y-6">
-          <Button className="w-full">Register</Button>
+          <Button disabled={isLoading} className="w-full">
+            Register
+          </Button>
           <Button
+            disabled={isLoading}
             className="w-full"
             variant={`outline`}
             onClick={(e) => {

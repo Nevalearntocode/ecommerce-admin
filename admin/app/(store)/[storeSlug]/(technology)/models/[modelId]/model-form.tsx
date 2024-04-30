@@ -61,7 +61,6 @@ const ModelForm = ({ model }: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    console.log(data);
     if (model && model.name === data.name && model.value === data.value) {
       toast.info("Model has not changed.");
       return;
@@ -99,7 +98,6 @@ const ModelForm = ({ model }: Props) => {
       router.refresh();
       close();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };

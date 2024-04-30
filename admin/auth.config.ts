@@ -1,27 +1,12 @@
-import { db } from "@/lib/db";
-import { NextAuthOptions, getServerSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import type { NextAuthConfig } from "next-auth";
 import bcrypt from "bcryptjs";
-import { Adapter } from "next-auth/adapters";
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from "next";
+import { db } from "./lib/db";
 
-export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(db) as Adapter,
-  session: {
-    strategy: "jwt",
-  },
-  secret: process.env.NEXTAUTH_SECRET,
+export default {
   providers: [
-    Google({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
+    Google,
     Credentials({
       name: "credentials",
       credentials: {
@@ -34,7 +19,7 @@ export const authOptions: NextAuthOptions = {
           type: "password",
         },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         if (!credentials || !credentials.email || !credentials.password) {
           throw new Error("Invalid credentials");
         }
@@ -69,13 +54,4 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-};
-
-export function auth(
-  ...args:
-    | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  return getServerSession(...args, authOptions);
-}
+} satisfies NextAuthConfig;

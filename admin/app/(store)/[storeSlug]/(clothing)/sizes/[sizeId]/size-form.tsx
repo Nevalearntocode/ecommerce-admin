@@ -66,7 +66,6 @@ const SizeForm = ({ size }: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    console.log(data);
     if (size && size.name === data.name && size.value === data.value) {
       toast.info("Size has not changed.");
       return;
@@ -104,7 +103,6 @@ const SizeForm = ({ size }: Props) => {
       router.refresh();
       close();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };

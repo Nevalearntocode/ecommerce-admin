@@ -47,7 +47,10 @@ const UpdateRoleModal = (props: Props) => {
       form.setValue("isAdmin", data.staff.isAdmin);
       form.setValue("canManageStore", data.staff.canManageStore);
       form.setValue("canManageCategory", data.staff.canManageCategory);
-      form.setValue("canManageBillboard", data.staff.canManageBillboard || false);
+      form.setValue(
+        "canManageBillboard",
+        data.staff.canManageBillboard || false,
+      );
       form.setValue("canManageProduct", data.staff.canManageProduct);
     }
   }, [data, form]);
@@ -69,7 +72,6 @@ const UpdateRoleModal = (props: Props) => {
       toast.success(res.data.success);
       router.refresh();
     } catch (error: any) {
-      console.log(error);
       toast.error(error.response.data);
     }
   };
@@ -211,7 +213,11 @@ const UpdateRoleModal = (props: Props) => {
               </div>
             </div>
             <div className="flex w-full">
-              <Button type="submit" className="ml-auto flex" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="ml-auto flex"
+                disabled={isLoading}
+              >
                 Confirm
               </Button>
             </div>
