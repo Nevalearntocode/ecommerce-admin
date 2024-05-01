@@ -63,6 +63,20 @@ export async function PATCH(
       return new NextResponse("Model has not changed.", { status: 200 });
     }
 
+    const existingModelWithSameName = await db.model.findFirst({
+      where: {
+        name: updateData.name,
+        storeId: existingStore.id,
+      },
+    });
+
+    if (
+      existingModelWithSameName &&
+      existingModelWithSameName.id !== existingModel.id
+    ) {
+      return new NextResponse("Model already exists.", { status: 400 });
+    }
+
     const newModel = await db.model.update({
       where: {
         id: existingModel.id,

@@ -63,6 +63,17 @@ export async function PATCH(
       return new NextResponse("Type has not changed.", { status: 200 });
     }
 
+    const existingTypeWithName = await db.type.findFirst({
+      where: {
+        name: updateData.name,
+        storeId: existingStore.id,
+      },
+    });
+
+    if (existingTypeWithName) {
+      return new NextResponse("Type already exists.", { status: 409 });
+    }
+
     const newType = await db.type.update({
       where: {
         id: existingType.id,

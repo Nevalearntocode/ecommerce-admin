@@ -65,6 +65,18 @@ export async function PATCH(
       return new NextResponse("Size has not changed.", { status: 200 });
     }
 
+    // check if there is already a size with this name in store
+    const existingSizeWithName = await db.size.findFirst({
+      where: {
+        name: updateData.name,
+        storeId: existingStore.id,
+      },
+    });
+
+    if (existingSizeWithName && existingSizeWithName.id !== existingSize.id) {
+      return new NextResponse("Size already exists.", { status: 400 });
+    }
+
     const newSize = await db.size.update({
       where: {
         id: existingSize.id,

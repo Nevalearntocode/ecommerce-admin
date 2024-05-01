@@ -68,6 +68,17 @@ export async function PATCH(
       return new NextResponse("Color has not changed.", { status: 200 });
     }
 
+    const existingColorWithName = await db.color.findFirst({
+      where: {
+        name: updateData.name,
+        storeId: existingStore.id,
+      },
+    });
+
+    if (existingColorWithName && existingColorWithName.id !== existingColor.id) {
+      return new NextResponse("Color already exists.", { status: 400 });
+    }
+
     const newColor = await db.color.update({
       where: {
         id: existingColor.id,

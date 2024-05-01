@@ -23,7 +23,7 @@ export async function POST(req: Request) {
 
     const existingUser = await db.user.findUnique({
       where: {
-        email,
+        email: email.toLowerCase(),
       },
       select: {
         id: true,
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
     const newUser = await db.user.create({
       data: {
-        email,
+        email: email.toLowerCase(),
         hashedPassword,
         name: "",
         image: "",

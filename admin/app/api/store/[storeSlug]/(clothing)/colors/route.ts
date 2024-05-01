@@ -64,6 +64,17 @@ export async function POST(
       );
     }
 
+    const existingColor = await db.color.findFirst({
+      where: {
+        name: name.toLowerCase(),
+        storeId: existingStore.id,
+      },
+    });
+
+    if (existingColor) {
+      return new NextResponse("Color already exists.", { status: 400 });
+    }
+
     const newColor = await db.color.create({
       data: {
         name: name.toLowerCase(),

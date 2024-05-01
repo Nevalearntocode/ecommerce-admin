@@ -163,7 +163,7 @@ model OrderItem {
 
 model Size {
   id        Int       @id @default(autoincrement())
-  name      String    @unique
+  name      String
   value     SizeValue
   store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId   Int
@@ -176,7 +176,7 @@ model Size {
 
 model Color {
   id        Int       @id @default(autoincrement())
-  name      String    @unique
+  name      String
   value     String
   store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId   Int
@@ -189,7 +189,7 @@ model Color {
 
 model Model {
   id        Int       @id @default(autoincrement())
-  name      String    @unique
+  name      String
   value     String
   store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId   Int
@@ -202,7 +202,7 @@ model Model {
 
 model Type {
   id        Int       @id @default(autoincrement())
-  name      String    @unique
+  name      String
   value     String
   store     Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
   storeId   Int

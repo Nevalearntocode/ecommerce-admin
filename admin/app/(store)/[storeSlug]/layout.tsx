@@ -1,6 +1,5 @@
 import Empty from "@/components/mainpages/empty";
 import NotPermitted from "@/components/mainpages/not-permitted";
-import { getCurrentStaff } from "@/data/get-staffs";
 import { getStoreWithCurrentStaffLayout } from "@/data/get-stores";
 import {
   canManageBillboard,

@@ -55,6 +55,17 @@ export async function POST(
       );
     }
 
+    const existingModel = await db.model.findFirst({
+      where: {
+        name: name.toLowerCase(),
+        storeId: existingStore.id,
+      },
+    });
+
+    if (existingModel) {
+      return new NextResponse("Model already exists.", { status: 400 });
+    }
+
     const newModel = await db.model.create({
       data: {
         name: name.toLowerCase(),

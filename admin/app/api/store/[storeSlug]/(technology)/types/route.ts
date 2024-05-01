@@ -55,6 +55,17 @@ export async function POST(
       );
     }
 
+    const existingType = await db.type.findFirst({
+      where: {
+        name: name.toLowerCase(),
+        storeId: existingStore.id,
+      },
+    });
+
+    if (existingType) {
+      return new NextResponse("Type already exists.", { status: 409 });
+    }
+
     const newType = await db.type.create({
       data: {
         name: name.toLowerCase(),

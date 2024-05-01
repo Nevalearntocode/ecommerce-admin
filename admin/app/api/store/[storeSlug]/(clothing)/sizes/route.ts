@@ -41,7 +41,7 @@ export async function POST(
 
     if (existingStore.storeType !== "CLOTHING") {
       return new NextResponse(
-        "Size is not a valid attribute for this product. Please use relevant attributes.",
+        "Size is not a valid attribute for this store. Please use relevant attributes.",
         { status: 400 },
       );
     }
@@ -55,6 +55,17 @@ export async function POST(
         "You do not have permission to perform this action.",
         { status: 403 },
       );
+    }
+
+    const existingSize = await db.size.findFirst({
+      where: {
+        name: name.toLowerCase(),
+        storeId: existingStore.id,
+      },
+    });
+
+    if (existingSize) {
+      return new NextResponse("Size already exists.", { status: 400 });
     }
 
     const newSize = await db.size.create({
