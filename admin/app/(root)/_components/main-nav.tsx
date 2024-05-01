@@ -9,7 +9,7 @@ import { useParams, usePathname } from "next/navigation";
 import MobileNav from "./mobile-nav";
 
 type Props = {
-  stores: StoreWithStaffs[];
+  store: StoreWithStaffs;
   userId: string;
 };
 
@@ -28,25 +28,19 @@ export type StaffPermissionName =
   | "canManageBillboard"
   | "canManageProduct";
 
-const MainNav = ({ stores, userId }: Props) => {
+const MainNav = ({ store, userId }: Props) => {
   const params = useParams();
   const pathname = usePathname();
 
-  const existingStore = stores.find((store) => store.slug == params.storeSlug);
-
-  if (!params.storeSlug || !existingStore) {
-    return null;
-  }
-
-  const staff = existingStore.staffs[0];
+  const staff = store.staffs[0];
 
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
 
-  const isOwner = existingStore.userId === userId;
+  const isOwner = store.userId === userId;
 
-  const isAdmin = staff.isAdmin || existingStore.userId === userId;
+  const isAdmin = staff.isAdmin || store.userId === userId;
 
   // Define the hierarchy of permissions from highest to lowest access level
   const permissionHierarchy = [
@@ -139,9 +133,9 @@ const MainNav = ({ stores, userId }: Props) => {
 
   const routes: RouteType[] = [...DEFAULT_ROUTES];
 
-  if (existingStore.storeType === "CLOTHING") {
+  if (store.storeType === "CLOTHING") {
     routes.push(...CLOTHING_ROUTES);
-  } else if (existingStore.storeType === "TECHNOLOGY") {
+  } else if (store.storeType === "TECHNOLOGY") {
     routes.push(...TECHNOLOGY_ROUTES);
   }
 

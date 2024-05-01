@@ -50,3 +50,9 @@ export type StaffWithUser = Staff & {
 export type StaffWithStore = Staff & {
   store: Store;
 };
+
+export type CurrentStaff = Staff & {
+  store: {
+    userId: string;
+  };
+};

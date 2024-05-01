@@ -5,6 +5,7 @@ import { canManageCategory, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 import { getCategoryByStoreSlugAndCategorySlug } from "@/data/get-categories";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -17,7 +18,7 @@ const CategoryPage = async ({ params }: Props) => {
   const staff = await getCurrentStaff(params.storeSlug);
 
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
   const isAuthorized =
     canManageCategory(staff) || isOwner(staff.userId, staff.store.userId);

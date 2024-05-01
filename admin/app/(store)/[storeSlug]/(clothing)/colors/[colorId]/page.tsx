@@ -4,6 +4,7 @@ import ColorForm from "./color-form";
 import { getCurrentStaff } from "@/data/get-staffs";
 import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -17,7 +18,7 @@ const ColorPage = async ({ params }: Props) => {
   const staff = await getCurrentStaff(params.storeSlug);
 
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
   const isAuthorized =
     canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);

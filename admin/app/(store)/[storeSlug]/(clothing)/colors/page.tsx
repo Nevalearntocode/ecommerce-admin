@@ -16,7 +16,7 @@ const Colors = async ({ params }: Props) => {
   const staff = await getCurrentStaffAndStoreType(params.storeSlug);
 
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
 
   const isAuthorized =

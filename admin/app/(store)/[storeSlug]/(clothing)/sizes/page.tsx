@@ -15,7 +15,7 @@ type Props = {
 const Sizes = async ({ params }: Props) => {
   const staff = await getCurrentStaffAndStoreType(params.storeSlug);
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
   const isAuthorized =
     canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);

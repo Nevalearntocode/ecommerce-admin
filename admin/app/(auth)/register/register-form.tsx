@@ -71,6 +71,7 @@ const RegisterForm = (props: Props) => {
           redirect: false,
         }).then(() => {
           router.push(`/`);
+          router.refresh();
         });
       }
       toast.success("Welcome!");

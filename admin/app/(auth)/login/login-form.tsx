@@ -47,6 +47,7 @@ const LoginForm = (props: Props) => {
       if (callback?.ok) {
         toast.success("Welcome back!");
         router.push(`/`);
+        router.refresh();
       }
 
       if (callback?.error) {

@@ -7,6 +7,7 @@ import {
 } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 import { db } from "@/lib/db";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -16,8 +17,9 @@ type Props = {
 
 const Billboards = async ({ params }: Props) => {
   const staff = await getCurrentStaff(params.storeSlug);
+
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
   const isAuthorized =
     canManageBillboard(staff) || isOwner(staff.userId, staff.store.userId);

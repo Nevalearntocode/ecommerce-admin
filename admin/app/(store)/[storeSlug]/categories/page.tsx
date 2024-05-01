@@ -4,6 +4,7 @@ import { canManageCategory, isOwner } from "@/permissions/permission-hierarchy";
 import NotPermitted from "@/components/mainpages/not-permitted";
 import { db } from "@/lib/db";
 import CategoryClient from "./category-client";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -14,7 +15,7 @@ type Props = {
 const Categories = async ({ params }: Props) => {
   const staff = await getCurrentStaff(params.storeSlug);
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
   const categories = await db.category.findMany({
     where: {

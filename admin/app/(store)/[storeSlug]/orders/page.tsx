@@ -4,6 +4,7 @@ import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
 import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import React from "react";
 import OrderClient from "./order-client";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -15,7 +16,7 @@ const Orders = async ({ params }: Props) => {
   const staff = await getCurrentStaffAndStoreType(params.storeSlug);
 
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
   const isAuthorized =
     canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);
@@ -24,7 +25,7 @@ const Orders = async ({ params }: Props) => {
     return <NotPermitted />;
   }
 
-  const orders = await getStoreOrders(staff.storeId)
+  const orders = await getStoreOrders(staff.storeId);
 
   return (
     <div className="flex-col">

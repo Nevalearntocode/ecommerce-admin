@@ -12,6 +12,7 @@ import {
   getCategoryAndTechnologyFieldsInStore,
 } from "@/data/get-stores";
 import TechnologyProductForm from "./technology-product-form";
+import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -24,7 +25,7 @@ const Product = async ({ params }: Props) => {
   const staff = await getCurrentStaffAndStoreType(params.storeSlug);
 
   if (!staff) {
-    return null;
+    return redirect(`/${params.storeSlug}`);
   }
   const isAuthorized =
     canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);
