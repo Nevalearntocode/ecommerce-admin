@@ -35,7 +35,6 @@ import {
 import ProductImage from "@/components/uploadthing/product-image";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
-import { generateSlug } from "@/constant";
 import useModal from "@/hooks/use-modal-store";
 
 type Props = {

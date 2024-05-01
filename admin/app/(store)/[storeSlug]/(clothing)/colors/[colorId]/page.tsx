@@ -1,10 +1,6 @@
 import { getColorById } from "@/data/get-colors";
 import React from "react";
 import ColorForm from "./color-form";
-import { getCurrentStaff } from "@/data/get-staffs";
-import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
-import NotPermitted from "@/components/mainpages/not-permitted";
-import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -15,17 +11,6 @@ type Props = {
 
 const ColorPage = async ({ params }: Props) => {
   const color = await getColorById(params.colorId);
-  const staff = await getCurrentStaff(params.storeSlug);
-
-  if (!staff) {
-    return redirect(`/${params.storeSlug}`);
-  }
-  const isAuthorized =
-    canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
-  }
 
   return (
     <div className="flex-col">

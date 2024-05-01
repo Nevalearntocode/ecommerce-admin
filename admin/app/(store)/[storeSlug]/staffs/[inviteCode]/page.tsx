@@ -21,6 +21,13 @@ const Invite = async ({ params }: Props) => {
       inviteCode: params.inviteCode,
       slug: params.storeSlug,
     },
+    include: {
+      staffs: {
+        select: {
+          userId: true,
+        },
+      },
+    },
   });
 
   if (!store) {
@@ -28,6 +35,10 @@ const Invite = async ({ params }: Props) => {
   }
 
   if (store.userId === user.id) {
+    return redirect(`/${store.slug}`);
+  }
+
+  if (store.staffs.some((staff) => staff.userId === user.id)) {
     return redirect(`/${store.slug}`);
   }
 

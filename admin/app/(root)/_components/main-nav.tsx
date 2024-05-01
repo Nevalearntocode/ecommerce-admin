@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { StoreWithStaffs } from "@/types";
 import { Menu } from "lucide-react";
 import Link from "next/link";
-import { useParams, usePathname } from "next/navigation";
+import { redirect, useParams, usePathname } from "next/navigation";
 import MobileNav from "./mobile-nav";
 
 type Props = {
@@ -35,7 +35,7 @@ const MainNav = ({ store, userId }: Props) => {
   const staff = store.staffs[0];
 
   if (!staff) {
-    return redirect(`/${params.storeSlug}`);
+    return null
   }
 
   const isOwner = store.userId === userId;

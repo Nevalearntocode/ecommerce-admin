@@ -5,7 +5,8 @@ import SettingsForm from "./settings-form";
 import getCurrentUser from "@/data/get-current-user";
 import { redirect } from "next/navigation";
 import NotPermitted from "@/components/mainpages/not-permitted";
-import { canManageStore } from "@/permissions/permission-hierarchy";
+import { canManageStore, isOwner } from "@/permissions/permission-hierarchy";
+import { getCurrentStaff } from "@/data/get-staffs";
 
 type Props = {
   params: {
@@ -14,29 +15,20 @@ type Props = {
 };
 
 const Settings = async ({ params }: Props) => {
-  const user = await getCurrentUser();
+  const staff = await getCurrentStaff(params.storeSlug);
 
-  if (!user) {
+  if (!staff) {
     return redirect(`/`);
   }
 
-  const store = await getStoreWithCurrentStaff(params.storeSlug, user.id);
-
-  if (!store) {
-    return <Empty label="You don't have any store with given link." />;
-  }
-
-  const staff = store.staffs[0];
-  const isOwner = store.userId === user.id;
-
-  if (!canManageStore(staff) && !isOwner) {
+  if (!canManageStore(staff) && !isOwner(staff.userId, staff.store.userId)) {
     return <NotPermitted />;
   }
 
   return (
     <div className="flex flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SettingsForm store={store} isOwner={isOwner} />
+        <SettingsForm store={staff.store} isOwner={isOwner(staff.userId, staff.store.userId)} />
       </div>
     </div>
   );

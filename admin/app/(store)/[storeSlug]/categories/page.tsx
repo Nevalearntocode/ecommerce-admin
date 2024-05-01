@@ -13,10 +13,6 @@ type Props = {
 };
 
 const Categories = async ({ params }: Props) => {
-  const staff = await getCurrentStaff(params.storeSlug);
-  if (!staff) {
-    return redirect(`/${params.storeSlug}`);
-  }
   const categories = await db.category.findMany({
     where: {
       store: {
@@ -30,13 +26,6 @@ const Categories = async ({ params }: Props) => {
       createdAt: "desc",
     },
   });
-
-  const isAuthorized =
-    canManageCategory(staff) || isOwner(staff.userId, staff.store.userId);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
-  }
 
   return (
     <div className="flex-col">

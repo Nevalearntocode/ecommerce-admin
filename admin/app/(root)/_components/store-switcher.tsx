@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Store, StoreType } from "@prisma/client";
+import React, { useState } from "react";
+import { Store } from "@prisma/client";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import {
   Popover,

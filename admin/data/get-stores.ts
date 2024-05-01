@@ -1,6 +1,29 @@
 import { db } from "../lib/db";
 import getCurrentUser from "./get-current-user";
 
+export async function getStoreWithCurrentStaffLayout(storeSlug: string) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const store = await db.store.findUnique({
+    where: {
+      slug: storeSlug,
+    },
+    include: {
+      staffs: {
+        where: {
+          userId: user.id,
+        },
+      },
+    },
+  });
+
+  return store;
+}
+
 export default async function getUserStoresById(userId: string) {
   const stores = await db.store.findMany({
     where: {
@@ -82,56 +105,6 @@ export async function getStoreToCreateProduct(
   return store;
 }
 
-export async function getClothingAttributeIds(
-  storeId: number,
-  sizeName: string,
-  colorName: string,
-) {
-  const store = await db.store.findUnique({
-    where: {
-      id: storeId,
-    },
-    include: {
-      sizes: {
-        where: {
-          name: sizeName,
-        },
-      },
-      colors: {
-        where: {
-          name: colorName,
-        },
-      },
-    },
-  });
-  return store;
-}
-
-export async function getTechnologyAttributeIds(
-  storeId: number,
-  modelName: string,
-  typeName: string,
-) {
-  const store = await db.store.findUnique({
-    where: {
-      id: storeId,
-    },
-    include: {
-      models: {
-        where: {
-          name: modelName,
-        },
-      },
-      types: {
-        where: {
-          name: typeName,
-        },
-      },
-    },
-  });
-  return store;
-}
-
 export async function getUserStoreBySlug(slug: string) {
   const store = await db.store.findUnique({
     where: {
@@ -194,22 +167,6 @@ export async function gerFirstUserStore() {
           },
         },
       ],
-    },
-  });
-
-  return store;
-}
-
-export async function getStoreById(id: string) {
-  const storeId = Number(id);
-
-  if (!storeId) {
-    return null;
-  }
-
-  const store = await db.store.findUnique({
-    where: {
-      id: storeId,
     },
   });
 

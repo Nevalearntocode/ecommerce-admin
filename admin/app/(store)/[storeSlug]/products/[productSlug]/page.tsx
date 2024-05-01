@@ -1,10 +1,7 @@
-import NotPermitted from "@/components/mainpages/not-permitted";
 import {
   getClothingProductWithStoreType,
   getTechnologyProductWithStoreType,
 } from "@/data/get-products";
-import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
-import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import React from "react";
 import ClothingProductForm from "./clothing-product-form";
 import {
@@ -13,6 +10,7 @@ import {
 } from "@/data/get-stores";
 import TechnologyProductForm from "./technology-product-form";
 import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
 
 type Props = {
   params: {
@@ -22,31 +20,29 @@ type Props = {
 };
 
 const Product = async ({ params }: Props) => {
-  const staff = await getCurrentStaffAndStoreType(params.storeSlug);
+  const store = await db.store.findUnique({
+    where: {
+      slug: params.storeSlug,
+    },
+  });
 
-  if (!staff) {
-    return redirect(`/${params.storeSlug}`);
-  }
-  const isAuthorized =
-    canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
+  if (!store) {
+    return redirect(`/`);
   }
 
-  if (staff.store.storeType === "CLOTHING") {
+  if (store.storeType === "CLOTHING") {
     const product = await getClothingProductWithStoreType(
-      staff.storeId,
+      store.id,
       params.productSlug,
     );
 
     const { categories, colors, sizes } =
-      await getCategoryAndClothingFieldsInStore(staff.storeId);
+      await getCategoryAndClothingFieldsInStore(store.id);
 
     return (
       <div className="flex-col">
         <div className="flex-1 space-y-4 p-8 pt-6">
-          {staff.store.storeType === "CLOTHING" && (
+          {store.storeType === "CLOTHING" && (
             <ClothingProductForm
               product={product}
               categories={categories}
@@ -58,19 +54,19 @@ const Product = async ({ params }: Props) => {
       </div>
     );
   }
-  if (staff.store.storeType === "TECHNOLOGY") {
+  if (store.storeType === "TECHNOLOGY") {
     const product = await getTechnologyProductWithStoreType(
-      staff.storeId,
+      store.id,
       params.productSlug,
     );
 
     const { categories, models, types } =
-      await getCategoryAndTechnologyFieldsInStore(staff.storeId);
+      await getCategoryAndTechnologyFieldsInStore(store.id);
 
     return (
       <div className="flex-col">
         <div className="flex-1 space-y-4 p-8 pt-6">
-          {staff.store.storeType === "TECHNOLOGY" && (
+          {store.storeType === "TECHNOLOGY" && (
             <TechnologyProductForm
               product={product}
               categories={categories}

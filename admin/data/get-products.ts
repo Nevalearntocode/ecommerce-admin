@@ -68,17 +68,3 @@ export async function getClothingProductWithStoreType(
   });
   return product as ClothingProduct | null;
 }
-
-export async function getProductUsingStoreType<
-  T extends ClothingProduct | TechnologyProduct,
->(storeId: number, slug: string, storeType: StoreType) {
-  if (storeType == "CLOTHING") {
-    const product = await getClothingProductWithStoreType(storeId, slug);
-
-    return product;
-  }
-  if (storeType == "TECHNOLOGY") {
-    const product = await getTechnologyProductWithStoreType(storeId, slug);
-    return product;
-  }
-}

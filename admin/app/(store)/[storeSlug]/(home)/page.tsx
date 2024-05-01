@@ -11,7 +11,6 @@ import { getStoreSalesCount } from "@/data/get-sales-count";
 import { getStockCount } from "@/data/get-stock-count";
 import Overview from "./_components/overview";
 import { getMonthlyGraphRevenue } from "@/data/get-graph-revenue";
-import { getCurrentStaff } from "@/data/get-staffs";
 import SalesCard from "./_components/sales-card";
 import Home from "./_components/home-product-card";
 
@@ -27,15 +26,6 @@ const StorePage = async ({ params }: Props) => {
     return (
       <Empty
         label={`You don't have any store with slug: ${decodeURIComponent(params.storeSlug)}`}
-      />
-    );
-  }
-
-  const staff = await getCurrentStaff(params.storeSlug);
-  if (!staff) {
-    return (
-      <Empty
-        label={`You are not a staff of store with slug: ${decodeURIComponent(params.storeSlug)}`}
       />
     );
   }

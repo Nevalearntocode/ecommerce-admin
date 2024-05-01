@@ -1,13 +1,6 @@
 import React from "react";
 import BillboardClient from "./billboard-client";
-import { getCurrentStaff } from "@/data/get-staffs";
-import {
-  canManageBillboard,
-  isOwner,
-} from "@/permissions/permission-hierarchy";
-import NotPermitted from "@/components/mainpages/not-permitted";
 import { db } from "@/lib/db";
-import { redirect } from "next/navigation";
 
 type Props = {
   params: {
@@ -16,18 +9,6 @@ type Props = {
 };
 
 const Billboards = async ({ params }: Props) => {
-  const staff = await getCurrentStaff(params.storeSlug);
-
-  if (!staff) {
-    return redirect(`/${params.storeSlug}`);
-  }
-  const isAuthorized =
-    canManageBillboard(staff) || isOwner(staff.userId, staff.store.userId);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
-  }
-
   const billboards = await db.billboard.findMany({
     where: {
       store: {

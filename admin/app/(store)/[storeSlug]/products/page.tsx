@@ -1,13 +1,12 @@
-import NotPermitted from "@/components/mainpages/not-permitted";
 import {
   getClothingProductsWithStoreType,
   getTechnologyProductsWithStoreType,
 } from "@/data/get-products";
-import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
-import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
 import React from "react";
 import ClothingProductClient from "./_components/clothing/clothing-product-client";
 import TechnologyProductClient from "./_components/technology/technology-product-client";
+import { redirect } from "next/navigation";
+import { db } from "@/lib/db";
 
 type Props = {
   params: {
@@ -16,20 +15,18 @@ type Props = {
 };
 
 const Products = async ({ params }: Props) => {
-  const staff = await getCurrentStaffAndStoreType(params.storeSlug);
+  const store = await db.store.findUnique({
+    where: {
+      slug: params.storeSlug,
+    },
+  });
 
-  if (!staff) {
-    return redirect(`/${params.storeSlug}`);
-  }
-  const isAuthorized =
-    canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
+  if (!store) {
+    return redirect(`/`);
   }
 
-  if (staff.store.storeType === "CLOTHING") {
-    const products = await getClothingProductsWithStoreType(staff.storeId);
+  if (store.storeType === "CLOTHING") {
+    const products = await getClothingProductsWithStoreType(store.id);
     return (
       <div className="flex-col">
         <div className="flex-1 space-y-4 p-8 pt-6">
@@ -39,8 +36,8 @@ const Products = async ({ params }: Props) => {
     );
   }
 
-  if (staff.store.storeType === "TECHNOLOGY") {
-    const products = await getTechnologyProductsWithStoreType(staff.storeId);
+  if (store.storeType === "TECHNOLOGY") {
+    const products = await getTechnologyProductsWithStoreType(store.id);
     return (
       <div className="flex-col">
         <div className="flex-1 space-y-4 p-8 pt-6">

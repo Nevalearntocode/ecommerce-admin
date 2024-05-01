@@ -1,10 +1,8 @@
 import React from "react";
 import ModelClient from "./model-client";
-import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
-import NotPermitted from "@/components/mainpages/not-permitted";
+import Empty from "@/components/mainpages/empty";
 
 type Props = {
   params: {
@@ -13,37 +11,31 @@ type Props = {
 };
 
 const Models = async ({ params }: Props) => {
-  const staff = await getCurrentStaffAndStoreType(params.storeSlug);
-
-  if (!staff) {
-    return redirect(`/${params.storeSlug}`);
-  }
-  const isAuthorized =
-    canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
-  }
-
-  if (staff.store.storeType !== "TECHNOLOGY") {
-    return redirect(`/${params.storeSlug}`);
-  }
-
-  const models = await db.model.findMany({
+  const store = await db.store.findUnique({
     where: {
-      store: {
-        slug: params.storeSlug,
+      slug: params.storeSlug,
+    },
+    include: {
+      models: {
+        orderBy: {
+          value: "asc",
+        },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
   });
+
+  if (!store) {
+    return <Empty label="You don't have any store with given link." />;
+  }
+
+  if (store.storeType !== "TECHNOLOGY") {
+    return redirect(`/${params.storeSlug}`);
+  }
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ModelClient models={models} />
+        <ModelClient models={store.models} />
       </div>
     </div>
   );

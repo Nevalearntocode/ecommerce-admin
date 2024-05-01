@@ -15,18 +15,6 @@ type Props = {
 };
 
 const CategoryPage = async ({ params }: Props) => {
-  const staff = await getCurrentStaff(params.storeSlug);
-
-  if (!staff) {
-    return redirect(`/${params.storeSlug}`);
-  }
-  const isAuthorized =
-    canManageCategory(staff) || isOwner(staff.userId, staff.store.userId);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
-  }
-
   const category = await getCategoryByStoreSlugAndCategorySlug(
     params.storeSlug,
     params.categorySlug,

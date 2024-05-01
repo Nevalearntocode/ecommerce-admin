@@ -1,10 +1,8 @@
 import React from "react";
 import SizeClient from "./size-client";
-import { getCurrentStaffAndStoreType } from "@/data/get-staffs";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { canManageProduct, isOwner } from "@/permissions/permission-hierarchy";
-import NotPermitted from "@/components/mainpages/not-permitted";
+import Empty from "@/components/mainpages/empty";
 
 type Props = {
   params: {
@@ -13,36 +11,31 @@ type Props = {
 };
 
 const Sizes = async ({ params }: Props) => {
-  const staff = await getCurrentStaffAndStoreType(params.storeSlug);
-  if (!staff) {
-    return redirect(`/${params.storeSlug}`);
-  }
-  const isAuthorized =
-    canManageProduct(staff) || isOwner(staff.userId, staff.store.userId);
-
-  if (!isAuthorized) {
-    return <NotPermitted />;
-  }
-
-  if (staff.store.storeType !== "CLOTHING") {
-    return redirect(`/${params.storeSlug}`);
-  }
-
-  const sizes = await db.size.findMany({
+  const store = await db.store.findUnique({
     where: {
-      store: {
-        slug: params.storeSlug,
+      slug: params.storeSlug,
+    },
+    include: {
+      sizes: {
+        orderBy: {
+          value: "asc",
+        },
       },
     },
-    orderBy: {
-      value: "asc",
-    },
   });
+
+  if (!store) {
+    return <Empty label="You don't have any store with given link." />;
+  }
+
+  if (store.storeType !== "CLOTHING") {
+    return redirect(`/${params.storeSlug}`);
+  }
 
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <SizeClient sizes={sizes} />
+        <SizeClient sizes={store.sizes} />
       </div>
     </div>
   );
