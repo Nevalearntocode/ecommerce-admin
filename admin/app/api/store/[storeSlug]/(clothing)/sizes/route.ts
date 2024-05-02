@@ -59,7 +59,7 @@ export async function POST(
 
     const existingSize = await db.size.findFirst({
       where: {
-        name: name.toLowerCase(),
+        name,
         storeId: existingStore.id,
       },
     });
@@ -70,7 +70,7 @@ export async function POST(
 
     const newSize = await db.size.create({
       data: {
-        name: name.toLowerCase(),
+        name,
         value,
         storeId: existingStore.id,
       },
@@ -88,6 +88,8 @@ export async function GET(
 ) {
   try {
     const { storeSlug } = params;
+    const { searchParams } = new URL(req.url);
+    const sizeName = searchParams.get("size") || undefined;
 
     if (!storeSlug) {
       return new NextResponse("Store slug is required.", { status: 400 });
@@ -99,6 +101,12 @@ export async function GET(
       },
       include: {
         sizes: {
+          where: {
+            name: {
+              equals: sizeName,
+              mode: "insensitive",
+            },
+          },
           orderBy: {
             value: "asc",
           },

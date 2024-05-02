@@ -133,15 +133,8 @@ const ModelForm = ({ model }: Props) => {
                 <FormItem className="">
                   <FormLabel>Model name</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={isLoading}
-                      {...field}
-                      placeholder="ASUS Zenbook Pro 14 Duo OLED (UX8402)"
-                    />
+                    <Input disabled={isLoading} {...field} />
                   </FormControl>
-                  <FormDescription className="text-xs italic">
-                    This name will be saved as lowercase for SEO purpose.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -156,11 +149,7 @@ const ModelForm = ({ model }: Props) => {
                       <FormLabel>Model value</FormLabel>
                       <FormControl>
                         <div className="flex items-center justify-center gap-x-4">
-                          <Input
-                            disabled={isLoading}
-                            {...field}
-                            placeholder={"i7-12700H/RTX3050Ti/16GB/1TB"}
-                          />
+                          <Input disabled={isLoading} {...field} />
                         </div>
                       </FormControl>
                       <FormDescription className="text-xs italic">

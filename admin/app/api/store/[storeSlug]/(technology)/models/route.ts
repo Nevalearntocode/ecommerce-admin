@@ -57,7 +57,7 @@ export async function POST(
 
     const existingModel = await db.model.findFirst({
       where: {
-        name: name.toLowerCase(),
+        name: name,
         storeId: existingStore.id,
       },
     });
@@ -68,7 +68,7 @@ export async function POST(
 
     const newModel = await db.model.create({
       data: {
-        name: name.toLowerCase(),
+        name: name,
         value,
         storeId: existingStore.id,
       },
@@ -86,6 +86,10 @@ export async function GET(
 ) {
   try {
     const { storeSlug } = params;
+    const { searchParams } = new URL(req.url);
+
+    const name = searchParams.get("model") || undefined;
+    const value = searchParams.get("value") || undefined;
 
     if (!storeSlug) {
       return new NextResponse("Store slug is required.", { status: 400 });
@@ -97,6 +101,17 @@ export async function GET(
       },
       include: {
         models: {
+          where: {
+            name: {
+              equals: name,
+
+              mode: "insensitive",
+            },
+            value: {
+              equals: value,
+              mode: "insensitive",
+            },
+          },
           orderBy: {
             value: "asc",
           },

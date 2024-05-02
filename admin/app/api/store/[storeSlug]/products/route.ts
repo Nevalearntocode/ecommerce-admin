@@ -122,7 +122,7 @@ export async function POST(
       price: parseFloat(price),
       stock: Number(stock),
       slug: name.toLowerCase().trim().replace(/\s+/g, "-"),
-      brand: brand?.toLowerCase(),
+      brand,
       isFeatured,
       isArchived,
       description,
@@ -250,13 +250,13 @@ export async function GET(
 
     const { searchParams } = new URL(req.url);
     const categorySlug =
-      searchParams.get("category")?.toLowerCase() || undefined;
-    const brand = searchParams.get("brand")?.toLowerCase() || undefined;
-    const colorName = searchParams.get("color")?.toLowerCase() || undefined;
-    const sizeName = searchParams.get("size")?.toLowerCase() || undefined;
-    const modelName = searchParams.get("model")?.toLowerCase() || undefined;
-    const typeName = searchParams.get("type")?.toLowerCase() || undefined;
-    const isFeatured = searchParams.get("featured")?.toLowerCase() || undefined;
+      searchParams.get("category") || undefined;
+    const brand = searchParams.get("brand") || undefined;
+    const colorName = searchParams.get("color") || undefined;
+    const sizeName = searchParams.get("size") || undefined;
+    const modelName = searchParams.get("model") || undefined;
+    const typeName = searchParams.get("type") || undefined;
+    const isFeatured = searchParams.get("featured") || undefined;
 
     const featured = isFeatured === "true";
 
@@ -267,14 +267,23 @@ export async function GET(
           category: {
             slug: categorySlug,
           },
-          brand,
+          brand: {
+            equals: brand,
+            mode: "insensitive",
+          },
           isFeatured: featured ? true : undefined,
           isArchived: false,
-          color: {
-            name: colorName,
+          color:{
+            name: {
+              equals: colorName,
+              mode: "insensitive",
+            }
           },
           size: {
-            name: sizeName,
+            name: {
+              equals: sizeName,
+              mode: "insensitive",
+            },
           },
         },
         include: {
@@ -300,10 +309,16 @@ export async function GET(
           isFeatured: isFeatured ? true : undefined,
           isArchived: false,
           model: {
-            name: modelName,
+            name: {
+              equals: modelName,
+              mode: "insensitive",
+            }
           },
           type: {
-            name: typeName,
+            name: {
+              equals: typeName,
+              mode: "insensitive",
+            },
           },
         },
         include: {

@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 import { StoreWithStaffs } from "@/types";
 import { Menu } from "lucide-react";
 import Link from "next/link";
-import { redirect, useParams, usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import MobileNav from "./mobile-nav";
 
 type Props = {
-  store: StoreWithStaffs;
+  stores: StoreWithStaffs[];
   userId: string;
 };
 
@@ -28,15 +28,21 @@ export type StaffPermissionName =
   | "canManageBillboard"
   | "canManageProduct";
 
-const MainNav = ({ store, userId }: Props) => {
+const MainNav = ({ stores, userId }: Props) => {
   const params = useParams();
   const pathname = usePathname();
 
-  const staff = store.staffs[0];
-
-  if (!staff) {
+  if(params.storeSlug === undefined) {
     return null
   }
+
+  const store = stores.find((store) => store.slug === params.storeSlug);
+
+  if (!store) {
+    return null;
+  }
+
+  const staff = store.staffs[0];
 
   const isOwner = store.userId === userId;
 
@@ -185,7 +191,7 @@ const MainNav = ({ store, userId }: Props) => {
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
                 route.active
-                  ? "text-black dark:text-white"
+                  ? "text-black dark:text-white font-semibold"
                   : "text-muted-foreground",
               )}
             >

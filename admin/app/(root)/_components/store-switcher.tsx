@@ -51,7 +51,11 @@ const StoreSwitcher = ({ stores }: Props) => {
 
   const onStoreSelect = (storeSlug: string) => {
     setIsComboboxOpen(false);
-    router.push(`/${storeSlug}/${currentPath}`);
+    if(currentPath){
+      router.push(`/${storeSlug}/${currentPath}`);
+    } else {
+      router.push(`/${storeSlug}`);
+    }
   };
 
   return (

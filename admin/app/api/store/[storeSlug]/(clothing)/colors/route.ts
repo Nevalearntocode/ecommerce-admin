@@ -33,7 +33,7 @@ export async function POST(
     }
 
     const updateData = {
-      value: "",
+      value: value,
     };
 
     if (value.length === 4) {
@@ -66,7 +66,7 @@ export async function POST(
 
     const existingColor = await db.color.findFirst({
       where: {
-        name: name.toLowerCase(),
+        name,
         storeId: existingStore.id,
       },
     });
@@ -77,7 +77,7 @@ export async function POST(
 
     const newColor = await db.color.create({
       data: {
-        name: name.toLowerCase(),
+        name,
         value: updateData.value,
         storeId: existingStore.id,
       },
@@ -95,6 +95,9 @@ export async function GET(
 ) {
   try {
     const { storeSlug } = params;
+    const { searchParams } = new URL(req.url);
+    const colorName = searchParams.get("color") || undefined;
+    const value = searchParams.get("value") || undefined;
 
     if (!storeSlug) {
       return new NextResponse("Store slug is required.", { status: 400 });
@@ -106,6 +109,16 @@ export async function GET(
       },
       include: {
         colors: {
+          where: {
+            name: {
+              equals: colorName,
+              mode: "insensitive",
+            },
+            value: {
+              equals: value,
+              mode: "insensitive",
+            },
+          },
           orderBy: {
             value: "asc",
           },

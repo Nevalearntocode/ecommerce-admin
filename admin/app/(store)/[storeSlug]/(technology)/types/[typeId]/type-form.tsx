@@ -133,15 +133,9 @@ const TypeForm = ({ type }: Props) => {
                 <FormItem className="">
                   <FormLabel>Type name</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={isLoading}
-                      {...field}
-                      placeholder="Laptop"
-                    />
+                    <Input disabled={isLoading} {...field} />
                   </FormControl>
-                  <FormDescription className="text-xs italic">
-                    This name will be saved as lowercase for SEO purpose.
-                  </FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
@@ -156,11 +150,7 @@ const TypeForm = ({ type }: Props) => {
                       <FormLabel>Type value</FormLabel>
                       <FormControl>
                         <div className="flex items-center justify-center gap-x-4">
-                          <Input
-                            disabled={isLoading}
-                            {...field}
-                            placeholder={"Gaming Laptop"}
-                          />
+                          <Input disabled={isLoading} {...field} />
                         </div>
                       </FormControl>
                       <FormDescription className="text-xs italic">

@@ -7,8 +7,6 @@ const { auth } = NextAuth(authConfig);
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedin = !!req.auth;
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set("storeUrl", req.url);
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isUploadthingRoute = nextUrl.pathname.startsWith(`/api/uploadthing`);
@@ -37,11 +35,7 @@ export default auth((req) => {
     return NextResponse.redirect(new URL(`/login`, req.url));
   }
 
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  return
 });
 
 export const config = {

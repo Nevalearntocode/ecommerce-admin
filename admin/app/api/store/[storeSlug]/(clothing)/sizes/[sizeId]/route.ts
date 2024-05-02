@@ -54,7 +54,7 @@ export async function PATCH(
     }
 
     const updateData = {
-      name: name ? name.toLowerCase() : existingSize.name,
+      name: name ? name : existingSize.name,
       value: value ? value : existingSize.value,
     };
 

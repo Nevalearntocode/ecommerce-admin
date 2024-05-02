@@ -9,6 +9,7 @@ import {
 } from "@/permissions/permission-hierarchy";
 import { Staff } from "@prisma/client";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import React from "react";
 
 type Props = {
@@ -49,9 +50,9 @@ const StoreLayout = async ({ children, params }: Props) => {
 
   const permissionMap: permissionMap = {
     settings: canManageStore,
-    staffs: canManageProduct,
     categories: canManageCategory,
     billboards: canManageBillboard,
+    staffs: canManageProduct,
     colors: canManageProduct,
     sizes: canManageProduct,
     models: canManageProduct,
@@ -59,6 +60,12 @@ const StoreLayout = async ({ children, params }: Props) => {
     products: canManageProduct,
     orders: canManageProduct,
   };
+
+  const keys = Object.keys(permissionMap);
+
+  if (!keys.includes(route) && route !== undefined) {
+    return redirect(`/${store.slug}`);
+  }
 
   if (route && !permissionMap[route](staff)) {
     return <NotPermitted />;

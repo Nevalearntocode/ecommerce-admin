@@ -72,20 +72,21 @@ export async function PATCH(
       updateData.image = existingStore.image;
     }
 
-    const existedStoreWithGivenName = await db.store.findUnique({
+    const existedStoreWithGivenName = await db.store.findFirst({
       where: {
-        name: updateData.name,
-        NOT: [
-          {
-            id: existingStore.id,
-          },
-        ],
+      name: {
+        equals: updateData.name,
+        mode: "insensitive",
+      },
+      NOT: {  
+        id: existingStore.id,
+      },
       },
     });
 
     if (existedStoreWithGivenName) {
       return new NextResponse(`Store with name: ${name} already exists`, {
-        status: 400,
+      status: 400,
       });
     }
 
