@@ -66,7 +66,7 @@ export async function getStoreWithCurrentStaffLayout(storeSlug: string) {
     },
   });
 
-  return {store, user} as { store: StoreWithChildren; user: SafeUser};
+  return { store, user } as { store: StoreWithChildren; user: SafeUser };
 }
 
 export default async function getUserStoresById(userId: string) {
@@ -87,6 +87,18 @@ export default async function getUserStoresById(userId: string) {
       staffs: {
         where: {
           userId,
+        },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              updatedAt: true,
+              createdAt: true,
+            },
+          },
         },
       },
     },
