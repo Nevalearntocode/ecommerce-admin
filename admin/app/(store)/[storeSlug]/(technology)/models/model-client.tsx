@@ -2,7 +2,6 @@
 
 import Header from "@/components/header";
 import { Separator } from "@/components/ui/separator";
-import { Model } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { ModelColumn, columns } from "./model-column";
 import { format } from "date-fns";
@@ -13,14 +12,14 @@ import useFilter from "@/hooks/use-filter";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import { useMemo } from "react";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  models: Model[];
-};
+type Props = {};
 
-const ModelClient = ({ models }: Props) => {
+const ModelClient = ({}: Props) => {
   const router = useRouter();
   const params = useParams();
+  const { models } = useStoreContext().store;
 
   const { setSearchInput, filteredItems: filteredModels } = useFilter(
     models,

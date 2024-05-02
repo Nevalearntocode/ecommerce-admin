@@ -55,11 +55,11 @@ const UpdateRoleModal = (props: Props) => {
     }
   }, [data, form]);
 
-  if (!data || !data.staff || !data.currentStaff) {
+  if (!data || !data.staff) {
     return null;
   }
 
-  const { staff, currentStaff } = data;
+  const { staff, isOwner } = data;
 
   const isLoading = form.formState.isSubmitting;
 
@@ -183,7 +183,7 @@ const UpdateRoleModal = (props: Props) => {
                     </FormItem>
                   )}
                 />
-                {currentStaff.userId === currentStaff.store.userId && (
+                {isOwner && (
                   <FormField
                     control={form.control}
                     name="isAdmin"

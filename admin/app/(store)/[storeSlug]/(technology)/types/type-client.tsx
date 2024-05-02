@@ -2,7 +2,6 @@
 
 import Header from "@/components/header";
 import { Separator } from "@/components/ui/separator";
-import { Type } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { TypeColumn, columns } from "./type-column";
 import { format } from "date-fns";
@@ -13,12 +12,12 @@ import useFilter from "@/hooks/use-filter";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import { useMemo } from "react";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  types: Type[];
-};
+type Props = {};
 
-const TypeClient = ({ types }: Props) => {
+const TypeClient = ({}: Props) => {
+  const { types } = useStoreContext().store;
   const router = useRouter();
   const params = useParams();
 
@@ -55,7 +54,6 @@ const TypeClient = ({ types }: Props) => {
         ]}
       />
       <Separator />
-      {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <SearchInput onChange={setSearchInput} component="type" />
       </div>

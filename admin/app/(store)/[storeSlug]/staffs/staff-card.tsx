@@ -9,15 +9,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getHighestRole } from "@/lib/utils";
-import { StaffWithStore, StaffWithUser } from "@/types";
+import { StaffWithUser } from "@/types";
 import { format } from "date-fns";
 import React from "react";
 import StaffCardAction from "./staff-card-action";
 import { canManageStaff, isOwner } from "@/permissions/permission-hierarchy";
+import { useStoreContext } from "@/contexts/store-context";
 
 type Props = {
   staff: StaffWithUser;
-  currentStaff: StaffWithStore;
+  currentStaff: StaffWithUser;
 };
 
 export const roleIconMap = {
@@ -31,6 +32,9 @@ export const roleIconMap = {
 };
 
 const StaffCard = ({ staff, currentStaff }: Props) => {
+  const { userId } = useStoreContext().store;
+  const { id } = useStoreContext().user;
+
   return (
     <Card className="flex flex-col justify-between">
       <CardHeader>
@@ -43,16 +47,14 @@ const StaffCard = ({ staff, currentStaff }: Props) => {
                 : staff.user.email.charAt(0).toLocaleUpperCase()}
             </AvatarFallback>
           </Avatar>
-          {(isOwner(currentStaff.userId, currentStaff.store.userId) ||
-            canManageStaff(currentStaff)) && (
-            <StaffCardAction staff={staff} currentStaff={currentStaff} />
+          {(isOwner(staff.userId, userId) || canManageStaff(currentStaff)) && (
+            <StaffCardAction staff={staff} />
           )}
         </div>
         <CardTitle>
           {staff.user.name === "" ? staff.user.email : staff.user.name}
         </CardTitle>
-        {(isOwner(currentStaff.userId, currentStaff.store.userId) ||
-          canManageStaff(currentStaff)) && (
+        {(isOwner(staff.userId, userId) || canManageStaff(currentStaff)) && (
           <div>
             {staff.user.name !== "" && (
               <CardDescription>{staff.user.email}</CardDescription>
@@ -63,23 +65,17 @@ const StaffCard = ({ staff, currentStaff }: Props) => {
       <CardContent className="flex justify-between">
         <div className="flex flex-col">
           <p className="text-zinc-400">
-            Role{" "}
             {
               roleIconMap[
-                isOwner(staff.userId, currentStaff.store.userId)
-                  ? "Owner"
-                  : getHighestRole(staff)
+                isOwner(staff.userId, userId) ? "Owner" : getHighestRole(staff)
               ]
             }
           </p>
           <p className="">
-            {isOwner(staff.userId, currentStaff.store.userId)
-              ? "Owner"
-              : getHighestRole(staff)}
+            {isOwner(staff.userId, userId) ? "Owner" : getHighestRole(staff)}
           </p>
         </div>
-        {(isOwner(currentStaff.userId, currentStaff.store.userId) ||
-          canManageStaff(currentStaff)) && (
+        {(isOwner(staff.userId, userId) || canManageStaff(currentStaff)) && (
           <div className="flex flex-col">
             <p className="text-zinc-400">Hire date</p>
             <p className="">{format(staff.createdAt, "dd/MM/yy")}</p>

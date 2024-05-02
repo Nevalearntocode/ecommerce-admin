@@ -31,7 +31,7 @@ export const columns: ColumnDef<TypeColumn>[] = [
   {
     id: "actions",
     cell: ({ row }) => (
-      <EntityCellAction endpoint="types" entity={row.original} type="general" />
+      <EntityCellAction endpoint="types" entity={row.original} type="type" />
     ),
   },
 ];

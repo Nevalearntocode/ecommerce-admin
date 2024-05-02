@@ -51,7 +51,7 @@ const StoreSwitcher = ({ stores }: Props) => {
 
   const onStoreSelect = (storeSlug: string) => {
     setIsComboboxOpen(false);
-    if(currentPath){
+    if (currentPath) {
       router.push(`/${storeSlug}/${currentPath}`);
     } else {
       router.push(`/${storeSlug}`);
@@ -115,10 +115,8 @@ const StoreSwitcher = ({ stores }: Props) => {
           <CommandList>
             <CommandGroup>
               <CommandItem onSelect={() => open("createStore")}>
-                {/* <Button className="w-full" variant={`ghost`} size={"sm"}> */}
                 Create a new store
                 <Plus className="ml-auto h-4 w-4" />
-                {/* </Button> */}
               </CommandItem>
             </CommandGroup>
           </CommandList>

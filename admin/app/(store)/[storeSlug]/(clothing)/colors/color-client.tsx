@@ -13,12 +13,12 @@ import useFilter from "@/hooks/use-filter";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import { useMemo } from "react";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  colors: Color[];
-};
+type Props = {};
 
-const ColorClient = ({ colors }: Props) => {
+const ColorClient = ({}: Props) => {
+  const { colors } = useStoreContext().store;
   const router = useRouter();
   const params = useParams();
 
@@ -27,15 +27,15 @@ const ColorClient = ({ colors }: Props) => {
     "name",
   );
 
-const formattedColors: ColorColumn[] = useMemo(() => {
-  return filteredColors.map((color) => ({
-    id: color.id,
-    name: color.name,
-    value: color.value,
-    createdAt: format(color.createdAt, "h:mm MMMM do, yyyy"),
-    updatedAt: format(color.updatedAt, "h:mm MMMM do, yyyy"),
-  }));
-}, [filteredColors]);
+  const formattedColors: ColorColumn[] = useMemo(() => {
+    return filteredColors.map((color) => ({
+      id: color.id,
+      name: color.name,
+      value: color.value,
+      createdAt: format(color.createdAt, "h:mm MMMM do, yyyy"),
+      updatedAt: format(color.updatedAt, "h:mm MMMM do, yyyy"),
+    }));
+  }, [filteredColors]);
   return (
     <>
       <HeaderWithActions

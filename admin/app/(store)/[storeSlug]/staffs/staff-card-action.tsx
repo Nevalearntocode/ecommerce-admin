@@ -7,26 +7,30 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useStoreContext } from "@/contexts/store-context";
 import useModal from "@/hooks/use-modal-store";
-import { StaffWithStore, StaffWithUser } from "@/types";
+import { isOwner } from "@/permissions/permission-hierarchy";
+import { StaffWithUser } from "@/types";
 import axios from "axios";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 type Props = {
   staff: StaffWithUser;
-  currentStaff: StaffWithStore;
 };
 
-const StaffCardAction = ({ currentStaff, staff }: Props) => {
+const StaffCardAction = ({ staff }: Props) => {
   const { open } = useModal();
   const router = useRouter();
+  const params = useParams();
+  const { userId } = useStoreContext().store;
+  const { id } = useStoreContext().user;
 
   const onDelete = async () => {
     try {
       const res = await axios.delete(
-        `/api/store/${currentStaff.store.slug}/staffs/${staff.id}`,
+        `/api/store/${params.storeSlug}/staffs/${staff.id}`,
       );
       toast.success(res.data.success);
       router.refresh();
@@ -51,7 +55,12 @@ const StaffCardAction = ({ currentStaff, staff }: Props) => {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Action</DropdownMenuLabel>
         <DropdownMenuItem
-          onClick={() => open("updateRole", { staff, currentStaff })}
+          onClick={() =>
+            open("updateRole", {
+              staff,
+              isOwner: isOwner(id, userId),
+            })
+          }
         >
           <Edit className="mr-2 h-4 w-4" />
           Update

@@ -4,28 +4,32 @@ import AddStaff from "@/app/(store)/[storeSlug]/staffs/add-staff";
 import Header from "@/components/header";
 
 import { Separator } from "@/components/ui/separator";
-import { StaffWithStore, StaffWithUser } from "@/types";
 import StaffCard from "./staff-card";
 import SearchStaff from "./search-staff";
 import { useSearchParams } from "next/navigation";
 import { getHighestRole } from "@/lib/utils";
 import { isOwner } from "@/permissions/permission-hierarchy";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  staffs: StaffWithUser[];
-  currentStaff: StaffWithStore;
-};
+type Props = {};
 
-const StaffClient = ({ staffs, currentStaff }: Props) => {
+const StaffClient = ({}: Props) => {
+  const { staffs, userId } = useStoreContext().store;
+  const { id } = useStoreContext().user;
+  const currentStaff = staffs.find((staff) => staff.userId === id);
   const searchParams = useSearchParams();
   const name = searchParams.get("name");
   const role = searchParams.get("role");
+
+  if (!currentStaff) {
+    return null;
+  }
 
   const filteredStaffs = staffs.filter((staff) => {
     if (name && role) {
       return (
         staff.user.name === name &&
-        (isOwner(staff.userId, currentStaff.store.userId)
+        (isOwner(staff.userId, userId)
           ? "Owner"
           : getHighestRole(staff).toLowerCase() === role.toLowerCase())
       );
@@ -36,7 +40,7 @@ const StaffClient = ({ staffs, currentStaff }: Props) => {
     }
 
     if (role && !name) {
-      return isOwner(staff.userId, currentStaff.store.userId)
+      return isOwner(staff.userId, userId)
         ? "Owner"
         : getHighestRole(staff).toLowerCase() === role.toLowerCase();
     }
@@ -51,10 +55,10 @@ const StaffClient = ({ staffs, currentStaff }: Props) => {
           title={`${staffs.length <= 1 ? `Staff (${staffs.length})` : `Staffs (${staffs.length})`}`}
           description="Manage employees for your store."
         />
-        <AddStaff currentStaff={currentStaff} store={currentStaff.store} />
+        <AddStaff isAdmin={currentStaff.isAdmin} />
       </div>
       <Separator className="mt-4" />
-      <SearchStaff staffs={staffs} storeUserId={currentStaff.store.userId} />
+      <SearchStaff staffs={staffs} storeUserId={userId} />
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {filteredStaffs.map((staff) => (
           <StaffCard key={staff.id} staff={staff} currentStaff={currentStaff} />

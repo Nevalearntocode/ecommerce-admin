@@ -13,7 +13,7 @@ type ModalData = {
   headerDelete?: string;
   descriptionDelete?: string;
   staff?: StaffWithUser;
-  currentStaff?: StaffWithStore;
+  isOwner?: boolean
 };
 
 type ModalStore = {

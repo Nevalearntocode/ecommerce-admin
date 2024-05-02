@@ -14,7 +14,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Store } from "@prisma/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
@@ -28,11 +27,10 @@ import { generateSlug } from "@/constant";
 import APIAlert from "@/components/apis/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import ImageUpload from "@/components/uploadthing/upload-image";
+import { useStoreContext } from "@/contexts/store-context";
+import { isOwner } from "@/permissions/permission-hierarchy";
 
-type Props = {
-  store: Store;
-  isOwner: boolean;
-};
+type Props = {};
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters long").trim(),
@@ -42,7 +40,9 @@ const formSchema = z.object({
 
 type FormType = z.infer<typeof formSchema>;
 
-const SettingsForm = ({ store, isOwner }: Props) => {
+const SettingsForm = ({}: Props) => {
+  const { name, slug, image, id, userId } = useStoreContext().store;
+  const { user } = useStoreContext();
   const { open, close } = useModal();
   const origin = useOrigin();
   const router = useRouter();
@@ -57,24 +57,20 @@ const SettingsForm = ({ store, isOwner }: Props) => {
   });
 
   useEffect(() => {
-    form.setValue("name", store.name);
-    form.setValue("slug", store.slug);
-    form.setValue("image", store.image);
-  }, [store, form]);
+    form.setValue("name", name);
+    form.setValue("slug", slug);
+    form.setValue("image", image);
+  }, [form, name, slug, image]);
 
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    if (
-      data.name === store.name &&
-      data.slug === store.slug &&
-      data.image === store.image
-    ) {
+    if (data.name === name && data.slug === slug && data.image === image) {
       toast.info("Store has not changed.");
       return;
     }
     try {
-      const res = await axios.patch(`/api/store/${store.slug}`, data);
+      const res = await axios.patch(`/api/store/${slug}`, data);
       toast.success(res.data.success);
       router.push(`/${generateSlug({ ...data })}/settings`);
       router.refresh();
@@ -85,7 +81,7 @@ const SettingsForm = ({ store, isOwner }: Props) => {
 
   const onDelete = async () => {
     try {
-      const res = await axios.delete(`/api/store/${store.slug}`);
+      const res = await axios.delete(`/api/store/${slug}`);
       toast.success(res.data.success);
       router.push(`/`);
       router.refresh();
@@ -98,7 +94,7 @@ const SettingsForm = ({ store, isOwner }: Props) => {
   const deletePackage = {
     confirmDelete: onDelete,
     headerDelete: " Delete Store?",
-    descriptionDelete: `Deleting "${store.name}" will permanently remove it and all its content. This is irreversible.`,
+    descriptionDelete: `Deleting "${name}" will permanently remove it and all its content. This is irreversible.`,
   };
 
   return (
@@ -106,7 +102,7 @@ const SettingsForm = ({ store, isOwner }: Props) => {
       <div className="flex items-center justify-between">
         <Header title="Settings" description="Manage your store" />
         <div className="flex gap-x-4">
-          {isOwner && (
+          {isOwner(user.id, userId) && (
             <Button
               className="h-10 w-32"
               disabled={isLoading}
@@ -217,12 +213,12 @@ const SettingsForm = ({ store, isOwner }: Props) => {
       <Separator />
       <APIAlert
         title="NEXT_PUBLIC_API_URL"
-        description={`${origin}/api/store/${store.slug}`}
+        description={`${origin}/api/store/${slug}`}
         variant="public"
       />
       <APIAlert
         title="NEXT_PUBLIC_API_URL"
-        description={`${origin}/api/v2/stores/${store.id}`}
+        description={`${origin}/api/v2/stores/${id}`}
         variant="public"
       />
     </>

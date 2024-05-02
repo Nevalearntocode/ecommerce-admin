@@ -13,29 +13,29 @@ import useFilter from "@/hooks/use-filter";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import { useMemo } from "react";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  sizes: Size[];
-};
+type Props = {};
 
-const SizeClient = ({ sizes }: Props) => {
+const SizeClient = ({}: Props) => {
   const router = useRouter();
   const params = useParams();
+  const { sizes } = useStoreContext().store;
 
   const { filteredItems: filteredSizes, setSearchInput } = useFilter(
     sizes,
     "name",
   );
 
-const formattedSizes: SizeColumn[] = useMemo(() => {
-  return filteredSizes.map((size) => ({
-    id: size.id,
-    name: size.name,
-    value: size.value,
-    createdAt: format(size.createdAt, "h:mm MMMM do, yyyy"),
-    updatedAt: format(size.updatedAt, "h:mm MMMM do, yyyy"),
-  }));
-}, [filteredSizes]);
+  const formattedSizes: SizeColumn[] = useMemo(() => {
+    return filteredSizes.map((size) => ({
+      id: size.id,
+      name: size.name,
+      value: size.value,
+      createdAt: format(size.createdAt, "h:mm MMMM do, yyyy"),
+      updatedAt: format(size.updatedAt, "h:mm MMMM do, yyyy"),
+    }));
+  }, [filteredSizes]);
 
   return (
     <>

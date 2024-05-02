@@ -53,13 +53,6 @@ export async function PATCH(
       return new NextResponse("Store not found", { status: 404 });
     }
 
-    if (isAdmin && existingStore.userId !== user.id) {
-      return new NextResponse(
-        "You do not have permission to perform this action.",
-        { status: 403 },
-      );
-    }
-
     const existingStaff = await db.staff.findUnique({
       where: {
         id: Number(params.staffId),
@@ -77,6 +70,19 @@ export async function PATCH(
       return new NextResponse(
         "You do not have permission to perform this action.",
         { status: 403 },
+      );
+    }
+
+    if (
+      isAdmin !== undefined &&
+      isAdmin !== existingStaff.isAdmin &&
+      !isOwner(user.id, existingStore.userId)
+    ) {
+      return new NextResponse(
+        "You don't have permission to change admin role.",
+        {
+          status: 400,
+        },
       );
     }
 

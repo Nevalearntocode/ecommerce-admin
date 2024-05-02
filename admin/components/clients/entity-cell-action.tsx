@@ -21,7 +21,7 @@ type Props = {
     slug?: string;
   };
   endpoint: string;
-  type?: "general" | "product";
+  type?: "general" | "product" | "color" | "size" | "model" | "type";
 };
 
 const EntityCellAction = ({ entity, endpoint, type }: Props) => {
@@ -50,7 +50,7 @@ const EntityCellAction = ({ entity, endpoint, type }: Props) => {
   };
 
   const description =
-    type === "general"
+    type !== "product"
       ? `Deleting "${entity.name}" will permanently remove it and all its content. This is irreversible.`
       : type === "product"
         ? `"${entity.name}" Will permanently be removed. This is irreversible.`
@@ -58,7 +58,7 @@ const EntityCellAction = ({ entity, endpoint, type }: Props) => {
 
   const deletePackage = {
     confirmDelete: onDelete,
-    headerDelete: `Delete ${entity.id ? "billboard" : "category"}?`,
+    headerDelete: `Delete ${type === "general" ? (entity.id ? "billboard" : "category") : type}?`,
     descriptionDelete: description,
   };
 

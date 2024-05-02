@@ -43,7 +43,7 @@ export const columns: ColumnDef<ColorColumn>[] = [
       <EntityCellAction
         endpoint="colors"
         entity={row.original}
-        type="general"
+        type="color"
       />
     ),
   },

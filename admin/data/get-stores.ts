@@ -1,3 +1,4 @@
+import { SafeUser, StoreWithChildren } from "@/types";
 import { db } from "../lib/db";
 import getCurrentUser from "./get-current-user";
 
@@ -14,14 +15,58 @@ export async function getStoreWithCurrentStaffLayout(storeSlug: string) {
     },
     include: {
       staffs: {
-        where: {
-          userId: user.id,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+              updatedAt: true,
+              createdAt: true,
+            },
+          },
         },
       },
+      categories: {
+        include: {
+          billboard: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      billboards: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      sizes: {
+        orderBy: {
+          value: "asc",
+        },
+      },
+      colors: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      models: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      types: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+      // orders: true,
+      // products: true,
     },
   });
 
-  return store;
+  return {store, user} as { store: StoreWithChildren; user: SafeUser};
 }
 
 export default async function getUserStoresById(userId: string) {

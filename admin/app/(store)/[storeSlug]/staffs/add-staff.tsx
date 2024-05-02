@@ -8,9 +8,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useStoreContext } from "@/contexts/store-context";
 import useModal from "@/hooks/use-modal-store";
 import { useOrigin } from "@/hooks/use-origin";
-import { Staff, Store } from "@prisma/client";
 import axios from "axios";
 import { Check, Copy, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -18,11 +18,12 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 
 type Props = {
-  currentStaff: Staff;
-  store: Store;
+  isAdmin: boolean;
 };
 
-const AddStaff = ({ currentStaff, store }: Props) => {
+const AddStaff = ({ isAdmin }: Props) => {
+  const store = useStoreContext().store;
+  const { id } = useStoreContext().user;
   const { open, close } = useModal();
   const [isCopy, setIsCopy] = useState<boolean>();
   const [dropDownMenuOpen, setdropDownMenuOpen] = useState(false);
@@ -76,7 +77,7 @@ const AddStaff = ({ currentStaff, store }: Props) => {
   return (
     <>
       <div className="flex gap-x-4">
-        {store.userId !== currentStaff.userId && (
+        {store.userId !== id && (
           <Button
             variant={`destructive`}
             className="h-10 md:h-12 md:w-28"
@@ -85,7 +86,7 @@ const AddStaff = ({ currentStaff, store }: Props) => {
             Leave store
           </Button>
         )}
-        {(currentStaff.isAdmin || store.userId === currentStaff.userId) && (
+        {(isAdmin || store.userId === id) && (
           <DropdownMenu
             open={dropDownMenuOpen}
             onOpenChange={setdropDownMenuOpen}

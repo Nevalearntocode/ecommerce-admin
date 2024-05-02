@@ -20,7 +20,18 @@ export type SafeUser = {
 };
 
 export type StoreWithStaffs = Store & {
-  staffs: Staff[];
+  staffs: (Staff & {
+    user: SafeUser
+  })[]
+};
+
+export type StoreWithChildren = StoreWithStaffs & {
+  categories: CategoryWithBillboard[];
+  billboards: Billboard[];
+  sizes: Size[];
+  colors: Color[];
+  models: Model[];
+  types: Type[];
 };
 
 export type CategoryWithBillboard = Category & {

@@ -31,10 +31,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import FormHeader from "@/components/forms/form-header";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  size: Size | null;
-};
+type Props = {};
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name needs at least 2 characters" }),
@@ -43,11 +42,13 @@ const formSchema = z.object({
 
 type FormType = z.infer<typeof formSchema>;
 
-const SizeForm = ({ size }: Props) => {
+const SizeForm = ({}: Props) => {
   const { open, close } = useModal();
   const origin = useOrigin();
   const router = useRouter();
   const params = useParams();
+  const { sizes } = useStoreContext().store;
+  const size = sizes.find((size) => size.id === Number(params.sizeId));
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {

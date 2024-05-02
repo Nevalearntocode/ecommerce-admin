@@ -24,10 +24,9 @@ import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
 import { useParams, useRouter } from "next/navigation";
 import FormHeader from "@/components/forms/form-header";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  color: Color | null;
-};
+type Props = {};
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name needs at least 2 characters" }),
@@ -38,11 +37,14 @@ const formSchema = z.object({
 
 type FormType = z.infer<typeof formSchema>;
 
-const ColorForm = ({ color }: Props) => {
+const ColorForm = ({}: Props) => {
   const { open, close } = useModal();
+  const { colors } = useStoreContext().store;
   const origin = useOrigin();
   const router = useRouter();
   const params = useParams();
+  const color = colors.find((color) => color.id === Number(params.colorId));
+
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {

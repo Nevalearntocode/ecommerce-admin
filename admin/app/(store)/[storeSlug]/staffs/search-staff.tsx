@@ -122,7 +122,9 @@ function SearchStaff({ staffs, storeUserId }: Props) {
                   )
                 }
               >
-                <p>{staff.user.name}</p>
+                <p>
+                  {staff.user.name === "" ? staff.user.email : staff.user.name}
+                </p>
                 <p className="">
                   {isOwner(staff.userId, storeUserId)
                     ? "Owner"

@@ -9,7 +9,6 @@ import { CategoryColumn, columns } from "./category-column";
 import { format } from "date-fns";
 import { DataTable } from "@/components/clients/datatable";
 import APIList from "@/components/apis/api-list";
-import { CategoryWithBillboard } from "@/types";
 import useFilter from "@/hooks/use-filter";
 import Pagination from "@/components/clients/pagination";
 import useDefaultView from "@/hooks/use-default-view";
@@ -18,12 +17,12 @@ import SearchInput from "@/components/clients/search";
 import GeneralCard from "@/components/clients/general-card";
 import usePagination from "@/hooks/use-pagination";
 import NoResults from "@/components/clients/no-results";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  categories: CategoryWithBillboard[];
-};
+type Props = {};
 
-const CategoryClient = ({ categories }: Props) => {
+const CategoryClient = ({}: Props) => {
+  const { categories } = useStoreContext().store;
   const { viewState, handleCardViewClick, handleDatatableViewClick } =
     useDefaultView("categoryView", "card");
   const { setSearchInput, filteredItems: filteredCategories } = useFilter(

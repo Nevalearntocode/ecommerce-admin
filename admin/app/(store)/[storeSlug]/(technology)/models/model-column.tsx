@@ -34,7 +34,7 @@ export const columns: ColumnDef<ModelColumn>[] = [
       <EntityCellAction
         endpoint="models"
         entity={row.original}
-        type="general"
+        type="model"
       />
     ),
   },

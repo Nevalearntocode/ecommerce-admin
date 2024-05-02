@@ -1,5 +1,6 @@
 import Empty from "@/components/mainpages/empty";
 import NotPermitted from "@/components/mainpages/not-permitted";
+import StoreContextProvider from "@/contexts/store-context";
 import { getStoreWithCurrentStaffLayout } from "@/data/get-stores";
 import {
   canManageBillboard,
@@ -7,6 +8,7 @@ import {
   canManageProduct,
   canManageStore,
 } from "@/permissions/permission-hierarchy";
+import { SafeUser, StoreWithChildren } from "@/types";
 import { Staff } from "@prisma/client";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -24,7 +26,12 @@ interface permissionMap {
 }
 
 const StoreLayout = async ({ children, params }: Props) => {
-  const store = await getStoreWithCurrentStaffLayout(params.storeSlug);
+  const res = await getStoreWithCurrentStaffLayout(params.storeSlug);
+
+  const {store, user} = res as {
+    store: StoreWithChildren,
+    user: SafeUser
+  }
 
   if (!store) {
     return (
@@ -34,15 +41,12 @@ const StoreLayout = async ({ children, params }: Props) => {
     );
   }
 
-  if (!store.staffs || store.staffs.length === 0) {
-    return (
-      <Empty
-        label={`You are not a staff of store with slug: ${decodeURIComponent(params.storeSlug)}`}
-      />
-    );
+  const staff = store.staffs.find((staff) => staff.userId === user.id);
+
+  if (!staff) {
+    return <NotPermitted />;
   }
 
-  const staff = store.staffs[0];
 
   const headerList = headers();
   const storeUrl = headerList.get("storeUrl") || "";
@@ -63,6 +67,18 @@ const StoreLayout = async ({ children, params }: Props) => {
 
   const keys = Object.keys(permissionMap);
 
+  if (route === "colors" || route === "sizes") {
+    if (store.storeType !== "CLOTHING") {
+      return redirect(`/${store.slug}`);
+    }
+  }
+
+  if (route === "models" || route === "types") {
+    if (store.storeType !== "TECHNOLOGY") {
+      return redirect(`/${store.slug}`);
+    }
+  }
+
   if (!keys.includes(route) && route !== undefined) {
     return redirect(`/${store.slug}`);
   }
@@ -71,7 +87,16 @@ const StoreLayout = async ({ children, params }: Props) => {
     return <NotPermitted />;
   }
 
-  return <>{children}</>;
+  return (
+    <StoreContextProvider
+      data={{
+        store,
+        user,
+      }}
+    >
+      {children}
+    </StoreContextProvider>
+  );
 };
 
 export default StoreLayout;

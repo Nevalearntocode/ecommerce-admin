@@ -7,7 +7,7 @@ import EntityCellAction from "@/components/clients/entity-cell-action";
 export type SizeColumn = {
   id: number;
   name: string;
-  value: SizeValue,
+  value: SizeValue;
   createdAt: string;
   updatedAt: string;
 };
@@ -32,7 +32,7 @@ export const columns: ColumnDef<SizeColumn>[] = [
   {
     id: "actions",
     cell: ({ row }) => (
-      <EntityCellAction endpoint="sizes" entity={row.original} type="general" />
+      <EntityCellAction endpoint="sizes" entity={row.original} type="size" />
     ),
   },
 ];

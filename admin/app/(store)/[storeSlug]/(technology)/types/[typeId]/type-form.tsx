@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Type } from "@prisma/client";
 import { Separator } from "@/components/ui/separator";
 import APIAlert from "@/components/apis/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
@@ -24,10 +23,9 @@ import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
 import { useParams, useRouter } from "next/navigation";
 import FormHeader from "@/components/forms/form-header";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  type: Type | null;
-};
+type Props = {};
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name needs at least 2 characters" }),
@@ -38,11 +36,13 @@ const formSchema = z.object({
 
 type FormType = z.infer<typeof formSchema>;
 
-const TypeForm = ({ type }: Props) => {
+const TypeForm = ({}: Props) => {
+  const { types } = useStoreContext().store;
   const { open, close } = useModal();
   const origin = useOrigin();
   const router = useRouter();
   const params = useParams();
+  const type = types.find((type) => type.id === Number(params.typeId));
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
