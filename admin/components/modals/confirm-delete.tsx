@@ -26,6 +26,14 @@ const ConfirmDeleteModal = (props: Props) => {
     return null;
   }
 
+  const { confirmDelete } = data;
+
+  const onDelete = async () => {
+    setIsLoading(true);
+    confirmDelete();
+    setIsLoading(false);
+  };
+
   return (
     <Dialog open={isModalOpen} onOpenChange={close}>
       <DialogContent>
@@ -36,17 +44,19 @@ const ConfirmDeleteModal = (props: Props) => {
           {data.descriptionDelete}
         </DialogDescription>
         <div className="mt-4 flex w-full justify-between">
-          <Button className="w-1/3" variant={`default`} onClick={close}>
+          <Button
+            disabled={isLoading}
+            className="w-1/3"
+            variant={`default`}
+            onClick={close}
+          >
             Cancel
           </Button>
           <Button
+            disabled={isLoading}
             className="w-1/3"
             variant={`destructive`}
-            onClick={() => {
-              setIsLoading(true);
-              data.confirmDelete;
-              setIsLoading(false);
-            }}
+            onClick={onDelete}
           >
             Confirm
           </Button>

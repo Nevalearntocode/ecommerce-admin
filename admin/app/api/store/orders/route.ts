@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": process.env.ALLOWED_FRONTEND_ORIGIN as string,
+  "Access-Control-Allow-Origin": process.env.ALLOWED_FRONTEND_ORIGIN || "*",
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
