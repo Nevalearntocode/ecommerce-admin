@@ -37,7 +37,7 @@ export async function POST(
     };
 
     if (value.length === 4) {
-      updateData.value = expandHexCode(value);
+      updateData.value = expandHexCode(value).toUpperCase();
     }
 
     const existingStore = await getStoreWithCurrentStaff(storeSlug, user.id);
@@ -78,7 +78,7 @@ export async function POST(
     const newColor = await db.color.create({
       data: {
         name,
-        value: updateData.value,
+        value: updateData.value.toUpperCase(),
         storeId: existingStore.id,
       },
     });

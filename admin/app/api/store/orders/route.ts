@@ -32,6 +32,8 @@ export async function POST(req: Request) {
       address: string;
     } = await req.json();
 
+    const origin = req.headers.get("origin");
+
     // Check if products is an array
     if (!Array.isArray(products) || products.length === 0) {
       return new NextResponse(
@@ -102,9 +104,16 @@ export async function POST(req: Request) {
       },
     });
 
+    console.log(origin);
+
     return NextResponse.json(
       { success: "Your order has been created.", order },
-      { headers: corsHeaders },
+      {
+        headers: {
+          "Access-Control-Allow-Origin": origin || "*",
+          "content-type": "application/json",
+        },
+      },
     );
   } catch (error) {
     return new NextResponse("Internal Error", { status: 500 });

@@ -58,7 +58,7 @@ export async function PATCH(
     };
 
     if (updateData.value.length === 4) {
-      updateData.value = expandHexCode(updateData.value);
+      updateData.value = expandHexCode(updateData.value).toUpperCase();
     }
 
     if (
@@ -75,7 +75,10 @@ export async function PATCH(
       },
     });
 
-    if (existingColorWithName && existingColorWithName.id !== existingColor.id) {
+    if (
+      existingColorWithName &&
+      existingColorWithName.id !== existingColor.id
+    ) {
       return new NextResponse("Color already exists.", { status: 400 });
     }
 
@@ -83,7 +86,7 @@ export async function PATCH(
       where: {
         id: existingColor.id,
       },
-      data: { ...updateData },
+      data: { ...updateData, value: updateData.value.toUpperCase() },
     });
 
     return NextResponse.json({

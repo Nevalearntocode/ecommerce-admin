@@ -4,9 +4,12 @@ import { apiAuthPrefix, authRoutes } from "./routes";
 import { NextResponse } from "next/server";
 const { auth } = NextAuth(authConfig);
 
+const allowedOrigin = [process.env.ALLOWED_FRONTEND_ORIGIN];
+
 export default auth((req) => {
   const { nextUrl } = req;
   const isLoggedin = !!req.auth;
+  const origin = req.headers.get("origin");
 
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("storeUrl", req.url);
@@ -14,6 +17,10 @@ export default auth((req) => {
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isUploadthingRoute = nextUrl.pathname.startsWith(`/api/uploadthing`);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+  if (origin && allowedOrigin.includes(origin)) {
+    return;
+  }
 
   if (isApiAuthRoute) {
     return;
