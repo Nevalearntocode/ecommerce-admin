@@ -3,6 +3,8 @@ import {
   Category,
   Color,
   Model,
+  Order,
+  OrderItem,
   Product,
   Size,
   Staff,
@@ -32,6 +34,11 @@ export type StoreWithChildren = StoreWithStaffs & {
   colors: Color[];
   models: Model[];
   types: Type[];
+  orders: (Order & {
+    orderItems: (OrderItem & {
+      product: Product;
+    })[];
+  })[];
 };
 
 export type CategoryWithBillboard = Category & {

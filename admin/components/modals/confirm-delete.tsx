@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -14,6 +14,7 @@ type Props = {};
 
 const ConfirmDeleteModal = (props: Props) => {
   const { close, type, data, isOpen } = useModal();
+  const [isLoading, setIsLoading] = useState(false);
 
   const isModalOpen = type === "confirmDelete" && isOpen;
   if (
@@ -41,7 +42,11 @@ const ConfirmDeleteModal = (props: Props) => {
           <Button
             className="w-1/3"
             variant={`destructive`}
-            onClick={data.confirmDelete}
+            onClick={() => {
+              setIsLoading(true);
+              data.confirmDelete;
+              setIsLoading(false);
+            }}
           >
             Confirm
           </Button>

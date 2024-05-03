@@ -2,12 +2,11 @@
 
 import React from "react";
 import { Button } from "../ui/button";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 type Props = {};
 
 const NotPermitted = ({}: Props) => {
-  const params = useParams();
   const router = useRouter();
 
   return (
@@ -19,7 +18,7 @@ const NotPermitted = ({}: Props) => {
         <p>Ask your manager for more information</p>
         <Button
           className="flex gap-x-2 pr-3"
-          onClick={() => router.push(`/${params.storeSlug}`)}
+          onClick={() => router.push(`/`)}
         >
           <p className="">Go back.</p>
         </Button>

@@ -61,8 +61,15 @@ export async function getStoreWithCurrentStaffLayout(storeSlug: string) {
           createdAt: "desc",
         },
       },
-      // orders: true,
-      // products: true,
+      orders: {
+        include: {
+          orderItems: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      },
     },
   });
 

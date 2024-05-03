@@ -1,5 +1,4 @@
 import Empty from "@/components/mainpages/empty";
-import NotPermitted from "@/components/mainpages/not-permitted";
 import StoreContextProvider from "@/contexts/store-context";
 import { getStoreWithCurrentStaffLayout } from "@/data/get-stores";
 import {
@@ -7,12 +6,15 @@ import {
   canManageCategory,
   canManageProduct,
   canManageStore,
+  isOwner,
 } from "@/permissions/permission-hierarchy";
-import { SafeUser, StoreWithChildren } from "@/types";
+import { ClothingProduct, SafeUser, StoreWithChildren, TechnologyProduct } from "@/types";
 import { Staff } from "@prisma/client";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
+import Unauthorized from "./unauthorized";
+import { getClothingProductsWithStoreType, getTechnologyProductsWithStoreType } from "@/data/get-products";
 
 type Props = {
   children: React.ReactNode;
@@ -28,10 +30,10 @@ interface permissionMap {
 const StoreLayout = async ({ children, params }: Props) => {
   const res = await getStoreWithCurrentStaffLayout(params.storeSlug);
 
-  const {store, user} = res as {
-    store: StoreWithChildren,
-    user: SafeUser
-  }
+  const { store, user } = res as {
+    store: StoreWithChildren;
+    user: SafeUser;
+  };
 
   if (!store) {
     return (
@@ -44,9 +46,10 @@ const StoreLayout = async ({ children, params }: Props) => {
   const staff = store.staffs.find((staff) => staff.userId === user.id);
 
   if (!staff) {
-    return <NotPermitted />;
+    return (
+      <Unauthorized label={`You are not a staff of store: "${store.name}"`} />
+    );
   }
-
 
   const headerList = headers();
   const storeUrl = headerList.get("storeUrl") || "";
@@ -84,7 +87,16 @@ const StoreLayout = async ({ children, params }: Props) => {
   }
 
   if (route && !permissionMap[route](staff)) {
-    return <NotPermitted />;
+    if (!isOwner(user.id, store.userId)) {
+      return redirect(`/${store.slug}`);
+    }
+  }
+
+  let products: (ClothingProduct | TechnologyProduct)[] = []
+  if (store.storeType === "CLOTHING") {
+    products = await getClothingProductsWithStoreType(store.id);
+  } else if (store.storeType === "TECHNOLOGY") {
+    products = await getTechnologyProductsWithStoreType(store.id);
   }
 
   return (
@@ -92,6 +104,7 @@ const StoreLayout = async ({ children, params }: Props) => {
       data={{
         store,
         user,
+        products
       }}
     >
       {children}

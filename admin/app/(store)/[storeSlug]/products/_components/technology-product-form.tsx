@@ -36,24 +36,13 @@ import ProductImage from "@/components/uploadthing/product-image";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import useModal from "@/hooks/use-modal-store";
+import { Category, Model, Type } from "@prisma/client";
 
 type Props = {
-  product: TechnologyProduct | null;
-  categories:
-    | {
-        name: string;
-      }[]
-    | undefined;
-  models:
-    | {
-        name: string;
-      }[]
-    | undefined;
-  types:
-    | {
-        name: string;
-      }[]
-    | undefined;
+  product: TechnologyProduct | undefined;
+  categories: Category[];
+  models: Model[];
+  types: Type[];
 };
 
 const formSchema = z.object({

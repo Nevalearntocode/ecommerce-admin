@@ -1,7 +1,6 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { Order, OrderItem, Product } from "@prisma/client";
 import React, { useMemo } from "react";
 import { OrderColumn, columns } from "./order-column";
 import { format } from "date-fns";
@@ -10,16 +9,13 @@ import useFilter from "@/hooks/use-filter";
 import HeaderWithActions from "@/components/clients/header-with-actions";
 import SearchInput from "@/components/clients/search";
 import { formatter } from "@/lib/utils";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  orders: (Order & {
-    orderItems: (OrderItem & {
-      product: Product;
-    })[];
-  })[];
-};
+type Props = {};
 
-const OrderClient = ({ orders }: Props) => {
+const OrderClient = ({}: Props) => {
+  const { orders } = useStoreContext().store;
+
   const { setSearchInput, filteredItems: filteredOrders } = useFilter(
     orders,
     "customer",
@@ -56,7 +52,6 @@ const OrderClient = ({ orders }: Props) => {
         description="Manage your orders for your store"
       />
       <Separator />
-      {/* Search */}
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         <SearchInput
           onChange={setSearchInput}
