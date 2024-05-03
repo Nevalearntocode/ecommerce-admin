@@ -40,9 +40,9 @@ import { Category, Color, Size } from "@prisma/client";
 
 type Props = {
   product: ClothingProduct | undefined;
-  categories: Category[]
-  colors: Color[]
-  sizes: Size[]
+  categories: Category[];
+  colors: Color[];
+  sizes: Size[];
 };
 
 const formSchema = z.object({
@@ -453,44 +453,40 @@ const ClothingProductForm = ({ product, categories, colors, sizes }: Props) => {
                     </FormItem>
                   )}
                 />
-                {form.watch("images").length > 0 && (
-                  <FormField
-                    control={form.control}
-                    name="images"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormControl>
-                          <ProductImage
-                            endpoint="productImage"
-                            onUpload={(value) => onChange(value, "upload")}
-                            onRemove={(value) => onChange(value, "remove")}
-                            value={field.value[1]}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-                {form.watch("images").length > 1 && (
-                  <FormField
-                    control={form.control}
-                    name="images"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormControl>
-                          <ProductImage
-                            endpoint="productImage"
-                            onUpload={(value) => onChange(value, "upload")}
-                            onRemove={(value) => onChange(value, "remove")}
-                            value={field.value[2]}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
+                <FormField
+                  control={form.control}
+                  name="images"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormControl>
+                        <ProductImage
+                          endpoint="productImage"
+                          onUpload={(value) => onChange(value, "upload")}
+                          onRemove={(value) => onChange(value, "remove")}
+                          value={field.value[1]}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="images"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormControl>
+                        <ProductImage
+                          endpoint="productImage"
+                          onUpload={(value) => onChange(value, "upload")}
+                          onRemove={(value) => onChange(value, "remove")}
+                          value={field.value[2]}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
           </div>

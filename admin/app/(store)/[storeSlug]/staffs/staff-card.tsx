@@ -47,20 +47,16 @@ const StaffCard = ({ staff, currentStaff }: Props) => {
                 : staff.user.email.charAt(0).toLocaleUpperCase()}
             </AvatarFallback>
           </Avatar>
-          {(isOwner(staff.userId, userId) || canManageStaff(currentStaff)) && (
+          {(isOwner(id, userId) || canManageStaff(currentStaff)) && (
             <StaffCardAction staff={staff} />
           )}
         </div>
         <CardTitle>
           {staff.user.name === "" ? staff.user.email : staff.user.name}
         </CardTitle>
-        {(isOwner(staff.userId, userId) || canManageStaff(currentStaff)) && (
-          <div>
-            {staff.user.name !== "" && (
-              <CardDescription>{staff.user.email}</CardDescription>
-            )}
-          </div>
-        )}
+        <div>
+          <CardDescription>{staff.user.email}</CardDescription>
+        </div>
       </CardHeader>
       <CardContent className="flex justify-between">
         <div className="flex flex-col">

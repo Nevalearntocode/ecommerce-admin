@@ -74,7 +74,9 @@ export async function PATCH(
         }
 
         if (product.stock < orderItem.quantity) {
-          throw new Error("Product out of stock");
+          throw new Error(
+            `Product ${product.name} is out of stock or not enough. Please update the stock first. ${product.stock}`,
+          );
         }
 
         await tx.product.update({

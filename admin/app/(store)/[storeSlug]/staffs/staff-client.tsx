@@ -15,6 +15,59 @@ type Props = {};
 
 const StaffClient = ({}: Props) => {
   const { staffs, userId } = useStoreContext().store;
+
+  staffs.sort((a, b) => {
+    if (isOwner(a.userId, userId)) {
+      return -1;
+    }
+
+    if (isOwner(b.userId, userId)) {
+      return 1;
+    }
+
+    if (a.isAdmin) {
+      return -1;
+    }
+
+    if (b.isAdmin) {
+      return 1;
+    }
+
+    if (a.canManageStore) {
+      return -1;
+    }
+
+    if (b.canManageStore) {
+      return 1;
+    }
+
+    if (a.canManageCategory) {
+      return -1;
+    }
+
+    if (b.canManageCategory) {
+      return 1;
+    }
+
+    if (a.canManageBillboard) {
+      return -1;
+    }
+
+    if (b.canManageBillboard) {
+      return 1;
+    }
+
+    if (a.canManageProduct) {
+      return -1;
+    }
+
+    if (b.canManageProduct) {
+      return 1;
+    }
+
+    return 0;
+  });
+
   const { id } = useStoreContext().user;
   const currentStaff = staffs.find((staff) => staff.userId === id);
   const searchParams = useSearchParams();

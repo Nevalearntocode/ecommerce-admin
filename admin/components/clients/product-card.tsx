@@ -38,7 +38,7 @@ function EntityCard({ entity, type }: Props) {
   };
 
   return (
-    <Card>
+    <Card className="pb-4">
       <CardHeader className="font-bold">{entity.name}</CardHeader>
       <CardContent className="h-2/3">
         <div className="h-full">
@@ -48,7 +48,7 @@ function EntityCard({ entity, type }: Props) {
             alt={entity.name}
             height={720}
             width={720}
-            className="aspect-video h-full w-full rounded-md transition duration-1000 hover:scale-110"
+            className="aspect-[2.4/1] h-full w-full rounded-md transition duration-1000 hover:scale-110"
           />
         </div>
         <div className="flex items-center justify-between pb-8">
@@ -69,7 +69,7 @@ function EntityCard({ entity, type }: Props) {
                       height={720}
                       width={720}
                       className={cn(
-                        "h-10 w-10 transition duration-1000 hover:scale-110",
+                        "aspect-square h-10 w-10 transition duration-1000 hover:scale-110",
                         index === mainImageIndex && "scale-125 border-2",
                       )}
                     />

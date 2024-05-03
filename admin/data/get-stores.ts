@@ -69,6 +69,9 @@ export async function getStoreWithCurrentStaffLayout(storeSlug: string) {
             },
           },
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       },
     },
   });
