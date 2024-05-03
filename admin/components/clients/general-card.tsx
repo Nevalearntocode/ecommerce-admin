@@ -9,7 +9,7 @@ import React from "react";
 type Props = {
   title: string;
   imageUrl: string;
-  path: string
+  path: string;
 };
 
 function GeneralCard({ title, imageUrl, path }: Props) {
@@ -21,21 +21,18 @@ function GeneralCard({ title, imageUrl, path }: Props) {
       <CardContent className="h-2/3" onClick={() => router.push(path)}>
         <div className="h-full">
           <Image
-            priority={true}
+            loading="lazy"
             src={imageUrl}
             alt={title}
-            height={720}
-            width={720}
+            height={200}
+            width={480}
             className="aspect-video h-full w-full rounded-md transition duration-1000 hover:scale-110"
           />
         </div>
         <div className="mt-4 flex items-center justify-between pb-8">
-            <Button
-              onClick={() => router.push(path)}
-              className="ml-auto w-1/3"
-            >
-              Edit
-            </Button>
+          <Button onClick={() => router.push(path)} className="ml-auto w-1/3">
+            Edit
+          </Button>
         </div>
       </CardContent>
     </Card>

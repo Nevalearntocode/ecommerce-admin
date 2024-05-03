@@ -22,10 +22,11 @@ const ProductImage = ({ onUpload, value, endpoint, onRemove }: Props) => {
       <div className={cn("relative flex h-auto min-h-[250px] justify-center")}>
         <div>
           <Image
+            loading="lazy"
             src={value}
             alt="product"
-            height={720}
-            width={720}
+            height={200}
+            width={480}
             className="aspect-video h-full w-full rounded-md object-fill"
           />
         </div>

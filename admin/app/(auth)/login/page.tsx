@@ -13,9 +13,10 @@ const Login = async (props: Props) => {
       </div>
       <div className="hidden h-full w-[75%] items-center justify-center bg-muted xl:flex">
         <Image
+          loading="lazy"
           src="/admin-dashboard.png"
           alt="Image"
-          width="1600"
+          width="480"
           height="900"
           className="aspect-video h-5/6 w-5/6 dark:brightness-[0.2] dark:grayscale"
         />

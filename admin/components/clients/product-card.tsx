@@ -46,8 +46,8 @@ function EntityCard({ entity, type }: Props) {
             priority={true}
             src={entity.images[mainImageIndex]}
             alt={entity.name}
-            height={720}
-            width={720}
+            height={200}
+            width={480}
             className="aspect-[2.4/1] h-full w-full rounded-md transition duration-1000 hover:scale-110"
           />
         </div>
@@ -63,11 +63,11 @@ function EntityCard({ entity, type }: Props) {
                     onClick={() => handleButtonClick(index)}
                   >
                     <Image
-                      priority={true}
+                      loading="lazy"
                       src={image}
                       alt="Small image"
-                      height={720}
-                      width={720}
+                      height={200}
+                      width={480}
                       className={cn(
                         "aspect-square h-10 w-10 transition duration-1000 hover:scale-110",
                         index === mainImageIndex && "scale-125 border-2",
