@@ -20,7 +20,7 @@ const Empty = ({ label }: Props) => {
         <h1 className="text-xl font-bold sm:text-2xl md:text-3xl lg:text-4xl">
           {label}
         </h1>
-        <div className="flex flex-col gap-y-4">
+        <div className="flex gap-x-4">
           <Button
             className="flex h-12 w-36 justify-between"
             onClick={() => open("createStore")}

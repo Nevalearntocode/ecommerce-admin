@@ -58,7 +58,8 @@ const AddStaff = ({ isAdmin }: Props) => {
     }
   };
 
-  const inviteSlug = `${origin}/${store?.slug}/staffs/${store?.inviteCode}`;
+  const inviteSlug = `${origin}/join?store=${store.slug}&invite=${store.inviteCode}`;
+
   const onCopy = () => {
     navigator.clipboard.writeText(inviteSlug);
     toast.success("Invite link copied.");

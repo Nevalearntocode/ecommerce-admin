@@ -32,8 +32,8 @@ const ImageUpload = ({ onChange, value, endpoint, type }: Props) => {
               loading="lazy"
               src={value}
               alt="billboard"
-              height={200}
-              width={480}
+              height={640}
+              width={640}
               className="aspect-video h-full w-full rounded-md object-fill"
             />
           </div>

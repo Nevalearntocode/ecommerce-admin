@@ -11,15 +11,12 @@ const Register = async (props: Props) => {
         <h1 className="w-full text-center text-3xl font-bold">Register</h1>
         <RegisterForm />
       </div>
-      <div className="hidden h-full w-[75%] items-center justify-center bg-muted xl:flex">
-        <Image
-          loading="lazy"
-          src="/admin-dashboard.png"
-          alt="Image"
-          width="480"
-          height="900"
-          className="aspect-video h-5/6 w-5/6 dark:brightness-[0.2] dark:grayscale"
-        />
+      <div className="hidden h-full items-center justify-center bg-muted xl:flex">
+        <div className="relative mx-16 my-16 flex aspect-[2.1/1] h-[65%] min-h-[400px] w-full items-center justify-center rounded-lg border-4 bg-gradient-to-br from-black to-gray-700 text-3xl">
+          <h1 className="absolute rounded-full px-3 py-2 text-2xl font-bold italic text-white md:text-3xl xl:text-4xl">
+            One Platform. Unlimited Possibilites.
+          </h1>
+        </div>
       </div>
     </div>
   );

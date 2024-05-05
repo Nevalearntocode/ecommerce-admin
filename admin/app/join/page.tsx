@@ -1,16 +1,23 @@
-import { db } from "@/lib/db";
 import getCurrentUser from "@/data/get-current-user";
+import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
+import React from "react";
 import InvalidLink from "./invalid-link";
 
 type Props = {
-  params: {
-    inviteCode: string;
-    storeSlug: string;
+  searchParams: {
+    [key: string]: string | string[] | undefined;
   };
 };
 
-const Invite = async ({ params }: Props) => {
+const JoinStore = async ({ searchParams }: Props) => {
+  const slug = searchParams.store as string;
+  const inviteCode = searchParams.invite as string;
+
+  if (!slug || !inviteCode) {
+    return <InvalidLink label="Invalid store slug or invite code" />;
+  }
+
   const user = await getCurrentUser();
   if (!user) {
     return redirect(`/login`);
@@ -18,8 +25,8 @@ const Invite = async ({ params }: Props) => {
 
   const store = await db.store.findUnique({
     where: {
-      inviteCode: params.inviteCode,
-      slug: params.storeSlug,
+      inviteCode: inviteCode,
+      slug,
     },
     include: {
       staffs: {
@@ -60,4 +67,4 @@ const Invite = async ({ params }: Props) => {
   return redirect(`/${store.slug}`);
 };
 
-export default Invite;
+export default JoinStore;

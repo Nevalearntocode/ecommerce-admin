@@ -41,13 +41,13 @@ function EntityCard({ entity, type }: Props) {
     <Card className="pb-4">
       <CardHeader className="font-bold">{entity.name}</CardHeader>
       <CardContent className="h-2/3">
-        <div className="h-full">
+        <div className="relative h-full">
           <Image
             priority={true}
             src={entity.images[mainImageIndex]}
             alt={entity.name}
-            height={200}
-            width={480}
+            height={640}
+            width={640}
             className="aspect-[2.4/1] h-full w-full rounded-md transition duration-1000 hover:scale-110"
           />
         </div>

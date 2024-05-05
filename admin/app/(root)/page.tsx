@@ -12,11 +12,7 @@ export default async function Home() {
   const store = await gerFirstUserStoreById(user.id);
 
   if (!store) {
-    return (
-      <div className="">
-        <HomePage />;
-      </div>
-    );
+    return <HomePage />;
   }
 
   return redirect(`/${store.slug}`);

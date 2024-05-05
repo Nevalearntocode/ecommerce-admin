@@ -33,8 +33,8 @@ const MainNav = ({}: Props) => {
 
   const staff = store.staffs.find((staff) => staff.userId === id);
 
-  if(!staff){
-    return null
+  if (!staff) {
+    return null;
   }
 
   const isOwner = store.userId === id;
@@ -94,7 +94,7 @@ const MainNav = ({}: Props) => {
       href: `/${params.storeSlug}/orders`,
       label: "Orders",
       active: pathname === `/${params.storeSlug}/orders`,
-      requireAdminOrPermission: "canManageOrder",
+      requireAdminOrPermission: "canManageProduct",
     },
   ];
 

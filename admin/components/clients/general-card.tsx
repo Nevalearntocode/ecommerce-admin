@@ -24,8 +24,8 @@ function GeneralCard({ title, imageUrl, path }: Props) {
             loading="lazy"
             src={imageUrl}
             alt={title}
-            height={200}
-            width={480}
+            height={640}
+            width={640}
             className="aspect-video h-full w-full rounded-md transition duration-1000 hover:scale-110"
           />
         </div>

@@ -9,7 +9,6 @@ import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,7 +16,6 @@ import {
 } from "../ui/form";
 import useModal from "@/hooks/use-modal-store";
 import { Input } from "../ui/input";
-import Image from "next/image";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
 import ImageUpload from "../uploadthing/upload-image";

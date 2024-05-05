@@ -48,7 +48,7 @@ const StoreLayout = async ({ children, params }: Props) => {
   if (!store) {
     return (
       <Empty
-        label={`Store with slug: "${decodeURIComponent(params.storeSlug)}" not found`}
+        label={`Store with slug: "${decodeURIComponent(params.storeSlug)}" not found.`}
       />
     );
   }

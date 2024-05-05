@@ -25,8 +25,8 @@ const ProductImage = ({ onUpload, value, endpoint, onRemove }: Props) => {
             loading="lazy"
             src={value}
             alt="product"
-            height={200}
-            width={480}
+            height={640}
+            width={640}
             className="aspect-video h-full w-full rounded-md object-fill"
           />
         </div>
