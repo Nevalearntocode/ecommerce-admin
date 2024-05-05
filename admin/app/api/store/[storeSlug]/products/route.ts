@@ -249,8 +249,7 @@ export async function GET(
     }
 
     const { searchParams } = new URL(req.url);
-    const categorySlug =
-      searchParams.get("category") || undefined;
+    const categorySlug = searchParams.get("category") || undefined;
     const brand = searchParams.get("brand") || undefined;
     const colorName = searchParams.get("color") || undefined;
     const sizeName = searchParams.get("size") || undefined;
@@ -273,15 +272,15 @@ export async function GET(
           },
           isFeatured: featured ? true : undefined,
           isArchived: false,
-          color:{
+          color: {
             name: {
               equals: colorName,
               mode: "insensitive",
-            }
+            },
           },
           size: {
             name: {
-              equals: sizeName,
+              equals: sizeName || undefined,
               mode: "insensitive",
             },
           },
@@ -312,7 +311,7 @@ export async function GET(
             name: {
               equals: modelName,
               mode: "insensitive",
-            }
+            },
           },
           type: {
             name: {

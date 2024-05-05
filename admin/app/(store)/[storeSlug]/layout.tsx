@@ -8,13 +8,23 @@ import {
   canManageStore,
   isOwner,
 } from "@/permissions/permission-hierarchy";
-import { ClothingProduct, SafeUser, StoreWithChildren, TechnologyProduct } from "@/types";
+import {
+  ClothingProduct,
+  SafeUser,
+  StoreWithChildren,
+  TechnologyProduct,
+} from "@/types";
 import { Staff } from "@prisma/client";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React from "react";
 import Unauthorized from "./unauthorized";
-import { getClothingProductsWithStoreType, getTechnologyProductsWithStoreType } from "@/data/get-products";
+import {
+  getClothingProductsWithStoreType,
+  getTechnologyProductsWithStoreType,
+} from "@/data/get-products";
+import Navbar from "./_components/navbar";
+import { db } from "@/lib/db";
 
 type Props = {
   children: React.ReactNode;
@@ -92,7 +102,25 @@ const StoreLayout = async ({ children, params }: Props) => {
     }
   }
 
-  let products: (ClothingProduct | TechnologyProduct)[] = []
+  const currentUserStores = await db.store.findMany({
+    where: {
+      staffs: {
+        some: {
+          userId: user.id,
+        },
+      },
+    },
+    select: {
+      name: true,
+      slug: true,
+      storeType: true,
+    },
+    orderBy: {
+      name: "asc",
+    },
+  });
+
+  let products: (ClothingProduct | TechnologyProduct)[] = [];
   if (store.storeType === "CLOTHING") {
     products = await getClothingProductsWithStoreType(store.id);
   } else if (store.storeType === "TECHNOLOGY") {
@@ -104,9 +132,10 @@ const StoreLayout = async ({ children, params }: Props) => {
       data={{
         store,
         user,
-        products
+        products,
       }}
     >
+      <Navbar stores={currentUserStores} user={user} />
       {children}
     </StoreContextProvider>
   );

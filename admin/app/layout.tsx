@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "@/app/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ModalProvider from "@/components/providers/modal-provider";
-import Navbar from "./(root)/_components/navbar";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -22,7 +21,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="light">
-          <Navbar />
           <Toaster />
           <ModalProvider />
           {children}

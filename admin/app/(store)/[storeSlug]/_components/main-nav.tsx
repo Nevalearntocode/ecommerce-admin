@@ -2,16 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { StoreWithStaffs } from "@/types";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import MobileNav from "./mobile-nav";
+import { useStoreContext } from "@/contexts/store-context";
 
-type Props = {
-  stores: StoreWithStaffs[];
-  userId: string;
-};
+type Props = {};
 
 export type RouteType = {
   href: string;
@@ -28,25 +25,21 @@ export type StaffPermissionName =
   | "canManageBillboard"
   | "canManageProduct";
 
-const MainNav = ({ stores, userId }: Props) => {
+const MainNav = ({}: Props) => {
+  const store = useStoreContext().store;
+  const { id } = useStoreContext().user;
   const params = useParams();
   const pathname = usePathname();
 
-  if(params.storeSlug === undefined) {
+  const staff = store.staffs.find((staff) => staff.userId === id);
+
+  if(!staff){
     return null
   }
 
-  const store = stores.find((store) => store.slug === params.storeSlug);
+  const isOwner = store.userId === id;
 
-  if (!store) {
-    return null;
-  }
-
-  const staff = store.staffs[0];
-
-  const isOwner = store.userId === userId;
-
-  const isAdmin = staff.isAdmin || store.userId === userId;
+  const isAdmin = staff.isAdmin || store.userId === id;
 
   // Define the hierarchy of permissions from highest to lowest access level
   const permissionHierarchy = [
@@ -191,7 +184,7 @@ const MainNav = ({ stores, userId }: Props) => {
               className={cn(
                 "text-sm font-medium transition-colors hover:text-primary",
                 route.active
-                  ? "text-black dark:text-white font-semibold"
+                  ? "font-semibold text-black dark:text-white"
                   : "text-muted-foreground",
               )}
             >

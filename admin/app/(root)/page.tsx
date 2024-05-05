@@ -1,7 +1,7 @@
 import getCurrentUser from "@/data/get-current-user";
-import Empty from "../../components/mainpages/empty";
 import { gerFirstUserStoreById } from "@/data/get-stores";
 import { redirect } from "next/navigation";
+import HomePage from "./_components/home";
 export default async function Home() {
   const user = await getCurrentUser();
 
@@ -12,7 +12,11 @@ export default async function Home() {
   const store = await gerFirstUserStoreById(user.id);
 
   if (!store) {
-    return <Empty label="You don't have any store yet." />;
+    return (
+      <div className="">
+        <HomePage />;
+      </div>
+    );
   }
 
   return redirect(`/${store.slug}`);

@@ -1,9 +1,11 @@
 import { db } from "@/lib/db";
 
-export const getStoreSalesCount = async (storeId: number) => {
+export const getStoreSalesCount = async (slug: string) => {
   const salesCount = await db.order.count({
     where: {
-      storeId,
+      store: {
+        slug
+      },
       isPaid: true,
     },
   });

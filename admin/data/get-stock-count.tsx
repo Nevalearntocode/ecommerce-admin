@@ -1,9 +1,11 @@
 import { db } from "@/lib/db";
 
-export const getStockCount = async (storeId: number) => {
+export const getStockCount = async (slug: string) => {
   const products = await db.product.findMany({
     where: {
-      storeId,
+      store: {
+        slug
+      },
       stock: {
         gt: 0,
       },

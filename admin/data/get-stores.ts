@@ -79,43 +79,6 @@ export async function getStoreWithCurrentStaffLayout(storeSlug: string) {
   return { store, user } as { store: StoreWithChildren; user: SafeUser };
 }
 
-export default async function getUserStoresById(userId: string) {
-  const stores = await db.store.findMany({
-    where: {
-      OR: [
-        { userId },
-        {
-          staffs: {
-            some: {
-              userId,
-            },
-          },
-        },
-      ],
-    },
-    include: {
-      staffs: {
-        where: {
-          userId,
-        },
-        include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              image: true,
-              updatedAt: true,
-              createdAt: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
-  return stores;
-}
 
 export async function getStoreWithCurrentStaff(slug: string, userId: string) {
   const store = await db.store.findUnique({
@@ -172,22 +135,13 @@ export async function getStoreToCreateProduct(
   return store;
 }
 
-export async function getUserStoreBySlug(slug: string) {
+export async function getStoreIdbySlug(slug: string) {
   const store = await db.store.findUnique({
     where: {
       slug,
     },
-    include: {
-      staffs: {
-        include: {
-          user: {
-            select: {
-              name: true,
-              email: true,
-            },
-          },
-        },
-      },
+    select: {
+      id: true,
     },
   });
 

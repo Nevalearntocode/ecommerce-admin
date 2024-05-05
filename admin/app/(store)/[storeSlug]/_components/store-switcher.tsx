@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Store } from "@prisma/client";
+import { Store, StoreType } from "@prisma/client";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import {
   Popover,
@@ -30,7 +30,11 @@ import { cn } from "@/lib/utils";
 import useModal from "@/hooks/use-modal-store";
 
 type Props = {
-  stores: Store[];
+  stores: {
+    name: string;
+    slug: string;
+    storeType: StoreType;
+  }[];
 };
 
 const IconMap = {
@@ -89,7 +93,7 @@ const StoreSwitcher = ({ stores }: Props) => {
               {stores.map((store) => (
                 <CommandItem
                   className=""
-                  key={store.id}
+                  key={store.slug}
                   onSelect={() => onStoreSelect(store.slug)}
                 >
                   {store.storeType === "CLOTHING" && (

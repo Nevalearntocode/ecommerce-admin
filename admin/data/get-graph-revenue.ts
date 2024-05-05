@@ -10,10 +10,12 @@ export type GraphData = {
  * @param storeId - The ID of the store.
  * @returns An array of graph data objects representing the monthly revenue.
  */
-export const getMonthlyGraphRevenue = async (storeId: number) => {
+export const getMonthlyGraphRevenue = async (slug: string) => {
   const paidOrders = await db.order.findMany({
     where: {
-      storeId,
+      store: {
+        slug,
+      },
       isPaid: true,
     },
     include: {

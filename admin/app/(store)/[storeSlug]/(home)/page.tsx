@@ -1,6 +1,4 @@
-import { getUserStoreBySlug } from "@/data/get-stores";
 import React from "react";
-import Empty from "../../../../components/mainpages/empty";
 import Header from "@/components/header";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,19 +19,10 @@ type Props = {
 };
 
 const StorePage = async ({ params }: Props) => {
-  const store = await getUserStoreBySlug(params.storeSlug);
-  if (!store) {
-    return (
-      <Empty
-        label={`You don't have any store with slug: ${decodeURIComponent(params.storeSlug)}`}
-      />
-    );
-  }
-
-  const totalRevenue = await getStoreTotalRevenue(store.id);
-  const salesCount = await getStoreSalesCount(store.id);
-  const products = await getStockCount(store.id);
-  const graphData = await getMonthlyGraphRevenue(store.id);
+  const totalRevenue = await getStoreTotalRevenue(params.storeSlug);
+  const salesCount = await getStoreSalesCount(params.storeSlug);
+  const products = await getStockCount(params.storeSlug);
+  const graphData = await getMonthlyGraphRevenue(params.storeSlug);
 
   return (
     <div className="flex-col">

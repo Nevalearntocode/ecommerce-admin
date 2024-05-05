@@ -1,9 +1,11 @@
 import { db } from "@/lib/db";
 
-export const getStoreTotalRevenue = async (storeId: number) => {
+export const getStoreTotalRevenue = async (slug: string) => {
   const paidOrders = await db.order.findMany({
     where: {
-      storeId,
+      store: {
+        slug
+      },
       isPaid: true,
     },
     include: {

@@ -1,14 +1,10 @@
 "use client";
 
 import React from "react";
-import { Button } from "../../../components/ui/button";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../../components/ui/avatar";
 import useModal from "@/hooks/use-modal-store";
 import { SafeUser } from "@/types";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Props = {
   user: SafeUser;
