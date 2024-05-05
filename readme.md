@@ -1,5 +1,7 @@
 # CMS Ecommerce Admin Dashboard: NEXT.js 14, TypeScript, TailwindCSS, Shadcn/ui, Auth.js (NextAuth.js v5), PostgreSQL, Prisma.
 
+[Link to live demo](https://ecommerce-admin-swart-six.vercel.app)
+
 ## Key Features
 - Multiple store types: Product attributes are specific to the store type (e.g., clothing: color, size; tech: model, type).
 - Employee Management: Add employees to your store through an invite link.
@@ -80,5 +82,5 @@ Running commands with npm `npm run [command]`
 | `build` | Creates an optimized production build of the application   |
 | `start` | Starts the production server (after running npm run build) |
 
-**Uploadthing Callbacks in Production**
-**Uploadthing callbacks require your application to be accessible over the internet. Ensure your production app is publicly reachable and not running on localhost.**
+## Uploadthing Callbacks in Production:
+**Uploadthing will only work in dev environment and deployment more detail here [uploadthing callback](https://docs.uploadthing.com/faq#my-callback-runs-in-development-but-not-in-production)**
