@@ -17,6 +17,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import logIn from "@/lib/sign-in";
 
 type Props = {};
 
@@ -28,6 +29,7 @@ const formSchema = z.object({
     message: "Password must be at least 6 characters long",
   }),
 });
+
 type FormType = z.infer<typeof formSchema>;
 
 const LoginForm = (props: Props) => {
@@ -42,17 +44,10 @@ const LoginForm = (props: Props) => {
 
   const isLoading = form.formState.isSubmitting;
 
-  const onSubmit = async (data: FormType) => {
-    signIn("credentials", { ...data, redirect: false }).then((callback) => {
-      if (callback?.ok) {
-        toast.success("Welcome back!");
-        router.push(`/`);
-        router.refresh();
-      }
-
-      if (callback?.error) {
-        toast.error("Invalid email or password.");
-      }
+  const onSubmit = (data: FormType) => {
+    logIn(data).then((callback) => {
+      callback?.error && toast.error(callback.error);
+      !callback?.error && toast.success("welcome back!") && router.push("/");
     });
   };
 
