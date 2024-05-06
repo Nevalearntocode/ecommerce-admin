@@ -216,11 +216,6 @@ const SettingsForm = ({}: Props) => {
         description={`${origin}/api/store/${slug}`}
         variant="public"
       />
-      <APIAlert
-        title="NEXT_PUBLIC_API_URL"
-        description={`${origin}/api/v2/stores/${id}`}
-        variant="public"
-      />
     </>
   );
 };
