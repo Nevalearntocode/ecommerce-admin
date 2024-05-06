@@ -83,6 +83,10 @@ const CreateStoreModal = (props: Props) => {
   const hasErrors = Object.keys(form.formState.errors).length > 0;
 
   const onSubmit = async (data: FormType) => {
+    if(data.image === ""){
+      toast.error(`Please upload an image for your store.`)
+      return;
+    }
     try {
       const res = await axios.post(`/api/store`, data);
       form.reset();
