@@ -63,7 +63,7 @@ export async function PATCH(
       );
     }
 
-    await prisma.$transaction(async (tx) => {
+    await db.$transaction(async (tx) => {
       for (const orderItem of order.orderItems) {
         const product = await tx.product.findUnique({
           where: { id: orderItem.productId },
